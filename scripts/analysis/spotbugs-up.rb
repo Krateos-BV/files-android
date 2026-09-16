@@ -12,7 +12,7 @@ Encoding.default_internal = Encoding::UTF_8
 puts "=================== starting Android Spotbugs Entropy Reducer ===================="
 
 # get args
-base_branch = ARGV[0]
+baseline_xml = ARGV[0]
 
 require 'fileutils'
 require 'pathname'
@@ -20,15 +20,26 @@ require 'open3'
 
 # run Spotbugs
 puts "running Spotbugs..."
-system './gradlew spotbugsGplayDebug'
+spotbugs_ran = system './gradlew spotbugsGplayDebug'
+
+# a failed build leaves no report, which would otherwise count as 0 warnings
+if !spotbugs_ran || !File.size?("app/build/reports/spotbugs/gplayDebug.xml")
+    puts "FAIL: Spotbugs did not produce a report"
+    exit 3
+end
 
 # find number of warnings
 current_warning_count = `./scripts/analysis/spotbugsSummary.py --total`.to_i
 puts "found warnings: " + current_warning_count.to_s
 
-# get warning counts from target branch
-previous_xml = "/tmp/#{base_branch}.xml"
+# get warning counts from the committed baseline
+previous_xml = baseline_xml
 previous_results = File.file?(previous_xml)
+
+if !previous_results
+    puts "FAIL: baseline #{previous_xml} not found"
+    exit 3
+end
 
 if previous_results == true
     previous_warning_count = `./scripts/analysis/spotbugsSummary.py --total --file #{previous_xml}`.to_i
