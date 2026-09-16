@@ -13,6 +13,7 @@ import android.os.Bundle;
 import com.nextcloud.client.preferences.AppPreferences;
 import com.nextcloud.client.preferences.AppPreferencesImpl;
 import com.owncloud.android.AbstractOnServerIT;
+import com.owncloud.android.MainApp;
 import com.owncloud.android.datamodel.OCFile;
 import com.owncloud.android.lib.common.accounts.AccountUtils;
 
@@ -60,9 +61,10 @@ public class UserAccountManagerImplTest extends AbstractOnServerIT {
     public void checkName() {
         UserAccountManagerImpl sut = new UserAccountManagerImpl(targetContext, accountManager);
 
-        Account owner = new Account("John@nextcloud.local", "nextcloud");
-        Account account1 = new Account("John@nextcloud.local", "nextcloud");
-        Account account2 = new Account("john@nextcloud.local", "nextcloud");
+        String accountType = MainApp.getAccountType(targetContext);
+        Account owner = new Account("John@nextcloud.local", accountType);
+        Account account1 = new Account("John@nextcloud.local", accountType);
+        Account account2 = new Account("john@nextcloud.local", accountType);
 
         OCFile file1 = new OCFile("/test1.pdf");
         file1.setOwnerId("John");

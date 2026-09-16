@@ -69,7 +69,7 @@ public abstract class AbstractOnServerIT extends AbstractIT {
             AccountManager platformAccountManager = AccountManager.get(targetContext);
 
             for (Account account : platformAccountManager.getAccounts()) {
-                if (account.type.equalsIgnoreCase("nextcloud")) {
+                if (account.type.equalsIgnoreCase(MainApp.getAccountType(targetContext))) {
                     platformAccountManager.removeAccountExplicitly(account);
                 }
             }
