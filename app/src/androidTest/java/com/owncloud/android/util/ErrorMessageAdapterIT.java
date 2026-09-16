@@ -31,12 +31,12 @@ import static junit.framework.TestCase.assertEquals;
 public class ErrorMessageAdapterIT {
     private final static String PATH_TO_DELETE = "/path/to/a.file";
     private final static String EXPECTED_ERROR_MESSAGE = "You are not permitted to delete this file";
-    private final static String ACCOUNT_TYPE = "nextcloud";
 
     @Test
     public void getErrorCauseMessageForForbiddenRemoval() {
-        Resources resources = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources();
-        User user = new MockUser("name", ACCOUNT_TYPE);
+        Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        Resources resources = targetContext.getResources();
+        User user = new MockUser("name", MainApp.getAccountType(targetContext));
         Context context = MainApp.getAppContext();
 
         String errorMessage = ErrorMessageAdapter.getErrorCauseMessage(

@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.owncloud.android.AbstractOnServerIT;
+import com.owncloud.android.MainApp;
 import com.owncloud.android.lib.common.OwnCloudAccount;
 import com.owncloud.android.lib.common.OwnCloudClient;
 import com.owncloud.android.lib.common.OwnCloudClientManager;
@@ -44,7 +45,7 @@ public class OwnCloudClientManagerTest extends AbstractOnServerIT {
 
         AccountManager accountManager = AccountManager.get(targetContext);
         String accountName = AccountUtils.buildAccountName(url, loginName);
-        Account newAccount = new Account(accountName, "nextcloud");
+        Account newAccount = new Account(accountName, MainApp.getAccountType(targetContext));
 
         accountManager.addAccountExplicitly(newAccount, password, null);
         accountManager.setUserData(newAccount, AccountUtils.Constants.KEY_OC_BASE_URL, url.toString());

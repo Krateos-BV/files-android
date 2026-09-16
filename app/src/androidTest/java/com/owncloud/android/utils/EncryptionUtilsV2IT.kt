@@ -13,6 +13,7 @@ import com.nextcloud.client.account.MockUser
 import com.nextcloud.common.User
 import com.nextcloud.utils.extensions.findMetadataKeyByUserId
 import com.owncloud.android.EncryptionIT
+import com.owncloud.android.MainApp
 import com.owncloud.android.datamodel.OCFile
 import com.owncloud.android.datamodel.e2e.v1.decrypted.Data
 import com.owncloud.android.datamodel.e2e.v1.decrypted.DecryptedFolderMetadataFileV1
@@ -246,7 +247,7 @@ class EncryptionUtilsV2IT : EncryptionIT() {
     @Throws(com.owncloud.android.operations.UploadException::class, Throwable::class)
     @Test
     fun testEncryptDecryptMetadataFile() {
-        val enc1 = MockUser("enc1", "Nextcloud")
+        val enc1 = MockUser("enc1", MainApp.getAccountType(targetContext))
 
         val root = OCFile("/")
         storageManager.saveFile(root)
@@ -296,7 +297,7 @@ class EncryptionUtilsV2IT : EncryptionIT() {
 
     @Test
     fun addFile() {
-        val enc1 = MockUser("enc1", "Nextcloud")
+        val enc1 = MockUser("enc1", MainApp.getAccountType(targetContext))
         val metadataFile = generateDecryptedFolderMetadataFile(enc1, enc1Cert)
         assertEquals(2, metadataFile.metadata.files.size)
         assertEquals(1, metadataFile.metadata.counter)
@@ -319,7 +320,7 @@ class EncryptionUtilsV2IT : EncryptionIT() {
 
     @Test
     fun removeFile() {
-        val enc1 = MockUser("enc1", "Nextcloud")
+        val enc1 = MockUser("enc1", MainApp.getAccountType(targetContext))
         val metadataFile = generateDecryptedFolderMetadataFile(enc1, enc1Cert)
         assertEquals(2, metadataFile.metadata.files.size)
 
@@ -332,7 +333,7 @@ class EncryptionUtilsV2IT : EncryptionIT() {
 
     @Test
     fun renameFile() {
-        val enc1 = MockUser("enc1", "Nextcloud")
+        val enc1 = MockUser("enc1", MainApp.getAccountType(targetContext))
         val metadataFile = generateDecryptedFolderMetadataFile(enc1, enc1Cert)
         assertEquals(2, metadataFile.metadata.files.size)
 
@@ -350,7 +351,7 @@ class EncryptionUtilsV2IT : EncryptionIT() {
 
     @Test
     fun addFolder() {
-        val enc1 = MockUser("enc1", "Nextcloud")
+        val enc1 = MockUser("enc1", MainApp.getAccountType(targetContext))
         val metadataFile = generateDecryptedFolderMetadataFile(enc1, enc1Cert)
         assertEquals(2, metadataFile.metadata.files.size)
         assertEquals(3, metadataFile.metadata.folders.size)
@@ -367,7 +368,7 @@ class EncryptionUtilsV2IT : EncryptionIT() {
 
     @Test
     fun removeFolder() {
-        val enc1 = MockUser("enc1", "Nextcloud")
+        val enc1 = MockUser("enc1", MainApp.getAccountType(targetContext))
         val metadataFile = generateDecryptedFolderMetadataFile(enc1, enc1Cert)
         assertEquals(2, metadataFile.metadata.files.size)
         assertEquals(3, metadataFile.metadata.folders.size)
@@ -394,7 +395,7 @@ class EncryptionUtilsV2IT : EncryptionIT() {
     @Test
     fun verifyMetadata() {
         val folder = OCFile("/e/")
-        val enc1 = MockUser("enc1", "Nextcloud")
+        val enc1 = MockUser("enc1", MainApp.getAccountType(targetContext))
         val metadataFile = generateDecryptedFolderMetadataFile(enc1, enc1Cert)
         val encrypted = encryptionUtilsV2.encryptFolderMetadataFile(
             metadataFile,
@@ -487,8 +488,8 @@ class EncryptionUtilsV2IT : EncryptionIT() {
     @Throws(com.owncloud.android.operations.UploadException::class, Throwable::class)
     @Test
     fun addSharee() {
-        val enc1 = MockUser("enc1", "Nextcloud")
-        val enc2 = MockUser("enc2", "Nextcloud")
+        val enc1 = MockUser("enc1", MainApp.getAccountType(targetContext))
+        val enc2 = MockUser("enc2", MainApp.getAccountType(targetContext))
 
         val root = OCFile("/")
         storageManager.saveFile(root)
@@ -548,8 +549,8 @@ class EncryptionUtilsV2IT : EncryptionIT() {
 
     @Test
     fun removeSharee() {
-        val enc1 = MockUser("enc1", "Nextcloud")
-        val enc2 = MockUser("enc2", "Nextcloud")
+        val enc1 = MockUser("enc1", MainApp.getAccountType(targetContext))
+        val enc2 = MockUser("enc2", MainApp.getAccountType(targetContext))
         var metadataFile = generateDecryptedFolderMetadataFile(enc1, enc1Cert)
         metadataFile = encryptionUtilsV2.addShareeToMetadata(
             metadataFile,
@@ -649,7 +650,7 @@ class EncryptionUtilsV2IT : EncryptionIT() {
     @Test
     fun verifyMetadataEmptyFolder() {
         val folder = OCFile("/e/")
-        val enc1 = MockUser("enc1", "Nextcloud")
+        val enc1 = MockUser("enc1", MainApp.getAccountType(targetContext))
 
         val metadataKey = EncryptionUtils.generateKey()
         val metadata = DecryptedMetadata(
@@ -694,7 +695,7 @@ class EncryptionUtilsV2IT : EncryptionIT() {
     @Test
     fun verifyMetadataWithOneFile() {
         val folder = OCFile("/e/")
-        val enc1 = MockUser("enc1", "Nextcloud")
+        val enc1 = MockUser("enc1", MainApp.getAccountType(targetContext))
 
         val metadata = DecryptedMetadata(
             mutableListOf(),
@@ -748,7 +749,7 @@ class EncryptionUtilsV2IT : EncryptionIT() {
     @Test
     fun verifyMetadataCounterTooOld() {
         val folder = OCFile("/e/")
-        val enc1 = MockUser("enc1", "Nextcloud")
+        val enc1 = MockUser("enc1", MainApp.getAccountType(targetContext))
         val metadataFile = generateDecryptedFolderMetadataFile(enc1, enc1Cert)
 
         val encrypted = encryptionUtilsV2.encryptFolderMetadataFile(
@@ -774,7 +775,7 @@ class EncryptionUtilsV2IT : EncryptionIT() {
     @Test
     fun verifyMetadataInvalidSignature() {
         val folder = OCFile("/e/")
-        val enc1 = MockUser("enc1", "Nextcloud")
+        val enc1 = MockUser("enc1", MainApp.getAccountType(targetContext))
         val metadataFile = generateDecryptedFolderMetadataFile(enc1, enc1Cert)
 
         val encrypted = encryptionUtilsV2.encryptFolderMetadataFile(
@@ -803,7 +804,7 @@ class EncryptionUtilsV2IT : EncryptionIT() {
     @Test
     fun verifyMetadataChecksumMismatch() {
         val folder = OCFile("/e/")
-        val enc1 = MockUser("enc1", "Nextcloud")
+        val enc1 = MockUser("enc1", MainApp.getAccountType(targetContext))
         val metadataFile = generateDecryptedFolderMetadataFile(enc1, enc1Cert)
 
         val encrypted = encryptionUtilsV2.encryptFolderMetadataFile(
