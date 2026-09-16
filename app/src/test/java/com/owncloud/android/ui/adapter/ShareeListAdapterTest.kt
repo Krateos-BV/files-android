@@ -11,6 +11,7 @@ import android.content.Context
 import android.content.res.Resources
 import com.nextcloud.client.account.AnonymousUser
 import com.nextcloud.client.account.User
+import com.owncloud.android.R
 import com.owncloud.android.datamodel.SharesType
 import com.owncloud.android.lib.resources.shares.OCShare
 import com.owncloud.android.lib.resources.shares.ShareType
@@ -67,7 +68,10 @@ class ShareeListAdapterTest {
         Mockito.`when`(fileActivity!!.resources).thenReturn(resources)
 
         val randomOrder = orderedShares.shuffled()
-        val user = AnonymousUser("nextcloud")
+        // account type value is irrelevant to sorting; stub the same resource lookup
+        // production code uses (AnonymousUser.fromContext) instead of a brand literal
+        Mockito.`when`(resources.getString(R.string.account_type)).thenReturn("mock-account-type")
+        val user = AnonymousUser.fromContext(context!!)
 
         val sut = ShareeListAdapter(
             fileActivity,
