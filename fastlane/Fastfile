@@ -213,34 +213,17 @@ private_lane :androidVersion do
     File.open("../app/build.gradle.kts","r") do |f|
         text = f.read
 
-        # everything between Document and Authors
-        major = text.match(/val versionMajor\s*=\s*([0-9]*)/)
-        minor = text.match(/val versionMinor\s*=\s*([0-9]*)/)
-        patch = text.match(/val versionPatch\s*=\s*([0-9]*)/)
-        build = text.match(/val versionBuild\s*=\s*([0-9]*)/)
+        # CalVer YY.M.D.ID; read the literal values straight out of the defaultConfig block
+        # rather than re-deriving them (the first match wins, which is the defaultConfig
+        # value, not the versionDev/qa flavor overrides further down the file)
+        versionCode = text.match(/versionCode\s*=\s*([0-9]+)/)[1]
+        name = text.match(/versionName\s*=\s*"([^"]*)"/)[1]
 
-        majorInt = major[1].to_i
-        minorInt = minor[1].to_i
-        patchInt = patch[1].to_i
-        buildInt = build[1].to_i
+        yy, mm, _dd, _id = name.split(".")
+        tag = "v" + name
+        branch = "stable-" + yy + "." + mm
 
-        versionCode = majorInt * 10000000 + minorInt * 10000 + patchInt * 100 + buildInt
-
-        if buildInt > 89
-            name = major[1] + "." + minor[1] + "." + patch[1]
-            tag = "stable-" + major[1] + "." + minor[1] + "." + patch[1]
-            branch = "stable-" + major[1] + "." + minor[1]
-        elsif buildInt > 50
-            name = major[1] + "." + minor[1] + "." + patch[1] + " RC" + (buildInt - 50).to_s
-            tag = "rc-" + major[1] + "." + minor[1] + "." + patch[1] + "-" + format('%02d', (buildInt - 50))
-            branch = "stable-" + major[1] + "." + minor[1]
-        else
-            name = major[1] + "." + minor[1] + "." + patch[1] + " Alpha " + format('%02d', (buildInt + 1))
-            tag = "/"
-            branch = "stable-" + major[1] + "." + minor[1]
-        end
-
-        { "versionCode" => versionCode.to_s, "versionName" => name, "tag" => tag, "branch" => branch }
+        { "versionCode" => versionCode, "versionName" => name, "tag" => tag, "branch" => branch }
     end
 end
 
