@@ -68,12 +68,6 @@ configurations.configureEach {
     }
 }
 
-// semantic versioning for version code
-val versionMajor = 35
-val versionMinor = 0
-val versionPatch = 0
-val versionBuild = 50 // 0-50=Alpha / 51-98=RC / 90-99=stable
-
 val ndkEnv = buildMap {
     file("${project.rootDir}/ndk.env").readLines().forEach {
         val (key, value) = it.split("=")
@@ -128,12 +122,9 @@ android {
         testInstrumentationRunner = if (shotTest) "com.karumi.shot.ShotTestRunner"
         else "com.nextcloud.client.TestRunner"
 
-        versionCode = versionMajor * 10000000 + versionMinor * 10000 + versionPatch * 100 + versionBuild
-        versionName = when {
-            versionBuild > 89 -> "${versionMajor}.${versionMinor}.${versionPatch}"
-            versionBuild > 50 -> "${versionMajor}.${versionMinor}.${versionPatch} RC" + (versionBuild - 50)
-            else -> "${versionMajor}.${versionMinor}.${versionPatch} Alpha" + (versionBuild + 1)
-        }
+        // CalVer YY.M.D.ID; versionCode is the date-encoded integer YYMMDDID (ID zero-padded to 3 digits)
+        versionCode = 260919000
+        versionName = "26.9.19.0"
 
         // adapt structure from Eclipse to Gradle/Android Studio expectations;
         // see http://tools.android.com/tech-docs/new-build-system/user-guide#TOC-Configuring-the-Structure
