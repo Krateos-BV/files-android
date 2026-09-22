@@ -15,16 +15,21 @@ source scripts/lib.sh
 
 BRANCH_TYPE=$BRANCH-$TYPE
 
+if [ -z "${GITHUB_REPOSITORY:-}" ]; then
+    err "GITHUB_REPOSITORY is not set, skipping comment cleanup"
+    exit 0
+fi
+
  # delete all old comments, matching this type
 echo "Deleting old comments for $BRANCH_TYPE"
-oldComments=$(curl_gh -X GET https://api.github.com/repos/nextcloud/android/issues/$PR/comments | jq --arg TYPE $BRANCH_TYPE '.[] | (.id |tostring) + "|" + (.user.login | test("(nextcloud-android-bot|github-actions)") | tostring) + "|" + (.body | test([$TYPE]) | tostring)'| grep "true|true" | tr -d "\"" | cut -f1 -d"|")
+oldComments=$(curl_gh -X GET https://api.github.com/repos/$GITHUB_REPOSITORY/issues/$PR/comments | jq --arg TYPE $BRANCH_TYPE '.[] | (.id |tostring) + "|" + (.user.login | test("(nextcloud-android-bot|github-actions)") | tostring) + "|" + (.body | test([$TYPE]) | tostring)'| grep "true|true" | tr -d "\"" | cut -f1 -d"|")
 count=$(echo -n "$oldComments" | grep -c '^')
 echo "Found $count old comments"
 
 if [ "$count" -gt 0 ]; then
   echo "$oldComments" | while read comment ; do
     echo "Deleting comment: $comment"
-    curl_gh -X DELETE https://api.github.com/repos/nextcloud/android/issues/comments/$comment
+    curl_gh -X DELETE https://api.github.com/repos/$GITHUB_REPOSITORY/issues/comments/$comment
   done
 fi
 

@@ -4,23 +4,23 @@
 # SPDX-FileCopyrightText: 2021-2023 Tobias Kaminsky <tobias@kaminsky.me>
 # SPDX-License-Identifier: AGPL-3.0-or-later OR GPL-2.0-only
 
-DRONE_PULL_REQUEST=$1
-LOG_USERNAME=$2
-LOG_PASSWORD=$3
-DRONE_BUILD_NUMBER=$4
-BRANCH=$5
+#1: PR
+#2: BRANCH
 
-function upload_logcat() {
-    log_filename="${DRONE_PULL_REQUEST}_logcat.txt.xz"
-    log_file="app/build/${log_filename}"
-    upload_path="https://nextcloud.kaminsky.me/remote.php/webdav/android-logcat/$log_filename"
+PR=$1
+BRANCH=$2
+
+# This fork has no file hosting, so the logcat is kept where the workflow
+# archives it as an artifact instead of being uploaded somewhere.
+function save_logcat() {
+    log_dir="app/build/logcat"
+    mkdir -p "$log_dir"
     xz logcat.txt
-    mv logcat.txt.xz "$log_file"
-    curl -u "${LOG_USERNAME}:${LOG_PASSWORD}" -X PUT "$upload_path" --upload-file "$log_file"
-    echo >&2 "Uploaded logcat to https://www.kaminsky.me/nc-dev/android-logcat/$log_filename"
+    mv logcat.txt.xz "$log_dir/${PR}_logcat.txt.xz"
+    echo >&2 "Saved logcat to $log_dir/${PR}_logcat.txt.xz, archived with this run's artifacts"
 }
 
-scripts/deleteOldComments.sh "$BRANCH" "IT" "$DRONE_PULL_REQUEST"
+scripts/deleteOldComments.sh "$BRANCH" "IT" "$PR"
 
 scripts/wait_for_emulator.sh || exit 1
 
@@ -43,7 +43,7 @@ stat=$?
 kill $LOGCAT_PID
 
 if [ ! $stat -eq 0 ]; then
-    upload_logcat
+    save_logcat
 fi
 
 curl -Os https://uploader.codecov.io/latest/linux/codecov
