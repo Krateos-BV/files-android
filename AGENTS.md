@@ -137,8 +137,9 @@ Run all checks with: `./gradlew check`
 > `nextcloud/files-android`. In this fork, work is reviewed on the pull request
 > itself rather than before it is opened, so the agent opens its own PRs and
 > writes their descriptions (see "What this agent may do in this fork" below).
-> Every other rule in this policy stands unchanged, including the DCO sign-off
-> requirement. **This amendment applies only to pull requests targeting
+> This fork also does not require a DCO sign-off (see "Developer Certificate of
+> Origin" below); every other rule in this policy stands unchanged.
+> **This amendment applies only to pull requests targeting
 > branches of `Krateos-BV/files-android`.** Anything destined for an upstream
 > `nextcloud/*` repository follows the unmodified upstream policy, where a
 > human opens the PR and writes it in their own words.
@@ -147,6 +148,31 @@ All contributions generated or assisted by this agent must fully comply with:
 
 - **[AI Contribution Policy](https://github.com/nextcloud/.github/blob/master/AI_POLICY.md)** - the primary reference for AI-specific rules, covering disclosure, author accountability, communication, security, licensing, code quality, and autonomous agent behavior.
 - **[Contribution Guidelines](https://github.com/nextcloud/.github/blob/master/CONTRIBUTING.md)** - covering testing requirements, the Developer Certificate of Origin (DCO), license headers, conventional commits, and translations. These apply in full to all contributions regardless of how they were produced.
+
+### Developer Certificate of Origin (DCO)
+
+Upstream `nextcloud/*` uses the DCO so that outside contributors certify they
+have the legal right to submit the code they send. That requirement does not
+carry over to this fork: `Krateos-BV/files-android` does not accept outside
+contributions, and its sole maintainer is the same person directing the agent -
+the agent is that person's tool, not a separate legal contributor. There is no
+third party here whose right to submit needs certifying.
+
+So in this fork:
+
+- Do not use `git commit -s`, and do not add a `Signed-off-by` trailer to
+  commits or to PR descriptions.
+- Do not add sign-offs retroactively to commits that already exist. A DCO
+  certification is meant to be made by the contributor at the time of the
+  commit; adding one after the fact would be ceremony, not certification.
+- Contributions still carry the `Assisted-by:` trailer and the AI disclosure
+  required above - those record how the code was produced, which the DCO
+  never did.
+
+Anything destined for an upstream `nextcloud/*` repository still follows
+upstream's rule, where the **human** contributor signs off in their own name.
+The agent never writes a `Signed-off-by` line on anyone's behalf, in either
+repository.
 
 ### What this agent must always do
 
@@ -172,14 +198,15 @@ All contributions generated or assisted by this agent must fully comply with:
   waiting for a human to do it, and write the PR description itself. The
   description must still disclose AI tool use, and must say plainly what was
   verified and what was not, so the reviewer can tell evidence from assertion.
-- This does not relax the DCO sign-off requirement below — the agent still
-  runs `git commit -s`, per this repo's own Commit guidelines.
+- Commit without a DCO sign-off. This fork does not use the Developer
+  Certificate of Origin, so neither the agent nor the contributor adds a
+  `Signed-off-by` trailer here.
 
 ## Commit and Pull Request Guidelines
 
 ### Commits
 
-- All commits must be signed off (`git commit -s`) per the Developer Certificate of Origin (DCO). All PRs target `master`. Backports use `/backport to stable-X.Y` in a PR comment.
+- Commits are not signed off in this fork - do not use `git commit -s` or add a `Signed-off-by` trailer (see "Developer Certificate of Origin" above). All PRs target `master`. Backports use `/backport to stable-X.Y` in a PR comment.
 
 - Commit messages must follow the [Conventional Commits v1.0.0 specification](https://www.conventionalcommits.org/en/v1.0.0/#specification) — e.g. `feat(chat): add voice message playback`, `fix(call): handle MCU disconnect gracefully`.
 
