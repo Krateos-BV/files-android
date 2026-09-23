@@ -200,4 +200,30 @@ class OCFileListAdapterHelper {
         job?.cancel()
         job = null
     }
+
+    companion object {
+        /**
+         * Whether [currentRemotePath] is the Notes folder, or below it.
+         *
+         * The two paths come from sources that disagree about slashes: the server capability reports the folder
+         * relative to the account root ("Notes/"), while [OCFile.getDecryptedRemotePath] returns an absolute path
+         * with a trailing separator ("/Notes/"). Both sides are normalized to "/<path>/" so that the prefix match
+         * is exact at a folder boundary and a sibling such as "/Notesomething/" cannot match.
+         */
+        @JvmStatic
+        fun isInNotesFolder(notesFolderPath: String?, currentRemotePath: String?): Boolean {
+            val notesFolder = normalizeFolderPath(notesFolderPath) ?: return false
+            val currentFolder = normalizeFolderPath(currentRemotePath) ?: return false
+            return currentFolder.startsWith(notesFolder)
+        }
+
+        private fun normalizeFolderPath(path: String?): String? {
+            val folder = path?.trim()?.trim('/')
+            if (folder.isNullOrEmpty()) {
+                return null
+            }
+
+            return OCFile.PATH_SEPARATOR + folder + OCFile.PATH_SEPARATOR
+        }
+    }
 }
