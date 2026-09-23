@@ -73,8 +73,8 @@ class ShareeListAdapterTest {
         // It reads the string off the Context, which on a mock does not delegate to
         // Resources the way a real Context would -- so both have to be stubbed.
         Mockito.`when`(resources.getString(R.string.account_type)).thenReturn("mock-account-type")
-        Mockito.`when`(context!!.getString(R.string.account_type)).thenReturn("mock-account-type")
-        val user = AnonymousUser.fromContext(context!!)
+        Mockito.`when`(context.getString(R.string.account_type)).thenReturn("mock-account-type")
+        val user = AnonymousUser.fromContext(context)
 
         val sut = ShareeListAdapter(
             fileActivity,
