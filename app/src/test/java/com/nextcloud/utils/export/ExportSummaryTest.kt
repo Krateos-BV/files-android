@@ -8,6 +8,8 @@ package com.nextcloud.utils.export
 
 import com.owncloud.android.R
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
@@ -55,5 +57,33 @@ class ExportSummaryTest {
 
         assertEquals(R.plurals.export_successful, summary.messageRes)
         assertEquals(0, summary.quantity)
+    }
+
+    @Test
+    fun a_detached_view_is_not_confirmed_on_screen() {
+        // The job outlives the screen that started it, so the observer can fire after the
+        // fragment's view is gone. The notification still reports the outcome.
+        assertFalse(ExportSummary.shouldConfirmOnScreen(viewAttached = false, exported = 3, failed = 0))
+    }
+
+    @Test
+    fun a_run_that_did_nothing_is_not_confirmed_on_screen() {
+        assertFalse(ExportSummary.shouldConfirmOnScreen(viewAttached = true, exported = 0, failed = 0))
+    }
+
+    @Test
+    fun a_run_that_exported_something_is_confirmed_on_screen() {
+        assertTrue(ExportSummary.shouldConfirmOnScreen(viewAttached = true, exported = 1, failed = 0))
+    }
+
+    @Test
+    fun a_run_that_only_failed_is_still_confirmed_on_screen() {
+        assertTrue(ExportSummary.shouldConfirmOnScreen(viewAttached = true, exported = 0, failed = 1))
+    }
+
+    @Test
+    fun locating_the_folder_is_offered_only_when_a_file_arrived_there() {
+        assertTrue(ExportSummary.shouldOfferLocateFolder(exported = 1))
+        assertFalse(ExportSummary.shouldOfferLocateFolder(exported = 0))
     }
 }
