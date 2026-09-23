@@ -21,6 +21,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.nextcloud.client.account.User
 import com.nextcloud.client.jobs.worker.WorkerFilesPayload
+import com.nextcloud.utils.export.ExportSummary
 import com.owncloud.android.R
 import com.owncloud.android.datamodel.FileDataStorageManager
 import com.owncloud.android.datamodel.OCFile
@@ -151,12 +152,9 @@ class FilesExportWork(
     }
 
     private fun showSummaryNotification(succeeded: Int, failed: Int) {
-        val resources = context.resources
-        val message = when {
-            failed == 0 -> resources.getQuantityString(R.plurals.export_successful, succeeded, succeeded)
-            succeeded == 0 -> resources.getQuantityString(R.plurals.export_failed, failed, failed)
-            else -> resources.getQuantityString(R.plurals.export_partially_failed, succeeded, succeeded)
-        }
+        val summary = ExportSummary.of(succeeded, failed)
+        val message = context.resources
+            .getQuantityString(summary.messageRes, summary.quantity, summary.quantity)
 
         val pendingIntent = PendingIntent.getActivity(
             context,
