@@ -523,12 +523,12 @@ public class OCFileListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean shouldShowOpenInNotes() {
-        if (!preferences.isShowEcosystemApps()) {
+        if (!preferences.isShowEcosystemApps() || currentDirectory == null) {
             return false;
         }
-        String notesFolderPath = capability.getNotesFolderPath();
-        String currentPath = currentDirectory.getDecryptedRemotePath();
-        return notesFolderPath != null && currentPath != null && currentPath.startsWith(notesFolderPath);
+
+        return OCFileListAdapterHelper.isInNotesFolder(capability.getNotesFolderPath(),
+                                                       currentDirectory.getDecryptedRemotePath());
     }
 
     private void updateLivePhotoIndicators(ListViewHolder holder, OCFile file) {
