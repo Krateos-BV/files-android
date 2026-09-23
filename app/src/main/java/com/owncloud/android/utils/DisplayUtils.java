@@ -522,10 +522,7 @@ public final class DisplayUtils {
             messageResource,
             Snackbar.LENGTH_INDEFINITE);
 
-        var fab = findFABView(activity);
-        if (fab != null && fab.getVisibility() == View.VISIBLE) {
-            snackbar.setAnchorView(fab);
-        }
+        anchorAboveBottomChrome(snackbar, activity);
 
         mainLooper.post(snackbar::show);
         return snackbar;
@@ -578,6 +575,7 @@ public final class DisplayUtils {
         }
 
         final var snackbar = Snackbar.make(view, String.format(context.getString(messageResource, formatArgs)), Snackbar.LENGTH_LONG);
+        anchorAboveBottomChrome(snackbar, view);
         snackbar.show();
     }
 
@@ -589,10 +587,7 @@ public final class DisplayUtils {
 
         activity.runOnUiThread(() -> {
             final var snackbar = Snackbar.make(activity.findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG);
-            var fab = findFABView(activity);
-            if (fab != null && fab.getVisibility() == View.VISIBLE) {
-                snackbar.setAnchorView(fab);
-            }
+            anchorAboveBottomChrome(snackbar, activity);
             snackbar.show();
         });
     }
@@ -605,10 +600,7 @@ public final class DisplayUtils {
 
         mainLooper.post(() -> {
             final var snackbar = Snackbar.make(view, messageResource, Snackbar.LENGTH_LONG);
-            var fab = findFABView(view.getRootView());
-            if (fab != null && fab.getVisibility() == View.VISIBLE) {
-                snackbar.setAnchorView(fab);
-            }
+            anchorAboveBottomChrome(snackbar, view);
             snackbar.show();
         });
     }
@@ -621,14 +613,11 @@ public final class DisplayUtils {
 
         mainLooper.post(() -> {
             final Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
+            anchorAboveBottomChrome(snackbar, view);
             snackbar.show();
         });
     }
     // endregion
-
-    private static View findFABView(Activity activity) {
-        return activity.findViewById(R.id.fab_main);
-    }
 
     private static View findFABView(View view) {
         return view.findViewById(R.id.fab_main);
@@ -637,12 +626,21 @@ public final class DisplayUtils {
     /**
      * Keep a {@link Snackbar} clear of the bottom chrome it would otherwise cover.
      * <p>
-     * Prefers the FAB, which already floats above the bottom navigation bar and is what the
-     * snackbar helpers above anchor to. The FAB is hidden on screens that offer nothing to create,
-     * so fall back to the navigation bar itself rather than leaving the snackbar unanchored.
+     * Prefers the FAB, which already floats above the bottom navigation bar. The FAB is hidden on
+     * screens that offer nothing to create, so fall back to the navigation bar itself rather than
+     * leaving the snackbar unanchored on top of it.
      *
      * @param snackbar the snackbar to anchor
+     * @param activity the activity hosting the bottom chrome
+     */
+    public static void anchorAboveBottomChrome(Snackbar snackbar, Activity activity) {
+        anchorAboveBottomChrome(snackbar, activity.findViewById(android.R.id.content));
+    }
+
+    /**
+     * @param snackbar the snackbar to anchor
      * @param view     any view in the hierarchy hosting the bottom chrome
+     * @see #anchorAboveBottomChrome(Snackbar, Activity)
      */
     public static void anchorAboveBottomChrome(Snackbar snackbar, View view) {
         View anchor = findBottomChromeAnchor(view);
@@ -652,8 +650,9 @@ public final class DisplayUtils {
     }
 
     /**
-     * @return the view {@link #anchorAboveBottomChrome} would anchor to, or {@code null} when no
-     *     bottom chrome is on screen and the snackbar can sit at the bottom edge.
+     * @return the view {@link #anchorAboveBottomChrome(Snackbar, View)} would anchor to, or
+     *     {@code null} when no bottom chrome is on screen and the snackbar can sit at the
+     *     bottom edge.
      */
     @VisibleForTesting
     @Nullable
@@ -682,7 +681,9 @@ public final class DisplayUtils {
      * @return The created {@link Snackbar}
      */
     public static Snackbar createSnackbar(View view, @StringRes int messageResource, int length) {
-        return Snackbar.make(view, messageResource, length);
+        Snackbar snackbar = Snackbar.make(view, messageResource, length);
+        anchorAboveBottomChrome(snackbar, view);
+        return snackbar;
     }
 
     // Solution inspired by https://stackoverflow.com/questions/34936590/why-isnt-my-vector-drawable-scaling-as-expected
@@ -726,11 +727,12 @@ public final class DisplayUtils {
     }
 
     static public void showServerOutdatedSnackbar(Activity activity, int length) {
-        Snackbar.make(activity.findViewById(android.R.id.content),
-                      R.string.outdated_server, length)
+        Snackbar snackbar = Snackbar.make(activity.findViewById(android.R.id.content),
+                                          R.string.outdated_server, length)
             .setAction(R.string.dismiss, v -> {
-            })
-            .show();
+            });
+        anchorAboveBottomChrome(snackbar, activity);
+        snackbar.show();
     }
 
     static public void startLinkIntent(Activity activity, @StringRes int link) {

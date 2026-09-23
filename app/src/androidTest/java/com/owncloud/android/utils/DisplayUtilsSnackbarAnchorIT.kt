@@ -11,6 +11,7 @@ import android.widget.FrameLayout
 import androidx.test.platform.app.InstrumentationRegistry
 import com.owncloud.android.R
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
 
@@ -61,5 +62,35 @@ class DisplayUtilsSnackbarAnchorIT {
         val (content, _, _) = hierarchy(View.GONE, View.GONE)
 
         assertNull(DisplayUtils.findBottomChromeAnchor(content))
+    }
+
+    @Test
+    fun prefersTheFabOverTheBottomNavigationBarWhenBothAreVisible() {
+        val (content, fab, bottomNav) = hierarchy(View.VISIBLE, View.VISIBLE)
+
+        val anchor = DisplayUtils.findBottomChromeAnchor(content)
+
+        assertEquals(fab, anchor)
+        assertNotEquals(bottomNav, anchor)
+    }
+
+    @Test
+    fun anchorsToBottomNavigationWhenFabIsInvisibleRatherThanGone() {
+        val (content, _, bottomNav) = hierarchy(View.INVISIBLE, View.VISIBLE)
+
+        assertEquals(bottomNav, DisplayUtils.findBottomChromeAnchor(content))
+    }
+
+    @Test
+    fun resolvesTheAnchorFromAnyDepthInTheHierarchy() {
+        val (content, fab, _) = hierarchy(View.VISIBLE, View.VISIBLE)
+
+        // Snackbar callers pass a fragment's view, which is nested well below the chrome.
+        val nested = FrameLayout(context)
+        (content.parent as FrameLayout).addView(nested)
+        val leaf = View(context)
+        nested.addView(leaf)
+
+        assertEquals(fab, DisplayUtils.findBottomChromeAnchor(leaf))
     }
 }
