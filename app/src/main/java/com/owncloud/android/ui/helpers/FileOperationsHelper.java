@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.StatFs;
@@ -36,6 +35,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.nextcloud.client.account.CurrentAccountProvider;
 import com.nextcloud.client.account.User;
 import com.nextcloud.client.jobs.BackgroundJobManager;
+import com.nextcloud.utils.export.ExportSummary;
 import com.nextcloud.client.jobs.FilesExportWork;
 import com.nextcloud.client.jobs.JobInfo;
 import com.nextcloud.client.jobs.download.FileDownloadHelper;
@@ -1157,34 +1157,19 @@ public class FileOperationsHelper {
     }
 
     private void showExportResult(View view, JobInfo jobInfo) {
-        // The job outlives the screen that started it. The observer is scoped to the host
-        // activity, so by the time it fires the fragment's view may be detached and
-        // Snackbar.make would fail to find a parent. The notification still reports the
-        // outcome in that case.
-        if (!view.isAttachedToWindow()) {
-            return;
-        }
-
         int exported = readCount(jobInfo, FilesExportWork.EXPORTED_COUNT);
         int failed = readCount(jobInfo, FilesExportWork.FAILED_COUNT);
 
-        if (exported == 0 && failed == 0) {
+        if (!ExportSummary.shouldConfirmOnScreen(view.isAttachedToWindow(), exported, failed)) {
             return;
         }
 
-        // Same wording as the summary notification, so the two never disagree.
-        Resources resources = view.getResources();
-        String message;
-        if (failed == 0) {
-            message = resources.getQuantityString(R.plurals.export_successful, exported, exported);
-        } else if (exported == 0) {
-            message = resources.getQuantityString(R.plurals.export_failed, failed, failed);
-        } else {
-            message = resources.getQuantityString(R.plurals.export_partially_failed, exported, exported);
-        }
+        ExportSummary summary = ExportSummary.of(exported, failed);
+        String message = view.getResources()
+            .getQuantityString(summary.getMessageRes(), summary.getQuantity(), summary.getQuantity());
 
         Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
-        if (exported > 0) {
+        if (ExportSummary.shouldOfferLocateFolder(exported)) {
             snackbar.setAction(R.string.locate_folder, v -> {
                 Intent intent = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
