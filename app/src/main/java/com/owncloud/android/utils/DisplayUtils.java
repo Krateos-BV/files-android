@@ -71,6 +71,7 @@ import java.util.TimeZone;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.widget.AppCompatDrawableManager;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -631,6 +632,45 @@ public final class DisplayUtils {
 
     private static View findFABView(View view) {
         return view.findViewById(R.id.fab_main);
+    }
+
+    /**
+     * Keep a {@link Snackbar} clear of the bottom chrome it would otherwise cover.
+     * <p>
+     * Prefers the FAB, which already floats above the bottom navigation bar and is what the
+     * snackbar helpers above anchor to. The FAB is hidden on screens that offer nothing to create,
+     * so fall back to the navigation bar itself rather than leaving the snackbar unanchored.
+     *
+     * @param snackbar the snackbar to anchor
+     * @param view     any view in the hierarchy hosting the bottom chrome
+     */
+    public static void anchorAboveBottomChrome(Snackbar snackbar, View view) {
+        View anchor = findBottomChromeAnchor(view);
+        if (anchor != null) {
+            snackbar.setAnchorView(anchor);
+        }
+    }
+
+    /**
+     * @return the view {@link #anchorAboveBottomChrome} would anchor to, or {@code null} when no
+     *     bottom chrome is on screen and the snackbar can sit at the bottom edge.
+     */
+    @VisibleForTesting
+    @Nullable
+    static View findBottomChromeAnchor(View view) {
+        View root = view.getRootView();
+
+        View fab = findFABView(root);
+        if (fab != null && fab.getVisibility() == View.VISIBLE) {
+            return fab;
+        }
+
+        View bottomNavigation = root.findViewById(R.id.bottom_navigation);
+        if (bottomNavigation != null && bottomNavigation.getVisibility() == View.VISIBLE) {
+            return bottomNavigation;
+        }
+
+        return null;
     }
 
 

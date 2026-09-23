@@ -1195,6 +1195,7 @@ public class FileOperationsHelper {
                 }
             });
         }
+        DisplayUtils.anchorAboveBottomChrome(snackbar, view);
         snackbar.show();
     }
 
