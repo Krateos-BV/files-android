@@ -103,6 +103,15 @@ public class FileDataStorageManager {
     private static final String SENDING_TO_FILECONTENTPROVIDER_MSG = "Sending %d operations to FileContentProvider";
     private static final String EXCEPTION_MSG = "Exception in batch of operations ";
 
+    /**
+     * A literal selection has to be paired with a non-null argument array. {@link
+     * com.owncloud.android.providers.FileContentProvider#query} treats a null array as a caller
+     * that built its selection from untrusted input, and rebinds the whole selection string as a
+     * single parameter of "(?)". SQLite then evaluates that string as 0 and the query silently
+     * matches nothing instead of failing.
+     */
+    private static final String[] NO_SELECTION_ARGS = new String[]{};
+
     public static final int ROOT_PARENT_ID = 0;
     private static final String JSON_NULL_STRING = "null";
     private static final String JSON_EMPTY_ARRAY = "[]";
@@ -1268,14 +1277,14 @@ public class FileDataStorageManager {
                 cursor = getContentResolver().query(ProviderTableMeta.CONTENT_URI_FILE,
                                                     null,
                                                     ProviderTableMeta.FILE_STORAGE_PATH + " IS NOT NULL",
-                                                    null,
+                                                    NO_SELECTION_ARGS,
                                                     null);
 
             } else {
                 cursor = getContentProviderClient().query(ProviderTableMeta.CONTENT_URI_FILE,
                                                           new String[]{ProviderTableMeta._ID, ProviderTableMeta.FILE_STORAGE_PATH},
                                                           ProviderTableMeta.FILE_STORAGE_PATH + " IS NOT NULL",
-                                                          null,
+                                                          NO_SELECTION_ARGS,
                                                           null);
             }
         } catch (RemoteException e) {
