@@ -11,6 +11,7 @@ import androidx.test.core.app.launchActivity
 import com.nextcloud.client.jobs.upload.FileUploadWorker
 import com.nextcloud.test.TestActivity
 import com.owncloud.android.AbstractIT
+import com.owncloud.android.MainApp
 import org.junit.Assert
 import org.junit.Test
 
@@ -32,7 +33,8 @@ class UriUploaderIT : AbstractIT() {
         launchActivity<TestActivity>().use { scenario ->
             scenario.onActivity { activity ->
                 val packageName = activity.packageName
-                val path = "file:///storage/emulated/0/Android/media/$packageName/nextcloud/test/welcome.txt"
+                val dataFolder = MainApp.getDataFolder()
+                val path = "file:///storage/emulated/0/Android/media/$packageName/$dataFolder/test/welcome.txt"
                 testPrivatePath(activity, path)
             }
         }
