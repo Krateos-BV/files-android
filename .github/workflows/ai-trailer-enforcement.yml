@@ -1,0 +1,42 @@
+# SPDX-FileCopyrightText: 2026 XeniaCloud
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Fork-local companion to ai-policy.yml, which is synced from the org template
+# repository (nextcloud/.github) and would lose a local edit on the next sync.
+#
+# ai-policy.yml detects an Assisted-by trailer and a coding-agent Co-Authored-By
+# trailer, but never compares them, so a commit an agent co-authored without the
+# Assisted-by trailer AGENTS.md mandates merges green. It also greps every commit
+# in the PR as one blob, so a single compliant commit covers for the rest.
+#
+# This checks each commit on its own and fails when one carries machine evidence
+# of agent authorship but no disclosure. A commit with no agent Co-Authored-By
+# never triggers it, so human work needs no exemption.
+name: AI trailer enforcement
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [master, main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ai-trailer-enforcement-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  require-assisted-by:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Every agent-co-authored commit carries an Assisted-by trailer
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: bash .github/workflows/scripts/check-assisted-by.sh "origin/${BASE_REF}" HEAD
