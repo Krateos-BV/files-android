@@ -7,9 +7,12 @@
 error=0
 total=0
 
-cp scripts/screenshotCombinations scripts/screenshotCombinations_
-grep -v "#" scripts/screenshotCombinations_ > scripts/screenshotCombinations
-rm scripts/screenshotCombinations_
+# Filter the commented-out combinations into a scratch file. Never rewrite
+# scripts/screenshotCombinations itself: it is tracked, and doing so deletes
+# the commented-out combinations from the working tree permanently.
+combinations=$(mktemp)
+trap 'rm -f "$combinations"' EXIT
+grep -v "#" scripts/screenshotCombinations > "$combinations"
 
 echo '<!DOCTYPE html>
 <html lang="de">
@@ -21,7 +24,7 @@ echo "<table>"
 echo "<tr><td style='width:150px'>Original</td>"
 while read line; do
     echo "<td style='width:150px'>$line</td>"
-done < scripts/screenshotCombinations
+done < "$combinations"
 echo "</tr>"
 
 #for image in ./build/reports/shot/verification/images/*.png ; do
@@ -58,7 +61,7 @@ for image in $(/bin/ls -1 ./screenshots/gplay/debug/*.png | grep -v _dark_ | gre
         fi
         
         echo "</td>"
-    done < scripts/screenshotCombinations
+    done < "$combinations"
     
     echo "</tr>"
 done
