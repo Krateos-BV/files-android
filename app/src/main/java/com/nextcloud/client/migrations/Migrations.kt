@@ -18,12 +18,14 @@ import javax.inject.Inject
  * This class collects all migration steps and provides API to supply those
  * steps to [MigrationsManager] for execution.
  */
+@Suppress("LongParameterList") // Dependencies Injection
 class Migrations @Inject constructor(
     private val logger: Logger,
     private val userAccountManager: UserAccountManager,
     private val workManager: WorkManager,
     private val arbitraryDataProvider: ArbitraryDataProvider,
-    private val jobManager: BackgroundJobManager
+    private val jobManager: BackgroundJobManager,
+    private val dataFolderMigration: DataFolderMigration
 ) {
 
     companion object {
@@ -98,6 +100,10 @@ class Migrations @Inject constructor(
         }
     }
 
+    private fun migrateDataFolder(s: Step) {
+        dataFolderMigration.migrate(s.toString())
+    }
+
     /**
      * List of migration steps. Those steps will be loaded and run by [MigrationsManager].
      *
@@ -110,7 +116,8 @@ class Migrations @Inject constructor(
         Step(0, "Migrate user id", false, this::migrateUserId),
         Step(1, "Migrate content observer job", false, this::migrateContentObserverJob),
         Step(2, "Restart contacts backup job", true, this::nop),
-        Step(3, "Restart contacts backup job", true, this::restartContactsBackupJobs)
+        Step(3, "Restart contacts backup job", true, this::restartContactsBackupJobs),
+        Step(4, "Migrate data folder off the upstream name", false, this::migrateDataFolder)
     ).sortedBy { it.id }.apply {
         val uniqueIds = associateBy { it.id }.size
         if (uniqueIds != size) {
