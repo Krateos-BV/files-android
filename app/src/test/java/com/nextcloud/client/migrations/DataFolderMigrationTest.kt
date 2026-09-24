@@ -59,19 +59,7 @@ class DataFolderMigrationTest {
         every { context.filesDir } returns filesDir
         every { preferences.getStoragePath(any()) } returns storageRoot.absolutePath
 
-        val migrations = Migrations(
-            logger,
-            mockk(relaxed = true),
-            mockk(relaxed = true),
-            mockk(relaxed = true),
-            mockk(relaxed = true),
-            context,
-            preferences,
-            fileDataStorageManager
-        )
-
-        val step = migrations.steps.first { it.id == DATA_FOLDER_STEP_ID }
-        step.run(step)
+        DataFolderMigration(context, preferences, fileDataStorageManager, logger).migrate("test")
     }
 
     private fun writeFile(parent: File, relativePath: String) {
@@ -159,6 +147,22 @@ class DataFolderMigrationTest {
 
         assertTrue(File(filesDir, "$CURRENT_DATA_FOLDER/tmp/account/part.tmp").exists())
         assertFalse(File(filesDir, LEGACY_DATA_FOLDER).exists())
+    }
+
+    @Test
+    fun `the migration is registered as a non-mandatory step`() {
+        val migrations = Migrations(
+            logger,
+            mockk(relaxed = true),
+            mockk(relaxed = true),
+            mockk(relaxed = true),
+            mockk(relaxed = true),
+            mockk(relaxed = true)
+        )
+
+        val step = migrations.steps.first { it.id == DATA_FOLDER_STEP_ID }
+
+        assertFalse(step.mandatory)
     }
 
     companion object {
