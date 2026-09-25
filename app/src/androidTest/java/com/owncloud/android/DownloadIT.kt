@@ -103,16 +103,11 @@ class DownloadIT : AbstractOnServerIT() {
         Assert.assertTrue(Path(file2.storagePath).exists())
 
         // test against hardcoded path to make sure that it is correct
-        Assert.assertEquals(
-            "/storage/emulated/0/Android/media/" + targetContext.packageName + "/nextcloud/" +
-                Uri.encode(account.name, "@") + "/testUpload/nonEmpty.txt",
-            file1.storagePath
-        )
-        Assert.assertEquals(
-            "/storage/emulated/0/Android/media/" + targetContext.packageName + "/nextcloud/" +
-                Uri.encode(account.name, "@") + "/testUpload/nonEmpty2.txt",
-            file2.storagePath
-        )
+        val accountRoot = "/storage/emulated/0/Android/media/" + targetContext.packageName + "/" +
+            MainApp.getDataFolder() + "/" + Uri.encode(account.name, "@")
+
+        Assert.assertEquals(accountRoot + "/testUpload/nonEmpty.txt", file1.storagePath)
+        Assert.assertEquals(accountRoot + "/testUpload/nonEmpty2.txt", file2.storagePath)
     }
 
     companion object {
