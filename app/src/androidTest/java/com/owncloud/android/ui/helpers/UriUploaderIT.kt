@@ -22,7 +22,9 @@ class UriUploaderIT : AbstractIT() {
         launchActivity<TestActivity>().use { scenario ->
             scenario.onActivity { activity ->
                 val packageName = activity.packageName
-                val path = "file:///data/data/$packageName/shared_prefs/com.nextcloud.client_preferences.xml"
+                // PreferenceManager.getDefaultSharedPreferences() stores under
+                // "<packageName>_preferences", so derive it rather than naming a brand.
+                val path = "file:///data/data/$packageName/shared_prefs/${packageName}_preferences.xml"
                 testPrivatePath(activity, path)
             }
         }
