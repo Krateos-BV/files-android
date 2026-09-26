@@ -6,7 +6,7 @@ name: "Detect wrong settings"
 
 on:
     pull_request:
-        branches: [ master, stable-* ]
+        branches: [ master, main, stable-* ]
 
 # Declare default permissions as read only.
 permissions: read-all
