@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: 2026 XeniaCloud
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Fork-local guard. The XNT-125 and XNT-170 renames both left a hardcoded
+# `nextcloud` path segment behind in test code, and both times the instruction
+# to grep for one was in the plan and simply not carried out. A checklist item
+# that depends on someone remembering it has now failed twice, so this checks it
+# instead. See XNT-194.
+name: Test brand literals
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [master, main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-brand-literals-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  no-unaccounted-brand-literals:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Every Nextcloud brand literal in test code is accounted for
+        run: bash .github/workflows/scripts/check-test-brand-literals.sh

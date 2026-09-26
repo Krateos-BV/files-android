@@ -1,0 +1,53 @@
+# SPDX-FileCopyrightText: 2026 XeniaCloud
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Nextcloud brand string literals that are legitimate in fork test code.
+#
+# Each rule is an extended regex matched against "<path>|<literal>", so a rule
+# can be brand-wide (match the literal alone) or pinned to one file (lead with
+# the path). Every rule must carry a reason, and a rule that stops matching
+# anything fails the scan so it gets pruned rather than quietly widening it.
+#
+# Before adding a rule, check the literal is not one the fork should own: a path
+# segment, a data folder or a preferences filename belongs behind a runtime
+# accessor (MainApp.getDataFolder(), getAuthority(), the package name), never in
+# a string. See XNT-125, XNT-170 and XNT-194.
+
+# Upstream hosts and the test accounts derived from them. These name
+# Nextcloud's own servers and fixtures, not our product.
+nextcloud\.(com|org|local|localhost|example\.com)
+
+# The upstream community handle, asserted by CommunityFragmentIT against links
+# that really do point at Nextcloud's social accounts.
+[Nn]extclouders
+
+# Test account names on a bare "nextcloud" realm, from upstream fixtures.
+\|"[^"]*@nextcloud"
+
+# SQL fixture rows carrying such an account name inside a longer CSV string.
+'test@nextcloud'
+
+# Fully-qualified upstream class names used as strings: reflection targets,
+# mockk static targets and screenshot test-class names. A rename here breaks
+# compilation elsewhere, so these cannot rot unnoticed.
+#
+# The trailing segment must be an uppercase-initial class name. Without that,
+# "com.nextcloud.client_preferences.xml" — the XNT-194 literal itself — reads as
+# a package path and this rule excuses the very thing the scan exists to catch.
+\|"com\.nextcloud(\.[a-z][A-Za-z0-9_]*)*\.[A-Z][A-Za-z0-9_]*"$
+
+# The pre-rename data folder, named deliberately: this constant and this
+# migration source path exist to recognise the old layout on disk.
+datamodel/FileDataStorageManagerMigrateStoredFilesTest\.kt\|"/storage/emulated/0/Android/media/eu\.xeniacloud\.files/nextcloud"
+client/migrations/DataFolderMigrationTest\.kt\|"nextcloud"
+
+# Server-supplied notification payload text. NotificationsFragmentIT feeds the
+# adapter a Notification exactly as a Nextcloud server sends it; the brand name
+# is the server's wording, not a string this app owns.
+ui/fragment/NotificationsFragmentIT\.kt\|"(Help improve Nextcloud|Do you want to help us to improve Nextcloud[^"]*)"
+
+# Upstream task-app description text in a fixture app list.
+"Sync tasks from various devices with your Nextcloud and edit them online\."
+
+# A public-link fixture on an upstream test host, with an /owncloud/ path.
+"https://nextcloud\.localhost/owncloud/[0-9a-z]+"
