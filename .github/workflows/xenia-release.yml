@@ -1,0 +1,91 @@
+# SPDX-FileCopyrightText: 2026 XeniaCloud
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# First-ever release pipeline for files-android (XNT-210). Builds a signed gplay release AAB
+# and uploads it to Google Play's internal testing track (NOT production - this is intentionally
+# conservative until the first release has been through Play Console review at least once).
+#
+# Signing/upload secrets are provisioned via Infisical -> GitHub Actions secrets, per the
+# convention established in XNT-207 (one upload keystore per app, not shared across the estate):
+#   ANDROID_KEYSTORE_B64        - base64-encoded upload keystore (.jks) for this app only
+#   ANDROID_KEYSTORE_PASSWORD   - keystore password
+#   ANDROID_KEY_ALIAS           - key alias inside the keystore
+#   ANDROID_KEY_PASSWORD        - key password
+#   PLAY_SERVICE_ACCOUNT_JSON   - Google Play service account JSON (Play Console API access)
+#
+# None of these secrets exist yet at the time this workflow was written; it will no-op safely
+# (fail closed) until they are added, same pattern as qa.yml's check-secrets guard.
+
+name: "XeniaCloud Release"
+
+on:
+    push:
+        tags:
+            - "v*"
+
+permissions: read-all
+
+concurrency:
+    group: xenia-release-${{ github.ref }}
+    cancel-in-progress: false
+
+jobs:
+    release:
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Check if release secrets are available
+                id: check-secrets
+                run: echo "ok=${{ secrets.ANDROID_KEYSTORE_B64 != '' && secrets.PLAY_SERVICE_ACCOUNT_JSON != '' }}" >> "$GITHUB_OUTPUT"
+
+            -   name: Checkout
+                if: ${{ steps.check-secrets.outputs.ok == 'true' }}
+                uses: actions/checkout@v4
+
+            -   name: set up JDK 21
+                if: ${{ steps.check-secrets.outputs.ok == 'true' }}
+                uses: actions/setup-java@v4
+                with:
+                    distribution: "temurin"
+                    java-version: 21
+
+            -   name: Decode upload keystore
+                if: ${{ steps.check-secrets.outputs.ok == 'true' }}
+                env:
+                    ANDROID_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+                run: |
+                    echo "$ANDROID_KEYSTORE_B64" | base64 -d > "${{ runner.temp }}/upload-keystore.jks"
+
+            -   name: Build signed gplay release AAB
+                if: ${{ steps.check-secrets.outputs.ok == 'true' }}
+                env:
+                    ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/upload-keystore.jks
+                    ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+                    ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+                    ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+                run: |
+                    echo "org.gradle.jvmargs=-Xmx6g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:+UseParallelGC -XX:MaxMetaspaceSize=1g" >> gradle.properties
+                    echo "org.gradle.caching=true" >> gradle.properties
+                    echo "org.gradle.parallel=true" >> gradle.properties
+                    ./gradlew bundleGplayRelease
+
+            -   name: Remove decoded keystore
+                if: ${{ always() }}
+                run: rm -f "${{ runner.temp }}/upload-keystore.jks"
+
+            -   name: Upload AAB build artifact
+                if: ${{ steps.check-secrets.outputs.ok == 'true' }}
+                uses: actions/upload-artifact@v4
+                with:
+                    name: app-gplay-release-aab
+                    path: app/build/outputs/bundle/gplayRelease/*.aab
+                    retention-days: 90
+
+            -   name: Upload to Google Play (internal testing track)
+                if: ${{ steps.check-secrets.outputs.ok == 'true' }}
+                uses: r0adkll/upload-google-play@935ef9c68bb393a8e6116b1575626a7f5be3a7fb # v1.1.3
+                with:
+                    serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+                    packageName: eu.xeniacloud.files
+                    releaseFiles: app/build/outputs/bundle/gplayRelease/*.aab
+                    track: internal
+                    status: completed

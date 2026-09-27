@@ -131,6 +131,22 @@ android {
 
         flavorDimensions += "default"
 
+        signingConfigs {
+            // Upload keystore for the gplay flavor's release AAB, per XNT-207 (one keystore per app).
+            // Populated at CI time from Infisical -> GitHub Actions secrets; never committed.
+            // Path/passwords are read from env vars so a local dev build without them still configures
+            // (and simply fails to sign, rather than failing to configure) other flavors/build types.
+            create("release") {
+                val keystorePath = System.getenv("ANDROID_KEYSTORE_PATH")
+                if (!keystorePath.isNullOrBlank()) {
+                    storeFile = file(keystorePath)
+                    storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                    keyAlias = System.getenv("ANDROID_KEY_ALIAS")
+                    keyPassword = System.getenv("ANDROID_KEY_PASSWORD")
+                }
+            }
+        }
+
         buildTypes {
             release {
                 buildConfigField("String", "NC_TEST_SERVER_DATA_STRING", "\"\"")
@@ -153,6 +169,12 @@ android {
             register("gplay") {
                 applicationId = "eu.xeniacloud.files"
                 dimension = "default"
+                // Sign gplay release builds (assembleGplayRelease / bundleGplayRelease) with the
+                // Play upload keystore when the CI env vars are present; other flavors are
+                // unaffected and other build types keep the default (unsigned/debug) signing.
+                if (!System.getenv("ANDROID_KEYSTORE_PATH").isNullOrBlank()) {
+                    signingConfig = signingConfigs.getByName("release")
+                }
             }
 
             register("huawei") {
