@@ -11,7 +11,7 @@
 #   ANDROID_KEYSTORE_PASSWORD   - keystore password
 #   ANDROID_KEY_ALIAS           - key alias inside the keystore
 #   ANDROID_KEY_PASSWORD        - key password
-#   PLAY_SERVICE_ACCOUNT_JSON   - Google Play service account JSON (Play Console API access)
+#   GSC_SERVICE_ACCOUNT_JSON   - Google Play service account JSON (Play Console API access)
 #
 # None of these secrets exist yet at the time this workflow was written; it will no-op safely
 # (fail closed) until they are added, same pattern as qa.yml's check-secrets guard.
@@ -39,7 +39,7 @@ jobs:
         steps:
             -   name: Check if release secrets are available
                 id: check-secrets
-                run: echo "ok=${{ secrets.ANDROID_KEYSTORE_B64 != '' && secrets.PLAY_SERVICE_ACCOUNT_JSON != '' }}" >> "$GITHUB_OUTPUT"
+                run: echo "ok=${{ secrets.ANDROID_KEYSTORE_B64 != '' && secrets.GSC_SERVICE_ACCOUNT_JSON != '' }}" >> "$GITHUB_OUTPUT"
 
             -   name: Checkout
                 if: ${{ steps.check-secrets.outputs.ok == 'true' }}
@@ -119,7 +119,7 @@ jobs:
             -   name: Upload to Google Play (internal testing track)
                 uses: r0adkll/upload-google-play@935ef9c68bb393a8e6116b1575626a7f5be3a7fb # v1.1.3
                 with:
-                    serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+                    serviceAccountJsonPlainText: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
                     packageName: eu.xeniacloud.files
                     releaseFiles: app/build/outputs/bundle/gplayRelease/*.aab
                     track: internal
