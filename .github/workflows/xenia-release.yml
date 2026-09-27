@@ -21,7 +21,9 @@ name: "XeniaCloud Release"
 on:
     push:
         tags:
-            - "v*"
+            # CalVer release tags, matching the versionName scheme already used in
+            # app/build.gradle.kts (defaultConfig versionCode/versionName), e.g. 26.9.19.0.
+            - "[0-9]*.[0-9]*.[0-9]*.[0-9]*"
 
 permissions: read-all
 
@@ -32,6 +34,8 @@ concurrency:
 jobs:
     release:
         runs-on: ubuntu-latest
+        outputs:
+            aab-name: app-gplay-release-aab
         steps:
             -   name: Check if release secrets are available
                 id: check-secrets
@@ -47,6 +51,23 @@ jobs:
                 with:
                     distribution: "temurin"
                     java-version: 21
+
+            # Same CalVer scheme as app/build.gradle.kts: versionName is the tag itself
+            # (YY.M.D.ID), versionCode is the date-encoded integer YYMMDDID with the ID
+            # zero-padded to 3 digits. Patches the same defaultConfig block that qa.yml
+            # patches for the qa flavor, keyed off the "CalVer YY.M.D.ID" marker comment
+            # so only defaultConfig (not the versionDev/qa flavor overrides) is touched.
+            -   name: Derive CalVer version from tag
+                if: ${{ steps.check-secrets.outputs.ok == 'true' }}
+                id: calver
+                run: |
+                    TAG="${GITHUB_REF_NAME}"
+                    IFS='.' read -r YY M D ID <<< "$TAG"
+                    VERSION_NAME="$TAG"
+                    VERSION_CODE=$(printf '%02d%02d%02d%03d' "$YY" "$M" "$D" "$ID")
+                    echo "version-name=$VERSION_NAME" >> "$GITHUB_OUTPUT"
+                    echo "version-code=$VERSION_CODE" >> "$GITHUB_OUTPUT"
+                    sed -i "/CalVer YY.M.D.ID/{n;s/versionCode = .*/versionCode = ${VERSION_CODE}/;n;s/versionName = .*/versionName = \"${VERSION_NAME}\"/}" app/build.gradle.kts
 
             -   name: Decode upload keystore
                 if: ${{ steps.check-secrets.outputs.ok == 'true' }}
@@ -80,8 +101,22 @@ jobs:
                     path: app/build/outputs/bundle/gplayRelease/*.aab
                     retention-days: 90
 
+    # Build/signing above runs unattended. Publishing to Google Play requires manual
+    # approval via the play-release GitHub Environment (a required reviewer must approve
+    # the job before it starts). The environment's required-reviewers list itself is a
+    # repo-settings change and is not configured by this workflow file.
+    upload-google-play:
+        needs: release
+        runs-on: ubuntu-latest
+        environment: play-release
+        steps:
+            -   name: Download AAB build artifact
+                uses: actions/download-artifact@v4
+                with:
+                    name: app-gplay-release-aab
+                    path: app/build/outputs/bundle/gplayRelease
+
             -   name: Upload to Google Play (internal testing track)
-                if: ${{ steps.check-secrets.outputs.ok == 'true' }}
                 uses: r0adkll/upload-google-play@935ef9c68bb393a8e6116b1575626a7f5be3a7fb # v1.1.3
                 with:
                     serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
