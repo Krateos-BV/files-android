@@ -1,0 +1,148 @@
+# SPDX-FileCopyrightText: 2026 Krateos BV
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: Xenia Upstream Sync
+
+# Periodically checks nextcloud/android:master for commits we don't have yet and
+# opens a PR so they get triaged instead of silently piling up. This fork has diverged
+# on branding/config/release plumbing, so this workflow deliberately NEVER merges
+# anything automatically - it only surfaces what upstream has and lets a human decide
+# per commit whether it's safe to pull in.
+#
+# If the merge attempt below hits conflicts, the PR is still opened with the conflict
+# markers committed as-is so the diff shows exactly what needs manual resolution,
+# rather than silently skipping the sync. xenia-conflict-marker-guard.yml is what
+# stops such a PR being merged before those markers are resolved.
+
+on:
+  schedule:
+    # Every Monday 06:00 UTC.
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  upstream-sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      # GITHUB_TOKEN cannot create or update files under .github/workflows/ - that is a
+      # GitHub security boundary, not a `permissions:` setting (`workflows` is not a
+      # permission a workflow can request). Upstream merges regularly touch workflow
+      # files, so the sync push is rejected server-side without this.
+      # A GitHub App installation token can hold `workflows: write`, so mint one per run.
+      # It is also short-lived and not tied to anyone's personal account, unlike a PAT.
+      #
+      # Second benefit: a PR opened with GITHUB_TOKEN does not trigger `pull_request`
+      # workflows, so sync PRs would have arrived with no CI at all. An App token's PR
+      # does trigger them. (XNT-184)
+      - name: Mint a GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ secrets.XENIA_SYNC_APP_ID }}
+          private-key: ${{ secrets.XENIA_SYNC_APP_PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Fetch upstream
+        run: git remote add upstream https://github.com/nextcloud/android.git && git fetch upstream master
+
+      - name: Check for new upstream commits
+        id: check
+        run: |
+          count=$(git rev-list --count HEAD..upstream/master)
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          echo "$count new upstream commit(s)"
+
+      - name: Check for an existing open sync PR
+        id: existing
+        if: steps.check.outputs.count != '0'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          open_pr=$(gh pr list --state open --head upstream-sync/master --json number --jq '.[0].number // ""')
+          echo "pr=$open_pr" >> "$GITHUB_OUTPUT"
+
+      - name: Configure git identity
+        if: steps.check.outputs.count != '0' && steps.existing.outputs.pr == ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Attempt merge of upstream/master
+        id: merge
+        if: steps.check.outputs.count != '0' && steps.existing.outputs.pr == ''
+        run: |
+          git checkout -b upstream-sync/master
+          if git merge upstream/master --no-edit; then
+            echo "clean=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "clean=false" >> "$GITHUB_OUTPUT"
+            git add -A
+            git commit -m "chore: merge nextcloud/android master (conflicts need manual resolution)"
+          fi
+
+      - name: List upstream commits
+        id: log
+        if: steps.check.outputs.count != '0' && steps.existing.outputs.pr == ''
+        run: |
+          log=$(git log --format='- %h %s' HEAD..upstream/master)
+          echo "log<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$log" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      # Pushed over an explicitly authenticated remote URL rather than left to the
+      # ambient credential helper - `persist-credentials: false` above means there is
+      # no ambient helper, and relying on one anyway is the exact bug XNT-184 fixed
+      # across the other forks' sync workflows. Do not reintroduce it here.
+      - name: Push sync branch
+        if: steps.check.outputs.count != '0' && steps.existing.outputs.pr == ''
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" upstream-sync/master --force
+
+      # Created via the REST API rather than `gh pr create`: the CLI goes through the
+      # GraphQL createPullRequest mutation, which refused an App installation token with
+      # "Resource not accessible by integration" even with pull_requests: write granted.
+      # The REST endpoint accepts the same token. (XNT-184)
+      - name: Open PR
+        if: steps.check.outputs.count != '0' && steps.existing.outputs.pr == ''
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          UPSTREAM_COUNT: ${{ steps.check.outputs.count }}
+          UPSTREAM_LOG: ${{ steps.log.outputs.log }}
+          MERGE_CLEAN: ${{ steps.merge.outputs.clean }}
+        run: |
+          status_line="This merge was clean."
+          if [ "$MERGE_CLEAN" != "true" ]; then
+            status_line="**This merge has unresolved conflicts** (committed as-is with conflict markers) - resolve them on this branch before merging."
+          fi
+
+          body=$(cat <<EOF
+          Automated sync check against [nextcloud/android](https://github.com/nextcloud/android) master.
+
+          $status_line
+
+          This PR is never auto-merged - review each commit for conflicts with our branding, bundle ID, CalVer versioning, and release plumbing before merging.
+
+          ## Upstream commits
+
+          $UPSTREAM_LOG
+          EOF
+          )
+
+          jq -n \
+            --arg title "Upstream sync: $UPSTREAM_COUNT new commit(s) from nextcloud/android" \
+            --arg head "upstream-sync/master" \
+            --arg base "${{ github.event.repository.default_branch }}" \
+            --arg body "$body" \
+            '{title: $title, head: $head, base: $base, body: $body}' \
+          | gh api --method POST "repos/${GITHUB_REPOSITORY}/pulls" --input - \
+              --jq '"Opened PR #\(.number): \(.html_url)"'

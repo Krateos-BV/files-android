@@ -30,6 +30,10 @@ jobs:
       security-events: write
     strategy:
       fail-fast: false
+      # 'java' is intentionally the only entry: the CodeQL Java/Kotlin extractor
+      # analyzes both languages together under this one matrix value, so a
+      # separate 'kotlin' entry is unnecessary (and unsupported as a distinct
+      # language). This matrix already covers the app's Kotlin sources.
       matrix:
         language: [ 'java' ]
     steps:

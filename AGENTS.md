@@ -206,7 +206,7 @@ repository.
 
 ### Commits
 
-- Commits are not signed off in this fork - do not use `git commit -s` or add a `Signed-off-by` trailer (see "Developer Certificate of Origin" above). All PRs target `master`. Backports use `/backport to stable-X.Y` in a PR comment.
+- Commits are not signed off in this fork - do not use `git commit -s` or add a `Signed-off-by` trailer (see "Developer Certificate of Origin" above). All PRs target `main`. Backports use `/backport to stable-X.Y` in a PR comment.
 
 - Commit messages must follow the [Conventional Commits v1.0.0 specification](https://www.conventionalcommits.org/en/v1.0.0/#specification) — e.g. `feat(chat): add voice message playback`, `fix(call): handle MCU disconnect gracefully`.
 
