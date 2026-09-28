@@ -29,6 +29,7 @@ import com.nextcloud.client.core.Clock
 import com.nextcloud.client.di.Injectable
 import com.nextcloud.client.documentscan.GeneratePdfFromImagesWork
 import com.nextcloud.client.jobs.autoUpload.AutoUploadLocalDeletionWorker
+import com.nextcloud.client.jobs.autoUpload.AutoUploadRescanWorker
 import com.nextcloud.client.jobs.autoUpload.AutoUploadWorker
 import com.nextcloud.client.jobs.download.FileDownloadWorker
 import com.nextcloud.client.jobs.folderDownload.FolderDownloadWorker
@@ -38,6 +39,7 @@ import com.nextcloud.client.jobs.upload.AlbumFileUploadWorker
 import com.nextcloud.client.jobs.upload.FileUploadHelper
 import com.nextcloud.client.jobs.upload.FileUploadWorker
 import com.nextcloud.client.jobs.worker.WorkerFilesPayload
+import com.nextcloud.client.network.SupportedNetworkTransports
 import com.nextcloud.client.preferences.AppPreferences
 import com.nextcloud.utils.extensions.isWorkScheduled
 import com.owncloud.android.datamodel.OCFile
@@ -497,6 +499,16 @@ internal class BackgroundJobManagerImpl(
     override fun isAutoUploadIgnoringPowerSavingScheduled(syncedFolderID: Long): Boolean =
         workManager.isWorkScheduled(autoUploadIgnorePowerSavingTag(syncedFolderID))
 
+    override fun schedulePeriodicAutoUpload() {
+        val request = periodicRequestBuilder(
+            jobClass = AutoUploadRescanWorker::class,
+            jobName = JOB_PERIODIC_FILES_SYNC,
+            constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+        ).build()
+
+        workManager.enqueueUniquePeriodicWork(JOB_PERIODIC_FILES_SYNC, ExistingPeriodicWorkPolicy.KEEP, request)
+    }
+
     override fun startAutoUpload(syncedFolder: SyncedFolder, overridePowerSaving: Boolean) {
         val syncedFolderID = syncedFolder.id
 
@@ -512,10 +524,7 @@ internal class BackgroundJobManagerImpl(
             .putLong(AutoUploadWorker.SYNCED_FOLDER_ID, syncedFolderID)
             .build()
 
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiresCharging(syncedFolder.isChargingOnly)
-            .build()
+        val constraints = SupportedNetworkTransports.getConstraints(requiresCharging = syncedFolder.isChargingOnly)
 
         val requestBuilder = oneTimeRequestBuilder(
             jobClass = AutoUploadWorker::class,
@@ -662,9 +671,7 @@ internal class BackgroundJobManagerImpl(
             val batches = uploadIds.toList().chunked(batchSize)
             val tag = startFileUploadJobTag(user.accountName)
 
-            val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build()
+            val constraints = SupportedNetworkTransports.getConstraints()
 
             val dataBuilder = Data.Builder()
                 .putBoolean(

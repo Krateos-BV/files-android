@@ -34,7 +34,6 @@
     <string name="add_new_public_share">Öffentlichen Freigabe-Link hinzufügen</string>
     <string name="add_new_secure_file_drop">Neue sichere Dateiablage hinzufügen</string>
     <string name="add_to_album">Zum Album hinzufügen</string>
-    <string name="add_to_cloud">Hinzufügen zu %1$s</string>
     <string name="album_already_exists">Album existiert bereits</string>
     <string name="album_copy_file_conflict">Existiert bereits</string>
     <string name="album_create_new_link">Neuen Link erstellen</string>
@@ -127,7 +126,7 @@
     <string name="authenticator_activity_cancel_login">Anmelden abbrechen</string>
     <string name="authenticator_activity_empty_base_url">Bitte eine gültige Serveradresse eingeben.</string>
     <string name="authenticator_activity_empty_response_message">Die Anmeldedaten konnten nicht abgerufen werden. Bitte noch einmal versuchen.</string>
-    <string name="authenticator_activity_login_error">Fehler bei der Verarbeitung Ihrer Anmeldeanforderung. Bitte versuchen Sie es später erneut.</string>
+    <string name="authenticator_activity_login_error">Fehler bei der Verarbeitung der Anmeldeanforderung. Bitte später erneut versuchen.</string>
     <string name="authenticator_activity_no_web_browser_found">Es ist kein Browser verfügbar, um diesen Link zu öffnen.</string>
     <string name="authenticator_activity_please_complete_login_process">Bitte schließen Sie den Anmeldevorgang in Ihrem Browser ab</string>
     <string name="auto_upload_background_activity_action">Hintergrundaktivität zulassen</string>
@@ -296,8 +295,6 @@
     <string name="create_link">Link erstellen</string>
     <string name="create_new">Neu</string>
     <string name="create_new_document">Neues Dokument</string>
-    <string name="create_new_encrypted_folder">Neuer verschlüsselter Ordner</string>
-    <string name="create_new_folder">Neuer Ordner</string>
     <string name="create_new_presentation">Neue Präsentation</string>
     <string name="create_new_spreadsheet">Neue Tabelle</string>
     <string name="create_presentation">Präsentation</string>
@@ -520,7 +517,7 @@
     <string name="file_list_empty_unified_search_no_results">Keine Ergebnisse für Ihre Suche gefunden</string>
     <string name="file_list_empty_unified_search_start_search">Beginnen Sie Ihre Suche</string>
     <string name="file_list_empty_unified_search_start_search_description">Geben Sie in die Suchleiste oben einen Begriff ein, um Dateien, Kontakte, Kalendertermine und mehr in Ihrem Konto zu finden.</string>
-    <string name="file_list_error_description">Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es später erneut.</string>
+    <string name="file_list_error_description">Bitte die Internetverbindung überprüfen und später erneut versuchen.</string>
     <string name="file_list_error_headline">Schlechte Verbindung</string>
     <string name="file_list_folder">Ordner</string>
     <string name="file_list_live">LIVE</string>
@@ -687,23 +684,7 @@
     <string name="manage_space_description">Einstellungen, Datenbank und Serverzertifikate von %1$s\'s Daten werden dauerhaft gelöscht.\n\nHerunter geladene Dateien bleiben unangetastet.\n\nDieser Vorgang kann eine Zeit dauern.</string>
     <string name="manage_space_title">Verwalte Speicherplatz</string>
     <string name="manage_tags">Schlagworte verwalten</string>
-    <string name="media_err_invalid_progressive_playback">Die Mediendatei kann nicht gestreamt werden</string>
-    <string name="media_err_io">Die Mediendatei konnte nicht gelesen werden</string>
-    <string name="media_err_malformed">Mediendatei ist nicht korrekt encodiert</string>
-    <string name="media_err_timeout">Wartezeit beim Abspielversuch abgelaufen</string>
-    <string name="media_err_unknown">Der interne Player kann die Mediendatei nicht abspielen</string>
-    <string name="media_err_unsupported">Medien-Codec wird nicht unterstützt</string>
-    <string name="media_forward_description">Vorspulknopf</string>
-    <string name="media_notif_ticker">%1$s Musik Player</string>
     <string name="media_picker_toolbar_title">Mediendateien auswählen</string>
-    <string name="media_play_pause_description">Wiedergabe-/Pause Knopf</string>
-    <string name="media_player_pause">Pausieren</string>
-    <string name="media_player_play">Spielen</string>
-    <string name="media_player_playing">Medien abspielen</string>
-    <string name="media_player_seek_backward">Rückwärts suchen</string>
-    <string name="media_player_seek_forward">Vorwärts suchen</string>
-    <string name="media_rewind_description">Rückspulknopf</string>
-    <string name="media_state_playing">%1$s (wird abgespielt)</string>
     <string name="menu_item_sort_by_date_newest_first">Neue zuerst</string>
     <string name="menu_item_sort_by_date_oldest_first">Älteste zuerst</string>
     <string name="menu_item_sort_by_name_a_z">A - Z</string>
@@ -798,8 +779,15 @@
     <string name="picture_set_as_no_app">Keine App gefunden, mit der ein Bid gesetzt werden könnte</string>
     <string name="pin_home">An Startbildschirm anheften</string>
     <string name="pin_shortcut_label">%1$s öffnen</string>
-    <string name="player_stop">Stopp</string>
-    <string name="player_toggle">Umschalten</string>
+    <string name="player_audio_title_with_artist">%1$s • %2$s</string>
+    <string name="player_control_view_next_button_content_description">Nächste Schaltfläche</string>
+    <string name="player_control_view_play_pause_button_content_description">Wiedergabe-/Pause Schaltfläche</string>
+    <string name="player_control_view_previous_button_content_description">Vorherige Schaltfläche</string>
+    <string name="player_control_view_random_button_content_description">Zufällige Schaltfläche</string>
+    <string name="player_control_view_repeat_button_content_description">Schaltfläche wiederholen</string>
+    <string name="player_error_source_not_found">Quelle nicht gefunden</string>
+    <string name="player_last_modified">Geändert: %s</string>
+    <string name="player_media_controls_close_action_title">Schließen</string>
     <string name="please_select_a_server">Bitte einen Server auswählen …</string>
     <string name="power_save_check_dialog_message">Bei deaktiviertem Energiesparmodus werden Daten auch bei niedrigem Batterieladezustand hochgeladen.</string>
     <string name="pref_behaviour_entries_delete_file">gelöscht</string>
@@ -955,6 +943,7 @@
     <string name="send">Senden</string>
     <string name="send_copy_to">Kopie senden an</string>
     <string name="send_share">Freigabe senden</string>
+    <string name="server_not_allowed">Server nicht erlaubt</string>
     <string name="server_not_reachable">Inhalt konnte nicht geladen werden</string>
     <string name="server_not_reachable_content">Das Gerät scheint nicht mit dem Internet verbunden zu sein</string>
     <string name="set_as">Setze als</string>
@@ -1075,7 +1064,6 @@
     <string name="store_short_dev_desc">Die selbst gehostete Produktivitätsplattform gibt Ihnen die volle Kontrolle (Vorab- Entwicklungsversion)</string>
     <string name="stream">Streamen mit …</string>
     <string name="stream_not_possible_headline">Internes Streamen nicht möglich</string>
-    <string name="stream_not_possible_message">Laden Sie sich den Inhalt herunter oder nutzen Sie eine externe App.</string>
     <string name="sub_folder_rule_day">Jahr/Monat/Tag</string>
     <string name="sub_folder_rule_month">Jahr/Monat</string>
     <string name="sub_folder_rule_year">Jahr</string>
@@ -1418,5 +1406,9 @@
     <plurals name="share_download_limit_description">
         <item quantity="one">%1$d verbleibender Download</item>
         <item quantity="other">%1$d verbleibende Downloads</item>
+    </plurals>
+    <plurals name="export_start">
+        <item quantity="one">Export gestartet (%d Datei)</item>
+        <item quantity="other">Exportieren gestartet (%d Dateien)</item>
     </plurals>
 </resources>

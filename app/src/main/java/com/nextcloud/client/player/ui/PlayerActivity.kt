@@ -12,7 +12,6 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.media.AudioManager
 import android.os.Bundle
-import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
@@ -27,6 +26,7 @@ import com.nextcloud.client.player.model.file.PlaybackFileType
 import com.nextcloud.client.player.ui.audio.AudioPlayerView
 import com.nextcloud.client.player.ui.video.VideoPlayerView
 import com.nextcloud.ui.fileactions.FileActionsBottomSheet
+import com.nextcloud.utils.SnackbarUtil
 import com.nextcloud.utils.extensions.getSerializableArgument
 import com.owncloud.android.R
 import com.owncloud.android.datamodel.OCFile
@@ -34,7 +34,6 @@ import com.owncloud.android.ui.activity.FileActivity
 import com.owncloud.android.ui.activity.FileDisplayActivity
 import com.owncloud.android.ui.dialog.ConfirmationDialogFragment
 import com.owncloud.android.ui.dialog.RemoveFilesDialogFragment
-import com.owncloud.android.utils.DisplayUtils
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -104,8 +103,7 @@ class PlayerActivity :
             PlaybackFileType.AUDIO -> AudioPlayerView(this)
             PlaybackFileType.VIDEO -> VideoPlayerView(this)
         }
-        val moreButton = playerView.findViewById<View>(R.id.more)
-        moreButton.setOnClickListener { viewModel.onMoreButtonClick() }
+        playerView.onMoreClick = { viewModel.onMoreButtonClick() }
         setContentView(playerView)
     }
 
@@ -138,17 +136,6 @@ class PlayerActivity :
         }
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-
-        val videoPlayerView = playerView as? VideoPlayerView ?: return
-        if (isInPictureInPictureMode) {
-            videoPlayerView.hideControls()
-        } else {
-            videoPlayerView.showControls()
-        }
-    }
-
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
         if (canUsePictureInPictureMode()) {
@@ -168,13 +155,10 @@ class PlayerActivity :
             null
         }
 
+        // Finish the activity if the user closes the PIP window
         if (!isInPictureInPictureMode && lifecycle.currentState == Lifecycle.State.CREATED) {
-            finish() // Finish the activity if the user closes the PIP window
+            finish()
             return
-        }
-
-        if (!isInPictureInPictureMode) {
-            (playerView as? VideoPlayerView)?.showControls()
         }
     }
 
@@ -213,7 +197,7 @@ class PlayerActivity :
 
     private fun showFileExportStartedMessage() {
         val message = resources.getQuantityString(R.plurals.export_start, 1, 1)
-        DisplayUtils.showSnackMessage(playerView, message)
+        SnackbarUtil.show(playerView, message)
     }
 
     private fun showRemoveFileDialog(file: OCFile) {

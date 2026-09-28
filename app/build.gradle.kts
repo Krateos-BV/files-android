@@ -68,6 +68,15 @@ configurations.configureEach {
     }
 }
 
+<<<<<<< HEAD
+=======
+// semantic versioning for version code
+val versionMajor = 35
+val versionMinor = 1
+val versionPatch = 0
+val versionBuild = 50 // 0-50=Alpha / 51-98=RC / 90-99=stable
+
+>>>>>>> upstream/master
 val ndkEnv = buildMap {
     file("${project.rootDir}/ndk.env").readLines().forEach {
         val (key, value) = it.split("=")
@@ -112,7 +121,7 @@ android {
         compileSdk = 37
 
         ndk {
-            abiFilters += listOf("arm64-v8a", "x86_64")
+            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
         }
 
         buildConfigField("boolean", "CI", ciBuild.toString())

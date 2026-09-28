@@ -35,10 +35,13 @@ import com.nextcloud.client.preferences.AppPreferences;
 import com.nextcloud.ui.fileactions.FileAction;
 import com.nextcloud.ui.fileactions.FileActionsBottomSheet;
 import com.nextcloud.ui.tags.TagManagementBottomSheet;
+import com.nextcloud.utils.HumanReadableFormatter;
 import com.nextcloud.utils.MenuUtils;
+import com.nextcloud.utils.SnackbarUtil;
 import com.nextcloud.utils.extensions.BundleExtensionsKt;
 import com.nextcloud.utils.extensions.FileExtensionsKt;
 import com.nextcloud.utils.mdm.MDMConfig;
+import com.nextcloud.utils.text.DisplayTextFormatter;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
 import com.owncloud.android.databinding.FileDetailsFragmentBinding;
@@ -63,7 +66,6 @@ import com.owncloud.android.ui.dialog.RenameFileDialogFragment;
 import com.owncloud.android.ui.events.EventBusFactory;
 import com.owncloud.android.ui.events.FavoriteEvent;
 import com.owncloud.android.ui.events.FileDownloadProgressEvent;
-import com.owncloud.android.utils.DisplayUtils;
 import com.owncloud.android.utils.EncryptionUtils;
 import com.owncloud.android.utils.MimeTypeUtil;
 import com.owncloud.android.utils.theme.CapabilityUtils;
@@ -330,6 +332,7 @@ public class FileDetailFragment extends FileFragment implements OnClickListener,
                                              .build());
         editChip.setEnsureMinTouchTargetSize(false);
         viewThemeUtils.material.themeChipSuggestion(editChip);
+        editChip.setChipIconTint(editChip.getTextColors());
         editChip.setOnClickListener(v -> {
             TagManagementBottomSheet bottomSheet = TagManagementBottomSheet.Companion.newInstance(
                 getFile().getLocalId(),
@@ -607,7 +610,7 @@ public class FileDetailFragment extends FileFragment implements OnClickListener,
             } else {
                 binding.filename.setVisibility(View.GONE);
             }
-            binding.size.setText(DisplayUtils.bytesToHumanReadable(file.getFileLength()));
+            binding.size.setText(HumanReadableFormatter.formatBytes(file.getFileLength()));
 
             boolean showDetailedTimestamp = preferences.isShowDetailedTimestampEnabled();
             setFileModificationTimestamp(file, showDetailedTimestamp);
@@ -668,10 +671,10 @@ public class FileDetailFragment extends FileFragment implements OnClickListener,
 
     private void setFileModificationTimestamp(OCFile file, boolean showDetailedTimestamp) {
         if (showDetailedTimestamp) {
-            binding.lastModificationTimestamp.setText(DisplayUtils.unixTimeToHumanReadable(file.getModificationTimestamp()));
+            binding.lastModificationTimestamp.setText(HumanReadableFormatter.formatDateTime(file.getModificationTimestamp()));
         } else {
-            binding.lastModificationTimestamp.setText(DisplayUtils.getRelativeTimestamp(getContext(),
-                                                                                        file.getModificationTimestamp()));
+            binding.lastModificationTimestamp.setText(
+                DisplayTextFormatter.formatRelativeTimestamp(requireContext(), file.getModificationTimestamp()));
         }
     }
 
@@ -851,13 +854,13 @@ public class FileDetailFragment extends FileFragment implements OnClickListener,
                                        ShareType shareType,
                                        boolean secureShare) {
         if (getFile() == null) {
-            DisplayUtils.showSnackMessage(requireView(), R.string.file_not_found_cannot_share);
+            SnackbarUtil.show(requireView(), R.string.file_not_found_cannot_share);
             return;
         }
 
         final var file = getFile();
         if (Objects.equals(file.getOwnerId(), shareeName)) {
-            DisplayUtils.showSnackMessage(requireView(), R.string.file_detail_share_already_active);
+            SnackbarUtil.show(requireView(), R.string.file_detail_share_already_active);
             return;
         }
 

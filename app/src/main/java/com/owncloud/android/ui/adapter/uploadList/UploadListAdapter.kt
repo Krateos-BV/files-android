@@ -24,11 +24,14 @@ import com.nextcloud.client.device.PowerManagementService
 import com.nextcloud.client.jobs.upload.FileUploadHelper
 import com.nextcloud.client.jobs.upload.FileUploadWorker
 import com.nextcloud.client.network.ConnectivityService
+import com.nextcloud.utils.HumanReadableFormatter
+import com.nextcloud.utils.SnackbarUtil
 import com.nextcloud.utils.extensions.getStatusText
 import com.nextcloud.utils.extensions.isLastResultConflictError
 import com.nextcloud.utils.extensions.setVisibleIf
 import com.nextcloud.utils.extensions.sortedByUploadOrder
 import com.nextcloud.utils.extensions.toFile
+import com.nextcloud.utils.text.DisplayTextFormatter
 import com.nextcloud.utils.thumbnail.ThumbnailGenerator
 import com.owncloud.android.R
 import com.owncloud.android.databinding.UploadListHeaderBinding
@@ -45,7 +48,6 @@ import com.owncloud.android.ui.adapter.uploadList.helper.UploadListAdapterHelper
 import com.owncloud.android.ui.adapter.uploadList.helper.UploadListItemOnClick
 import com.owncloud.android.ui.adapter.uploadList.model.UploadListSection
 import com.owncloud.android.ui.adapter.uploadList.model.UploadListType
-import com.owncloud.android.utils.DisplayUtils
 import com.owncloud.android.utils.theme.ViewThemeUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -235,7 +237,7 @@ class UploadListAdapter(
             )
             if (showNotExistMessage) {
                 withContext(Dispatchers.Main) {
-                    DisplayUtils.showSnackMessage(activity, R.string.upload_action_file_not_exist_message)
+                    SnackbarUtil.show(activity, R.string.upload_action_file_not_exist_message)
                 }
             }
         }
@@ -275,7 +277,7 @@ class UploadListAdapter(
                 fileSizeFormat = "%s, "
             }
 
-            val fileSizeInBytes = DisplayUtils.bytesToHumanReadable(item.fileSize)
+            val fileSizeInBytes = HumanReadableFormatter.formatBytes(item.fileSize)
             val uploadFileSize = String.format(fileSizeFormat, fileSizeInBytes)
             holder.binding.uploadFileSize.text = uploadFileSize
         } else {
@@ -296,12 +298,10 @@ class UploadListAdapter(
         holder.binding.uploadDate.setVisibleIf(showDate)
 
         if (showDate) {
-            holder.binding.uploadDate.text = DisplayUtils.getRelativeDateTimeString(
+            holder.binding.uploadDate.text = DisplayTextFormatter.formatRelativeDateTime(
                 activity,
                 updateTime,
-                DateUtils.MINUTE_IN_MILLIS,
-                DateUtils.WEEK_IN_MILLIS,
-                0
+                DateUtils.MINUTE_IN_MILLIS
             )
         }
     }
@@ -311,7 +311,7 @@ class UploadListAdapter(
             holder.binding.uploadAccount.visibility = View.VISIBLE
             val optionalUser = accountManager.getUser(item.accountName)
             holder.binding.uploadAccount.text = if (optionalUser.isPresent) {
-                DisplayUtils.getAccountNameDisplayText(optionalUser.get())
+                DisplayTextFormatter.formatAccountName(optionalUser.get())
             } else {
                 item.accountName
             }
@@ -478,7 +478,7 @@ class UploadListAdapter(
                 if (file != null) {
                     uploadHelper.retryUpload(item, user.get())
                 } else {
-                    DisplayUtils.showSnackMessage(
+                    SnackbarUtil.show(
                         activity,
                         R.string.local_file_not_found_message
                     )
