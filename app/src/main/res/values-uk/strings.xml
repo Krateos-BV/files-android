@@ -33,7 +33,6 @@
     <string name="add_new_public_share">Додати нове публічне посилання</string>
     <string name="add_new_secure_file_drop">Додати новий захищений файл</string>
     <string name="add_to_album">Додати в альбом</string>
-    <string name="add_to_cloud">Додати до хмари %1$s</string>
     <string name="album_delete">Вилучити альбом</string>
     <string name="album_rename_conflict">Це ім\'я вже використовується</string>
     <string name="album_share">Поділитися альбомом</string>
@@ -264,8 +263,6 @@
     <string name="create_link">Створити посилання</string>
     <string name="create_new">Створити</string>
     <string name="create_new_document">Новий документ</string>
-    <string name="create_new_encrypted_folder">Новий зашифрований каталог</string>
-    <string name="create_new_folder">Новий каталог</string>
     <string name="create_new_presentation">Нова презентація</string>
     <string name="create_new_spreadsheet">Нова електронна таблиця</string>
     <string name="create_presentation">Презентація</string>
@@ -632,22 +629,6 @@
     <string name="manage_space_description">Налаштування, база даних та дані сертифікатів сервера від %1$s буде вилучено без можливості відновлення.\n\nФайли, які було звантажено, буде збережено.\n\nЦей процес триватиме певний час.</string>
     <string name="manage_space_title">Керувати простором</string>
     <string name="manage_tags">Керування мітками</string>
-    <string name="media_err_invalid_progressive_playback">Неможливо транслювати мультимедійний файл</string>
-    <string name="media_err_io">Неможливо відкрити мультимедійний файл</string>
-    <string name="media_err_malformed">Мультимедійний файл має неправильно кодування</string>
-    <string name="media_err_timeout">Час на відтворення файлу вичерпано</string>
-    <string name="media_err_unknown">Неможливо програти мультимедійний файл вбудованим медіапрогравачем</string>
-    <string name="media_err_unsupported">Кодек не підтримується</string>
-    <string name="media_forward_description">Перемотка вперед</string>
-    <string name="media_notif_ticker">%1$s музичний програвач</string>
-    <string name="media_play_pause_description">Відтворення або пауза</string>
-    <string name="media_player_pause">Пауза</string>
-    <string name="media_player_play">Грати</string>
-    <string name="media_player_playing">Програвання</string>
-    <string name="media_player_seek_backward">Шукати назад</string>
-    <string name="media_player_seek_forward">Шукати вперед</string>
-    <string name="media_rewind_description">Перемтка назад</string>
-    <string name="media_state_playing">%1$s (програвання)</string>
     <string name="menu_item_sort_by_date_newest_first">Новіші спочатку</string>
     <string name="menu_item_sort_by_date_oldest_first">Старіші спочатку</string>
     <string name="menu_item_sort_by_name_a_z">А - Я</string>
@@ -742,8 +723,7 @@
     <string name="picture_set_as_no_app">Не знайдено застосунків для встановлення зображення для</string>
     <string name="pin_home">Закріпити на домівці</string>
     <string name="pin_shortcut_label">Відкрити %1$s</string>
-    <string name="player_stop">стоп</string>
-    <string name="player_toggle">переключитися</string>
+    <string name="player_media_controls_close_action_title">Закрити</string>
     <string name="please_select_a_server">Виберіть сервер...</string>
     <string name="power_save_check_dialog_message">Вимкнення заощадження батареї може вплинути на завантаження файлів при низькому заряді!</string>
     <string name="pref_behaviour_entries_delete_file">вилучено</string>
@@ -1018,7 +998,6 @@
     <string name="store_short_dev_desc">Платформа з власним хостингом, яка надає можливість контролювати ваші ресурси (версія для попереднього ознайомлення)</string>
     <string name="stream">Транслювати з...</string>
     <string name="stream_not_possible_headline">Внутрішня трансляція неможлива</string>
-    <string name="stream_not_possible_message">Будь ласка, звантажте мультимедійний файл замість використання зовнішнього застосунку</string>
     <string name="sub_folder_rule_day">Рік/місяць/день</string>
     <string name="sub_folder_rule_month">Рік/місяць</string>
     <string name="sub_folder_rule_year">Рік</string>
@@ -1390,4 +1369,4 @@
         <item quantity="many">%1$d залишилося завантажити</item>
         <item quantity="other">%1$d залишилося завантажити</item>
     </plurals>
-</resources>
+    </resources>

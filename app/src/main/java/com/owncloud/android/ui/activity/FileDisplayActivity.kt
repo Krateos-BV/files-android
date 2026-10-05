@@ -43,10 +43,12 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.WindowManager.BadTokenException
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.widget.SearchView
 import androidx.core.util.Function
 import androidx.core.view.MenuItemCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -62,6 +64,7 @@ import com.nextcloud.client.core.AsyncRunner
 import com.nextcloud.client.core.Clock
 import com.nextcloud.client.database.entity.SyncedFolderEntity
 import com.nextcloud.client.di.Injectable
+import com.nextcloud.client.di.ViewModelFactory
 import com.nextcloud.client.editimage.EditImageActivity
 import com.nextcloud.client.files.DeepLinkHandler
 import com.nextcloud.client.jobs.download.FileDownloadEventBroadcaster
@@ -73,19 +76,18 @@ import com.nextcloud.client.jobs.upload.FileUploadHelper
 import com.nextcloud.client.jobs.upload.FileUploadWorker
 import com.nextcloud.client.network.ClientFactory.CreationException
 import com.nextcloud.client.player.model.file.toPlaybackCollection
-import com.nextcloud.client.player.ui.PlayerLauncher
+import com.nextcloud.client.player.ui.audio.AudioPlayerLauncher
 import com.nextcloud.client.preferences.AppPreferences
 import com.nextcloud.client.utils.IntentUtil
 import com.nextcloud.model.OCUploadLocalPathData
-import com.nextcloud.model.WorkerState.OfflineOperationsCompleted
 import com.nextcloud.ui.composeActivity.ComposeProcessTextAlias
+import com.nextcloud.utils.SnackbarUtil
 import com.nextcloud.utils.extensions.getParcelableArgument
 import com.nextcloud.utils.extensions.getSerializableArgument
 import com.nextcloud.utils.extensions.isActive
 import com.nextcloud.utils.extensions.isDialogFragmentReady
 import com.nextcloud.utils.extensions.lastFragment
 import com.nextcloud.utils.extensions.navigateToAllFiles
-import com.nextcloud.utils.extensions.observeWorker
 import com.nextcloud.utils.extensions.setVisibleIf
 import com.nextcloud.utils.fileNameValidator.FileNameValidator.checkFolderPath
 import com.nextcloud.utils.view.FastScrollUtils
@@ -120,6 +122,7 @@ import com.owncloud.android.operations.SynchronizeFileOperation
 import com.owncloud.android.operations.albums.CopyFileToAlbumOperation
 import com.owncloud.android.syncadapter.FileSyncAdapter
 import com.owncloud.android.ui.CompletionCallback
+import com.owncloud.android.ui.activity.filedisplayactivity.FileDisplayActivityViewModel
 import com.owncloud.android.ui.asynctasks.CheckAvailableSpaceTask
 import com.owncloud.android.ui.asynctasks.CheckAvailableSpaceTask.CheckAvailableSpaceListener
 import com.owncloud.android.ui.asynctasks.FetchRemoteFileTask
@@ -151,6 +154,7 @@ import com.owncloud.android.ui.helpers.FileOperationsHelper
 import com.owncloud.android.ui.helpers.UriUploader
 import com.owncloud.android.ui.interfaces.TransactionInterface
 import com.owncloud.android.ui.navigation.NavigatorScreen
+import com.owncloud.android.ui.navigation.animator.NavigationAnimator
 import com.owncloud.android.ui.preview.PreviewImageActivity
 import com.owncloud.android.ui.preview.PreviewImageFragment
 import com.owncloud.android.ui.preview.PreviewTextFileFragment
@@ -158,7 +162,6 @@ import com.owncloud.android.ui.preview.PreviewTextFragment
 import com.owncloud.android.ui.preview.PreviewTextStringFragment
 import com.owncloud.android.ui.preview.pdf.PreviewPdfFragment.Companion.newInstance
 import com.owncloud.android.utils.DataHolderUtil
-import com.owncloud.android.utils.DisplayUtils
 import com.owncloud.android.utils.ErrorMessageAdapter
 import com.owncloud.android.utils.FileSortOrder
 import com.owncloud.android.utils.MimeTypeUtil
@@ -242,7 +245,7 @@ class FileDisplayActivity :
     private var listFragmentJustCreated = false
 
     @Inject
-    lateinit var playerLauncher: PlayerLauncher
+    lateinit var audioPlayerLauncher: AudioPlayerLauncher
 
     @Inject
     lateinit var localBroadcastManager: LocalBroadcastManager
@@ -274,11 +277,18 @@ class FileDisplayActivity :
     @Inject
     lateinit var passCodeManager: PassCodeManager
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val viewModel by viewModels<FileDisplayActivityViewModel> { viewModelFactory }
+
     /**
      * Indicates whether the downloaded file should be previewed immediately. Since `FileDownloadWorker` can be
      * triggered from multiple sources, this helps determine if an automatic preview is needed after download.
      */
     private var fileIDForImmediatePreview: Long = -1
+
+    private var isShowingDetailsFromPreview = false
 
     private lateinit var folderRefreshScheduler: FolderRefreshScheduler
 
@@ -309,6 +319,10 @@ class FileDisplayActivity :
         initUI()
         initTaskRetainerFragment()
 
+        if (intent.getBooleanExtra(EXTRA_RETURN_TO_PREVIEW, false)) {
+            NavigationAnimator(this).prepareSlideUpEnter(savedInstanceState) { detailsHeaderImage() }
+        }
+
         // Restoring after UI has been inflated.
         if (savedInstanceState != null) {
             showSortListGroup(savedInstanceState.getBoolean(KEY_IS_SORT_GROUP_VISIBLE))
@@ -316,7 +330,6 @@ class FileDisplayActivity :
 
         checkStoragePath()
         observeWorkerState()
-        startMetadataSyncForRoot()
         handleBackPress()
         setupDrawer(menuItemId)
     }
@@ -446,6 +459,10 @@ class FileDisplayActivity :
             createMinFragments(savedInstanceState)
         }
 
+        if (savedInstanceState == null && intent.getBooleanExtra(EXTRA_RETURN_TO_PREVIEW, false)) {
+            handleSpecialIntents(intent)
+        }
+
         upgradeNotificationForInstantUpload()
         checkOutdatedServer()
         checkNotifications()
@@ -492,7 +509,7 @@ class FileDisplayActivity :
                 optionalCapability.get().hasValidSubscription.isTrue
             )
         ) {
-            DisplayUtils.showServerOutdatedSnackbar(this, Snackbar.LENGTH_LONG)
+            SnackbarUtil.showServerOutdated(this, Snackbar.LENGTH_LONG)
         }
     }
 
@@ -616,6 +633,7 @@ class FileDisplayActivity :
                 val file = getFileFromIntent(intent)
                 setFile(file)
                 showDetails(file)
+                isShowingDetailsFromPreview = intent.getBooleanExtra(EXTRA_RETURN_TO_PREVIEW, false)
             }
 
             Intent.ACTION_SEARCH == action -> handleSearchIntent(intent)
@@ -752,6 +770,7 @@ class FileDisplayActivity :
             return
         }
 
+        isShowingDetailsFromPreview = false
         prepareFragmentBeforeCommit(showSortListGroup)
         commitFragment(fragment)
     }
@@ -882,8 +901,7 @@ class FileDisplayActivity :
         }
     }
 
-    fun canMediaPreviewed(file: OCFile?): Boolean =
-        file != null && (MimeTypeUtil.isAudio(file) || MimeTypeUtil.isVideo(file))
+    fun canPreviewInAudioPlayer(file: OCFile?): Boolean = file != null && MimeTypeUtil.isAudio(file)
 
     private fun tryStartWaitingPreview(success: Boolean): Boolean {
         if (!success) return false
@@ -897,8 +915,8 @@ class FileDisplayActivity :
                 true
             }
 
-            canMediaPreviewed(file) -> {
-                startMediaPreview(file, true, true)
+            canPreviewInAudioPlayer(file) -> {
+                startAudioPreview(file, true, true)
                 true
             }
 
@@ -1061,7 +1079,7 @@ class FileDisplayActivity :
                             }
 
                             if (!file.renameTo(renamedFile)) {
-                                DisplayUtils.showSnackMessage(
+                                SnackbarUtil.show(
                                     this@FileDisplayActivity,
                                     R.string.error_uploading_direct_camera_upload
                                 )
@@ -1136,7 +1154,7 @@ class FileDisplayActivity :
                                 )
                             }
                         if (isValidFolderPath == false) {
-                            DisplayUtils.showSnackMessage(
+                            SnackbarUtil.show(
                                 this,
                                 R.string.file_name_validator_error_contains_reserved_names_or_invalid_characters
                             )
@@ -1156,12 +1174,16 @@ class FileDisplayActivity :
                 } else {
                     lifecycleScope.launch(Dispatchers.IO) {
                         fileDataStorageManager.addCreateFileOfflineOperation(filePaths, decryptedRemotePaths)
+
+                        withContext(Dispatchers.Main) {
+                            refreshCurrentDirectory()
+                        }
                     }
                 }
             }
         } else {
             Log_OC.d(TAG, "User clicked on 'Update' with no selection")
-            DisplayUtils.showSnackMessage(this, R.string.filedisplay_no_file_selected)
+            SnackbarUtil.show(this, R.string.filedisplay_no_file_selected)
         }
     }
 
@@ -1266,6 +1288,12 @@ class FileDisplayActivity :
             isDrawerOpen -> {
                 before()
                 closeDrawer()
+                after()
+            }
+
+            isShowingDetailsFromPreview && leftFragment is FileDetailFragment -> {
+                before()
+                NavigationAnimator(this).finishWithSlideDown()
                 after()
             }
 
@@ -1612,6 +1640,10 @@ class FileDisplayActivity :
             file = currentFile
         }
 
+        if (isSyncFolderRemotePathRoot) {
+            startMetadataSyncForRoot()
+        }
+
         handleSyncResult(event, syncResult)
         DataHolderUtil.getInstance().delete(id)
         handleScrollBehaviour(fileListFragment)
@@ -1627,7 +1659,7 @@ class FileDisplayActivity :
     }
 
     private fun handleRemovedFolder(syncFolderRemotePath: String?) {
-        DisplayUtils.showSnackMessage(this, R.string.sync_current_folder_was_removed, syncFolderRemotePath)
+        SnackbarUtil.show(this, R.string.sync_current_folder_was_removed, syncFolderRemotePath)
         fileListFragment?.let {
             it.parentFolderFinder.getParentOnFirstParentRemoved(syncFolderRemotePath, storageManager)?.let { target ->
                 it.listDirectory(target, MainApp.isOnlyOnDevice())
@@ -1780,7 +1812,7 @@ class FileDisplayActivity :
                 }
                 if (renamedInUpload && !uploadedRemotePath.isNullOrBlank()) {
                     val newName = File(uploadedRemotePath).name
-                    DisplayUtils.showSnackMessage(
+                    SnackbarUtil.show(
                         this@FileDisplayActivity,
                         R.string.filedetails_renamed_in_upload_msg,
                         newName
@@ -2048,21 +2080,22 @@ class FileDisplayActivity :
     override fun isDrawerIndicatorAvailable(): Boolean = isRoot(getCurrentDir())
 
     private fun observeWorkerState() {
-        observeWorker { state ->
-            when (state) {
-                is OfflineOperationsCompleted -> {
-                    refreshCurrentDirectory()
-                }
-
-                else -> Unit
-            }
+        lifecycleScope.launch {
+            viewModel.observeOfflineWorker(onComplete = {
+                refreshCurrentDirectory()
+            })
         }
     }
 
     fun canPreviewInMediaPager(file: OCFile?): Boolean =
         PreviewImageFragment.canBePreviewed(file) || (file != null && MimeTypeUtil.isVideo(file))
 
-    fun previewImageWithSearchContext(file: OCFile, searchFragment: Boolean, currentSearchType: SearchType?) {
+    fun previewImageWithSearchContext(
+        file: OCFile,
+        searchFragment: Boolean,
+        currentSearchType: SearchType?,
+        sourceView: View?
+    ) {
         val type = if (searchFragment) {
             when (currentSearchType) {
                 SearchType.FAVORITE_SEARCH -> VirtualFolderType.FAVORITE
@@ -2080,7 +2113,7 @@ class FileDisplayActivity :
         }
 
         val showPreview = file.isDown || MimeTypeUtil.isVideo(file)
-        startImagePreview(file, showPreview, type, mediaState)
+        startImagePreview(file, showPreview, type, mediaState, sourceView)
     }
 
     fun previewFile(file: OCFile, setFabVisible: CompletionCallback?) {
@@ -2096,33 +2129,17 @@ class FileDisplayActivity :
         } else if (PreviewTextFileFragment.canBePreviewed(file)) {
             setFabVisible?.onComplete(false)
             startTextPreview(file, false)
-        } else if (canMediaPreviewed(file)) {
+        } else if (canPreviewInAudioPlayer(file)) {
             setFabVisible?.onComplete(false)
-            startMediaPreview(file, true, false)
+            startAudioPreview(file, true, false)
         } else {
             fileOperationsHelper.openFile(file)
         }
     }
 
     fun refreshCurrentDirectory() {
-        val currentDir =
-            if (getCurrentDir() !=
-                null
-            ) {
-                storageManager.getFileByDecryptedRemotePath(getCurrentDir()?.remotePath)
-            } else {
-                null
-            }
-
-        val lastFragment = lastFragment()
-
-        var fileListFragment: OCFileListFragment? = null
-        if (lastFragment is OCFileListFragment) {
-            fileListFragment = lastFragment
-        }
-        if (fileListFragment == null) {
-            fileListFragment = listOfFilesFragment
-        }
+        val currentDir = getCurrentDir()?.let { storageManager.getFileByDecryptedRemotePath(it.remotePath) }
+        val fileListFragment = lastFragment() as? OCFileListFragment ?: listOfFilesFragment
         fileListFragment?.listDirectory(currentDir, MainApp.isOnlyOnDevice())
     }
 
@@ -2368,7 +2385,7 @@ class FileDisplayActivity :
                 leftFragment.getFileDetailActivitiesFragment().reload()
             }
         } else {
-            DisplayUtils.showSnackMessage(this, R.string.file_version_restored_error)
+            SnackbarUtil.show(this, R.string.file_version_restored_error)
         }
     }
 
@@ -2381,7 +2398,7 @@ class FileDisplayActivity :
     private fun onMoveFileOperationFinish(operation: MoveFileOperation?, result: RemoteOperationResult<*>) {
         if (!result.isSuccess) {
             try {
-                DisplayUtils.showSnackMessage(
+                SnackbarUtil.show(
                     this,
                     ErrorMessageAdapter.getErrorCauseMessage(result, operation, getResources())
                 )
@@ -2403,7 +2420,7 @@ class FileDisplayActivity :
             refreshGalleryFragmentIfNeeded()
         } else {
             try {
-                DisplayUtils.showSnackMessage(
+                SnackbarUtil.show(
                     this,
                     ErrorMessageAdapter.getErrorCauseMessage(result, operation, getResources())
                 )
@@ -2423,7 +2440,7 @@ class FileDisplayActivity :
         val optionalUser = user
         val renamedFile = operation.file
         if (!result.isSuccess || optionalUser.isEmpty) {
-            DisplayUtils.showSnackMessage(
+            SnackbarUtil.show(
                 this,
                 ErrorMessageAdapter.getErrorCauseMessage(result, operation, getResources())
             )
@@ -2520,9 +2537,9 @@ class FileDisplayActivity :
         } else {
             try {
                 if (RemoteOperationResult.ResultCode.FOLDER_ALREADY_EXISTS == result.code) {
-                    DisplayUtils.showSnackMessage(this, R.string.folder_already_exists)
+                    SnackbarUtil.show(this, R.string.folder_already_exists)
                 } else {
-                    DisplayUtils.showSnackMessage(
+                    SnackbarUtil.show(
                         this,
                         ErrorMessageAdapter.getErrorCauseMessage(result, operation, getResources())
                     )
@@ -2712,23 +2729,13 @@ class FileDisplayActivity :
         file: OCFile,
         showPreview: Boolean,
         type: VirtualFolderType? = null,
-        mediaState: MediaState? = null
+        mediaState: MediaState? = null,
+        sourceView: View? = null
     ) {
-        if (user.isEmpty) {
-            Log_OC.e(TAG, "cannot start image preview")
-            return
-        }
-
-        val intent = Intent(this, PreviewImageActivity::class.java).apply {
-            putExtra(EXTRA_FILE, file)
-            putExtra(EXTRA_LIVE_PHOTO_FILE, file.livePhotoVideo)
-            putExtra(EXTRA_USER, user.get())
-            type?.let { putExtra(PreviewImageActivity.EXTRA_VIRTUAL_TYPE, it) }
-            mediaState?.let { putExtra(PreviewImageActivity.EXTRA_MEDIA_STATE, it) }
-        }
+        val intent = imagePreviewIntent(file, type, mediaState) ?: return
 
         if (showPreview) {
-            startActivity(intent)
+            NavigationAnimator(this).scaleUp(intent, sourceView)
         } else {
             val helper = FileOperationsHelper(
                 this,
@@ -2740,29 +2747,44 @@ class FileDisplayActivity :
         }
     }
 
+    private fun imagePreviewIntent(file: OCFile, type: VirtualFolderType?, mediaState: MediaState?): Intent? {
+        if (user.isEmpty) {
+            Log_OC.e(TAG, "cannot start image preview")
+            return null
+        }
+
+        return Intent(this, PreviewImageActivity::class.java).apply {
+            putExtra(EXTRA_FILE, file)
+            putExtra(EXTRA_LIVE_PHOTO_FILE, file.livePhotoVideo)
+            putExtra(EXTRA_USER, user.get())
+            type?.let { putExtra(PreviewImageActivity.EXTRA_VIRTUAL_TYPE, it) }
+            mediaState?.let { putExtra(PreviewImageActivity.EXTRA_MEDIA_STATE, it) }
+        }
+    }
+
     /**
-     * Starts the preview of a media [OCFile], synchronizing it first when it is not available yet.
+     * Starts the preview of an audio [OCFile], synchronizing it first when it is not available yet.
      */
-    fun startMediaPreview(file: OCFile, showPreview: Boolean, streamMedia: Boolean) {
+    fun startAudioPreview(file: OCFile, showPreview: Boolean, streamMedia: Boolean) {
         val user = getUser()
         if (!user.isPresent) {
             return // not reachable under normal conditions
         }
         if ((showPreview && file.isDown && !file.isDownloading) || streamMedia) {
-            startMediaActivity(file)
+            startAudioPlayer(file)
         } else {
             val previewIntent = Intent()
             previewIntent.putExtra(EXTRA_FILE, file)
-            previewIntent.putExtra(MEDIA_PREVIEW, true)
+            previewIntent.putExtra(AUDIO_PREVIEW, true)
             val fileOperationsHelper =
                 FileOperationsHelper(this, userAccountManager, connectivityService, editorUtils)
             fileOperationsHelper.startSyncForFileAndIntent(file, previewIntent)
         }
     }
 
-    private fun startMediaActivity(file: OCFile) {
+    private fun startAudioPlayer(file: OCFile) {
         val collection = listOfFilesFragment?.currentSearchType.toPlaybackCollection()
-        playerLauncher.launch(this, file, collection)
+        audioPlayerLauncher.launch(this, file, collection)
     }
 
     fun configureToolbarForPreview(file: OCFile?) {
@@ -2959,20 +2981,28 @@ class FileDisplayActivity :
 
         if (event.intent.getBooleanExtra(TEXT_PREVIEW, false)) {
             startTextPreview(file, true)
-        } else if (event.intent.getBooleanExtra(MEDIA_PREVIEW, false)) {
-            startMediaPreview(file, true, true)
+        } else if (event.intent.getBooleanExtra(AUDIO_PREVIEW, false)) {
+            startAudioPreview(file, true, true)
         } else if (bundle.containsKey(PreviewImageActivity.EXTRA_VIRTUAL_TYPE)) {
             val virtualType = bundle.get(PreviewImageActivity.EXTRA_VIRTUAL_TYPE) as VirtualFolderType?
             startImagePreview(
                 file,
                 true,
                 virtualType,
-                bundle.getSerializableArgument(PreviewImageActivity.EXTRA_MEDIA_STATE, MediaState::class.java)
+                bundle.getSerializableArgument(PreviewImageActivity.EXTRA_MEDIA_STATE, MediaState::class.java),
+                galleryThumbnailOf(file)
             )
         } else {
-            startImagePreview(file, true)
+            startImagePreview(file, true, sourceView = galleryThumbnailOf(file))
         }
     }
+
+    private fun detailsHeaderImage(): View? =
+        previewImageView?.takeIf { it.isShown && it.isLaidOut && it.drawable != null }
+
+    private fun galleryThumbnailOf(file: OCFile): View? = leftFragment?.view
+        ?.findViewWithTag<View>(file.fileId)
+        ?.takeIf { it.isShown && ViewCompat.getTransitionName(it) == NavigationAnimator.sharedElementName(file) }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMessageEvent(event: TokenPushEvent?) {
@@ -3046,13 +3076,11 @@ class FileDisplayActivity :
         val existingAccountName = existingUser.accountName
         mSwitchAccountButton.tag = existingAccountName
 
-        DisplayUtils.setAvatar(
+        avatarGenerator.setAccountAvatar(
             existingUser,
             this,
             getResources().getDimension(R.dimen.nav_drawer_menu_avatar_radius),
-            getResources(),
-            mSwitchAccountButton,
-            this
+            mSwitchAccountButton
         )
         val userChanged = (existingAccountName != lastDisplayedAccountName)
         if (userChanged) {
@@ -3086,7 +3114,7 @@ class FileDisplayActivity :
     }
 
     private fun handleOpenFileViaIntent(intent: Intent) {
-        DisplayUtils.showSnackMessage(this, getString(R.string.retrieving_file))
+        SnackbarUtil.show(this, getString(R.string.retrieving_file))
 
         val userName = intent.getStringExtra(KEY_ACCOUNT)
         val fileId = intent.getStringExtra(KEY_FILE_ID)
@@ -3106,7 +3134,7 @@ class FileDisplayActivity :
                     accountClicked(optionalUser.get())
                 }
             } else {
-                DisplayUtils.showSnackMessage(this, getString(R.string.associated_account_not_found))
+                SnackbarUtil.show(this, getString(R.string.associated_account_not_found))
             }
         }
     }
@@ -3118,7 +3146,7 @@ class FileDisplayActivity :
         if (match == null) {
             handleDeepLink(uri)
         } else if (match.users.isEmpty()) {
-            DisplayUtils.showSnackMessage(this, getString(R.string.associated_account_not_found))
+            SnackbarUtil.show(this, getString(R.string.associated_account_not_found))
         } else if (match.users.size == SINGLE_USER_SIZE) {
             openFile(match.users[0], match.fileId)
         } else {
@@ -3210,7 +3238,7 @@ class FileDisplayActivity :
 
     private fun onFileRequestError(throwable: Throwable?) {
         dismissLoadingDialog()
-        DisplayUtils.showSnackMessage(this, getString(R.string.error_retrieving_file))
+        SnackbarUtil.show(this, getString(R.string.error_retrieving_file))
         Log_OC.e(TAG, "Requesting file from remote failed!", throwable)
     }
 
@@ -3253,7 +3281,7 @@ class FileDisplayActivity :
                     file = current
                     updateActionBarTitleAndHomeButton(null)
                 } else {
-                    fragment.view?.let { DisplayUtils.showSnackMessage(it, message) }
+                    fragment.view?.let { SnackbarUtil.show(it, message) }
                 }
 
                 selectedFile?.let(fragment::onItemClicked)
@@ -3273,7 +3301,7 @@ class FileDisplayActivity :
                     val account = accountManager.getUser(accountName).orElse(null)
                         ?: run {
                             Log_OC.w(TAG, "user is not present")
-                            DisplayUtils.showSnackMessage(this@FileDisplayActivity, R.string.account_not_found)
+                            SnackbarUtil.show(this@FileDisplayActivity, R.string.account_not_found)
                             return
                         }
 
@@ -3289,7 +3317,7 @@ class FileDisplayActivity :
 
     // region MetadataSyncJob
     private fun startMetadataSyncForRoot() {
-        backgroundJobManager.startMetadataSyncJob(OCFile.ROOT_PATH)
+        backgroundJobManager.startMetadataSyncJob(OCFile.ROOT_PATH, folderAlreadySynced = true)
     }
 
     private fun startMetadataSyncForCurrentDir() {
@@ -3323,6 +3351,7 @@ class FileDisplayActivity :
         private const val SEARCH_VIEW_FOCUS_DELAY = 100L
 
         const val ACTION_DETAILS: String = "com.owncloud.android.ui.activity.action.DETAILS"
+        const val EXTRA_RETURN_TO_PREVIEW: String = "RETURN_TO_PREVIEW"
 
         @JvmField
         val REQUEST_CODE__SELECT_CONTENT_FROM_APPS: Int = REQUEST_CODE__LAST_SHARED + 1
@@ -3347,7 +3376,7 @@ class FileDisplayActivity :
         const val TAG_LIST_OF_FILES: String = "LIST_OF_FILES"
 
         const val TEXT_PREVIEW: String = "TEXT_PREVIEW"
-        const val MEDIA_PREVIEW: String = "MEDIA_PREVIEW"
+        const val AUDIO_PREVIEW: String = "AUDIO_PREVIEW"
 
         const val KEY_IS_SEARCH_OPEN: String = "IS_SEARCH_OPEN"
         const val KEY_SEARCH_QUERY: String = "SEARCH_QUERY"

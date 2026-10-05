@@ -34,7 +34,6 @@
     <string name="add_new_public_share">新增公開分享連結</string>
     <string name="add_new_secure_file_drop">新增安全檔案投遞</string>
     <string name="add_to_album">新增至相簿</string>
-    <string name="add_to_cloud">新增到 %1$s </string>
     <string name="album_already_exists">相簿已存在</string>
     <string name="album_copy_file_conflict">已存在。</string>
     <string name="album_create_new_link">建立新連結</string>
@@ -296,8 +295,6 @@
     <string name="create_link">建立連結</string>
     <string name="create_new">建立新的</string>
     <string name="create_new_document">新增文件</string>
-    <string name="create_new_encrypted_folder">新的加密資料夾</string>
-    <string name="create_new_folder">新增資料夾</string>
     <string name="create_new_presentation">新增投影片</string>
     <string name="create_new_spreadsheet">新增試算表</string>
     <string name="create_presentation">簡報</string>
@@ -439,14 +436,17 @@
     <string name="error_choosing_date">選擇日期錯誤</string>
     <string name="error_comment_file">對檔案留言時發生錯誤</string>
     <string name="error_crash_title">%1$s 當機</string>
+    <string name="error_creating_file">建立檔案時發生錯誤</string>
     <string name="error_creating_file_from_template">從範本建立檔案時發生錯誤</string>
     <string name="error_fetching_sharees">無法擷取分享對象。</string>
     <string name="error_file_actions">顯示檔案動作時發生錯誤</string>
     <string name="error_file_lock">變更檔案鎖定狀態時發生錯誤</string>
+    <string name="error_reading_file">讀取檔案時發生錯誤</string>
     <string name="error_report_issue_action">回報</string>
     <string name="error_report_issue_text">要回報議題給追蹤器？（需要有 GitHub 帳號）</string>
     <string name="error_retrieving_file">擷取檔案時發生錯誤</string>
     <string name="error_retrieving_templates">擷取範本時發生錯誤</string>
+    <string name="error_saving_local_file">儲存本機檔案時發生錯誤</string>
     <string name="error_setting_status_message">設定狀態訊息時發生錯誤！</string>
     <string name="error_showing_encryption_dialog">顯示加密設置對話窗時發生錯誤！</string>
     <string name="error_starting_direct_camera_upload">無法啟動相機</string>
@@ -578,6 +578,7 @@
     <string name="filename_forbidden_characters">禁止使用的字元： / \\ &lt; &gt; : \" | ? *</string>
     <string name="filename_forbidden_charaters_from_server">檔案名稱包含了至少一個無效字元</string>
     <string name="filename_hint">檔案名稱</string>
+    <string name="filename_too_long">檔案名稱不能長於 250 個字元</string>
     <string name="first_run_1_text">保障您的資料安全，且由您掌控</string>
     <string name="first_run_2_text">安全協作與檔案交換</string>
     <string name="first_run_3_text">易於使用的網路電子郵件、行事曆、聯絡人</string>
@@ -687,23 +688,7 @@
     <string name="manage_space_description">來自 %1$s 的設定，資料庫與伺服器憑證等相關資料將永久刪除。\n\n已下載的檔案將保留不會變動。\n\n此過程需要一點時間。</string>
     <string name="manage_space_title">管理空間</string>
     <string name="manage_tags">管理標籤</string>
-    <string name="media_err_invalid_progressive_playback">此媒體檔案無法以串流播放</string>
-    <string name="media_err_io">無法讀取媒體檔案</string>
-    <string name="media_err_malformed">媒體檔案編碼不正確</string>
-    <string name="media_err_timeout">嘗試播放檔案逾時</string>
-    <string name="media_err_unknown">內建媒體播放器無法播放此媒體檔案</string>
-    <string name="media_err_unsupported">不支援的媒體編解碼器</string>
-    <string name="media_forward_description">快轉按鈕</string>
-    <string name="media_notif_ticker">%1$s 音樂播放器</string>
     <string name="media_picker_toolbar_title">挑選媒體檔案</string>
-    <string name="media_play_pause_description">播放或暫停按鈕</string>
-    <string name="media_player_pause">暫停</string>
-    <string name="media_player_play">播放</string>
-    <string name="media_player_playing">正在播放媒體</string>
-    <string name="media_player_seek_backward">倒帶</string>
-    <string name="media_player_seek_forward">快轉</string>
-    <string name="media_rewind_description">倒帶按鈕</string>
-    <string name="media_state_playing">%1$s（播放中）</string>
     <string name="menu_item_sort_by_date_newest_first">新的在前</string>
     <string name="menu_item_sort_by_date_oldest_first">舊的在前</string>
     <string name="menu_item_sort_by_name_a_z">A - Z</string>
@@ -798,8 +783,15 @@
     <string name="picture_set_as_no_app">沒有找到圖片可設定的應用程式</string>
     <string name="pin_home">釘選至主畫面</string>
     <string name="pin_shortcut_label">開啟 %1$s</string>
-    <string name="player_stop">停止</string>
-    <string name="player_toggle">切換</string>
+    <string name="player_audio_title_with_artist">%1$s • %2$s</string>
+    <string name="player_control_view_next_button_content_description">下一頁按鈕</string>
+    <string name="player_control_view_play_pause_button_content_description">播放/暫停按鈕</string>
+    <string name="player_control_view_previous_button_content_description">上一頁按鈕</string>
+    <string name="player_control_view_random_button_content_description">隨機按鈕</string>
+    <string name="player_control_view_repeat_button_content_description">重複播放按鈕</string>
+    <string name="player_error_source_not_found">找不到來源</string>
+    <string name="player_last_modified">修改時間：%s</string>
+    <string name="player_media_controls_close_action_title">關閉</string>
     <string name="please_select_a_server">請選取伺服器……</string>
     <string name="power_save_check_dialog_message">停用省電檢查時，就算電池電量偏低，檔案仍會持續上傳！</string>
     <string name="pref_behaviour_entries_delete_file">已刪除</string>
@@ -955,6 +947,7 @@
     <string name="send">傳送</string>
     <string name="send_copy_to">傳送副本至</string>
     <string name="send_share">傳送分享</string>
+    <string name="server_not_allowed">不允許伺服器</string>
     <string name="server_not_reachable">無法載入內容</string>
     <string name="server_not_reachable_content">裝置似乎無法連線至網際網路</string>
     <string name="set_as">設定為</string>
@@ -1075,7 +1068,6 @@
     <string name="store_short_dev_desc">讓您能完全掌控、可自架的生產力平台（開發者預覽版）</string>
     <string name="stream">串流播放…</string>
     <string name="stream_not_possible_headline">無法進行內部串流</string>
-    <string name="stream_not_possible_message">請改為下載媒體，或使用外部應用程式播放。</string>
     <string name="sub_folder_rule_day">年/月/日</string>
     <string name="sub_folder_rule_month">年/月</string>
     <string name="sub_folder_rule_year">年</string>
@@ -1389,5 +1381,8 @@
     </plurals>
     <plurals name="share_download_limit_description">
         <item quantity="other">剩 %1$d 個下載</item>
+    </plurals>
+    <plurals name="export_start">
+        <item quantity="other">已開始匯出（%d 個檔案）</item>
     </plurals>
 </resources>

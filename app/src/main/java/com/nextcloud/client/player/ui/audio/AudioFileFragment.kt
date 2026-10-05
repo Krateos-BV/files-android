@@ -20,9 +20,10 @@ import com.nextcloud.client.player.model.state.PlaybackItemMetadata
 import com.nextcloud.client.player.model.state.PlaybackState
 import com.nextcloud.client.player.util.PlayerUtil.getPlaybackFile
 import com.nextcloud.client.player.util.PlayerUtil.putPlaybackFile
+import com.nextcloud.utils.HumanReadableFormatter
+import com.nextcloud.utils.text.DisplayTextFormatter
 import com.owncloud.android.R
 import com.owncloud.android.databinding.PlayerAudioFileFragmentBinding
-import com.owncloud.android.utils.DisplayUtils
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -132,12 +133,12 @@ open class AudioFileFragment :
     }
 
     private fun PlaybackFile.getDetailsText(): String = listOfNotNull(
-        contentLength.takeIf { it > 0 }?.let { DisplayUtils.bytesToHumanReadable(it) },
+        contentLength.takeIf { it > 0 }?.let { HumanReadableFormatter.formatBytes(it) },
         lastModified.takeIf { it > 0 }?.let(::getLastModifiedText)
     ).joinToString(DETAILS_SEPARATOR)
 
     private fun getLastModifiedText(lastModified: Long): String {
-        val relativeTimestamp = DisplayUtils.getRelativeTimestamp(context, lastModified)
+        val relativeTimestamp = DisplayTextFormatter.formatRelativeTimestamp(requireContext(), lastModified)
         return getString(R.string.player_last_modified, relativeTimestamp)
     }
 }

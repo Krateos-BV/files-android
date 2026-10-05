@@ -38,7 +38,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import com.caverock.androidsvg.SVG
@@ -49,15 +48,17 @@ import com.nextcloud.client.account.UserAccountManager
 import com.nextcloud.client.di.Injectable
 import com.nextcloud.client.jobs.BackgroundJobManager
 import com.nextcloud.client.network.ConnectivityService
+import com.nextcloud.client.player.model.file.PlaybackCollection
 import com.nextcloud.ui.fileactions.FileAction
 import com.nextcloud.ui.fileactions.FileActionsBottomSheet.Companion.newInstance
+import com.nextcloud.utils.SnackbarUtil
 import com.nextcloud.utils.extensions.clickWithDebounce
 import com.nextcloud.utils.extensions.getBigThumbnailKey
 import com.nextcloud.utils.extensions.getParcelableArgument
 import com.nextcloud.utils.extensions.getSmallThumbnail
 import com.nextcloud.utils.extensions.typedActivity
+import com.nextcloud.utils.view.ScreenMetrics
 import com.owncloud.android.MainApp
-import com.nextcloud.client.player.model.file.PlaybackCollection
 import com.owncloud.android.R
 import com.owncloud.android.databinding.PreviewImageFragmentBinding
 import com.owncloud.android.datamodel.OCFile
@@ -71,7 +72,6 @@ import com.owncloud.android.ui.dialog.ConfirmationDialogFragment
 import com.owncloud.android.ui.dialog.RemoveFilesDialogFragment
 import com.owncloud.android.ui.fragment.FileFragment
 import com.owncloud.android.utils.BitmapUtils
-import com.owncloud.android.utils.DisplayUtils
 import com.owncloud.android.utils.MimeTypeUtil
 import com.owncloud.android.utils.theme.ViewThemeUtils
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
@@ -162,7 +162,7 @@ class PreviewImageFragment :
 
     private fun hideActionBar() {
         (requireActivity() as PreviewImageActivity).run {
-            toggleActionBarVisibility(true)
+            toggleActionBarVisibility(false)
         }
     }
 
@@ -237,7 +237,7 @@ class PreviewImageFragment :
 
         binding.image.tag = file.fileId
 
-        val screenSize = DisplayUtils.getScreenSize(activity)
+        val screenSize = ScreenMetrics.size(activity)
         val width = screenSize.x
         val height = screenSize.y
 
@@ -412,7 +412,7 @@ class PreviewImageFragment :
                     onOverflowClick(isManualClick = true)
                 } else {
                     Log_OC.d(TAG, result?.logMessage)
-                    DisplayUtils.showSnackMessage(binding.root, result.getLogMessage(context))
+                    SnackbarUtil.show(binding.root, result.getLogMessage(context))
                 }
             }
         }
@@ -524,7 +524,7 @@ class PreviewImageFragment :
             val storagePath = ocFile.storagePath
             try {
                 val maxDownScale = 3 // could be a parameter passed to doInBackground(...)
-                val screenSize = DisplayUtils.getScreenSize(activity)
+                val screenSize = ScreenMetrics.size(activity)
                 var minWidth = screenSize.x
                 var minHeight = screenSize.y
                 var i = 0
@@ -794,7 +794,7 @@ class PreviewImageFragment :
             if (binding.image.drawable is LayerDrawable) {
                 val layerDrawable = binding.image.drawable as LayerDrawable
 
-                val layerOne = if (previewImageActivity?.isSystemUIVisible == true) {
+                val layerOne = if (previewImageActivity?.isActionBarVisible == true) {
                     ResourcesCompat.getDrawable(resources, R.color.bg_default, null)
                 } else {
                     ResourcesCompat.getDrawable(

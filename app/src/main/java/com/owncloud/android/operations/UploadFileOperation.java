@@ -158,6 +158,7 @@ public class UploadFileOperation extends SyncOperation {
 
     private final AtomicBoolean mCancellationRequested = new AtomicBoolean(false);
     private final AtomicBoolean mUploadStarted = new AtomicBoolean(false);
+    private final AtomicBoolean mPaused = new AtomicBoolean(false);
 
     private Context mContext;
 
@@ -448,6 +449,7 @@ public class UploadFileOperation extends SyncOperation {
         }
 
         mCancellationRequested.set(false);
+        mPaused.set(false);
         mUploadStarted.set(true);
 
         updateSize(0);
@@ -1591,6 +1593,15 @@ public class UploadFileOperation extends SyncOperation {
         }
     }
 
+    public void pause() {
+        mPaused.set(true);
+        cancel(ResultCode.USER_CANCELLED);
+    }
+
+    public boolean isPaused() {
+        return mPaused.get();
+    }
+
     /**
      * As soon as this method return true, upload can be cancel via cancel().
      */
@@ -1786,6 +1797,7 @@ public class UploadFileOperation extends SyncOperation {
         file.setModificationTimestamp(remoteFile.getModifiedTimestamp());
         file.setModificationTimestampAtLastSyncForData(remoteFile.getModifiedTimestamp());
         file.setEtag(remoteFile.getEtag());
+        file.setEtagOnServer(remoteFile.getEtag());
         file.setRemoteId(remoteFile.getRemoteId());
         file.setPermissions(remoteFile.getPermissions());
         file.setUploadTimestamp(remoteFile.getUploadTimestamp());

@@ -14,7 +14,6 @@ package com.owncloud.android.ui.activity;
 
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -59,17 +58,24 @@ import com.nextcloud.client.network.ClientFactory;
 import com.nextcloud.client.onboarding.FirstRunActivity;
 import com.nextcloud.client.player.media3.PlaybackModel;
 import com.nextcloud.client.preferences.AppPreferences;
+import com.nextcloud.client.systembars.SystemBarBackgroundCallbacks;
+import com.nextcloud.client.utils.IntentUtil;
 import com.nextcloud.common.NextcloudClient;
 import com.nextcloud.ui.ChooseAccountDialogFragment;
 import com.nextcloud.ui.composeActivity.ComposeActivity;
 import com.nextcloud.ui.composeActivity.ComposeDestination;
 import com.nextcloud.utils.GlideHelper;
+import com.nextcloud.utils.HumanReadableFormatter;
 import com.nextcloud.utils.LinkHelper;
+import com.nextcloud.utils.SnackbarUtil;
+import com.nextcloud.utils.avatar.AvatarGenerationListener;
+import com.nextcloud.utils.avatar.AvatarGenerator;
 import com.nextcloud.utils.extensions.ActivityExtensionsKt;
 import com.nextcloud.utils.extensions.DrawerActivityExtensionsKt;
 import com.nextcloud.utils.extensions.NavigationViewExtensionsKt;
 import com.nextcloud.utils.extensions.ViewExtensionsKt;
 import com.nextcloud.utils.mdm.MDMConfig;
+import com.nextcloud.utils.view.ScreenMetrics;
 import com.owncloud.android.MainApp;
 import com.owncloud.android.R;
 import com.owncloud.android.authentication.PassCodeManager;
@@ -99,9 +105,7 @@ import com.owncloud.android.ui.fragment.albums.AlbumItemsFragment;
 import com.owncloud.android.ui.fragment.albums.AlbumsFragment;
 import com.owncloud.android.ui.navigation.NavigatorActivity;
 import com.owncloud.android.ui.navigation.NavigatorScreen;
-import com.owncloud.android.ui.trashbin.TrashbinFragment;
 import com.owncloud.android.utils.BitmapUtils;
-import com.owncloud.android.utils.DisplayUtils;
 import com.owncloud.android.utils.DrawableUtil;
 import com.owncloud.android.utils.DrawerMenuUtil;
 import com.owncloud.android.utils.FilesSyncHelper;
@@ -140,7 +144,7 @@ import kotlin.Unit;
  * generation.
  */
 public abstract class DrawerActivity extends ToolbarActivity
-    implements DisplayUtils.AvatarGenerationListener, Injectable {
+    implements AvatarGenerationListener, Injectable {
 
     private static final String TAG = DrawerActivity.class.getSimpleName();
     private static final String KEY_IS_ACCOUNT_CHOOSER_ACTIVE = "IS_ACCOUNT_CHOOSER_ACTIVE";
@@ -236,6 +240,9 @@ public abstract class DrawerActivity extends ToolbarActivity
     @Inject
     protected ClientFactory clientFactory;
 
+    @Inject
+    public AvatarGenerator avatarGenerator;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
@@ -308,6 +315,7 @@ public abstract class DrawerActivity extends ToolbarActivity
         NavigationViewExtensionsKt.highlightNavigationView(drawerNavigationView,
                                                            bottomNavigationView,
                                                            menuItemId);
+        SystemBarBackgroundCallbacks.apply(this, viewThemeUtils);
         Log_OC.d(TAG, "New menu item is: " + menuItemId);
     }
 
@@ -536,7 +544,7 @@ public abstract class DrawerActivity extends ToolbarActivity
             ImageView imageView = (ImageView) view.getChildAt(0);
             imageView.setImageTintList(ColorStateList.valueOf(iconColor));
             GradientDrawable background = (GradientDrawable) imageView.getBackground();
-            background.setStroke(DisplayUtils.convertDpToPixel(1, this), iconColor);
+            background.setStroke(ScreenMetrics.dpToPx(1, this), iconColor);
             TextView textView = (TextView) view.getChildAt(1);
             textView.setTextColor(iconColor);
         }
@@ -617,7 +625,7 @@ public abstract class DrawerActivity extends ToolbarActivity
             showOnDeviceFiles();
         } else if (itemId == R.id.nav_uploads) {
             resetOnlyPersonalAndOnDevice();
-            startActivity(UploadListActivity.class, Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            pushFragment(NavigatorScreen.UploadList.INSTANCE);
         } else if (itemId == R.id.nav_trashbin) {
             resetOnlyPersonalAndOnDevice();
             pushFragment(NavigatorScreen.Trashbin.INSTANCE);
@@ -724,16 +732,6 @@ public abstract class DrawerActivity extends ToolbarActivity
         startActivity(composeActivity);
     }
 
-    void startActivity(Class<? extends Activity> activity) {
-        startActivity(new Intent(getApplicationContext(), activity));
-    }
-
-    private void startActivity(Class<? extends Activity> activity, int flags) {
-        Intent intent = new Intent(getApplicationContext(), activity);
-        intent.setFlags(flags);
-        startActivity(intent);
-    }
-
     public void showManageAccountsDialog() {
         ChooseAccountDialogFragment choseAccountDialog = ChooseAccountDialogFragment.newInstance(accountManager.getUser());
         choseAccountDialog.show(getSupportFragmentManager(), "fragment_chose_account");
@@ -825,7 +823,7 @@ public abstract class DrawerActivity extends ToolbarActivity
                 }
 
                 if (link.getRedirect()) {
-                    DisplayUtils.startLinkIntent(DrawerActivity.this, link.getUrl());
+                    IntentUtil.startLinkIntent(DrawerActivity.this, link.getUrl());
                 } else {
                     Intent externalWebViewIntent = new Intent(getApplicationContext(), ExternalSiteWebView.class);
                     externalWebViewIntent.putExtra(ExternalSiteWebView.EXTRA_TITLE, link.getName());
@@ -935,12 +933,12 @@ public abstract class DrawerActivity extends ToolbarActivity
         if (GetUserInfoRemoteOperation.SPACE_UNLIMITED == quotaValue) {
             mQuotaTextPercentage.setText(String.format(
                 getString(R.string.drawer_quota_unlimited),
-                DisplayUtils.bytesToHumanReadable(usedSpace)));
+                HumanReadableFormatter.formatBytes(usedSpace)));
         } else {
             mQuotaTextPercentage.setText(String.format(
                 getString(R.string.drawer_quota),
-                DisplayUtils.bytesToHumanReadable(usedSpace),
-                DisplayUtils.bytesToHumanReadable(totalSpace)));
+                HumanReadableFormatter.formatBytes(usedSpace),
+                HumanReadableFormatter.formatBytes(totalSpace)));
         }
 
         mQuotaProgressBar.setProgress(relative);
@@ -1454,7 +1452,7 @@ public abstract class DrawerActivity extends ToolbarActivity
 
         DeepLinkConstants deepLinkType = DeepLinkConstants.Companion.fromPath(path);
         if (deepLinkType == null) {
-            DisplayUtils.showSnackMessage(this, getString(R.string.invalid_url));
+            SnackbarUtil.show(this, getString(R.string.invalid_url));
             return;
         }
 
