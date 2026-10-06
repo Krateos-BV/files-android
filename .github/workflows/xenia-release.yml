@@ -31,6 +31,12 @@ concurrency:
     group: xenia-release-${{ github.ref }}
     cancel-in-progress: false
 
+env:
+    # Single place to flip the Play release status (XNT-266). Play rejects any status other
+    # than `draft` while the listing itself is still a draft, so keep `draft` until the first
+    # release has been through Play Console review, then change this to `completed`.
+    PLAY_STATUS: draft
+
 jobs:
     release:
         runs-on: ubuntu-latest
@@ -123,4 +129,4 @@ jobs:
                     packageName: eu.xeniacloud.files
                     releaseFiles: app/build/outputs/bundle/gplayRelease/*.aab
                     track: internal
-                    status: completed
+                    status: ${{ env.PLAY_STATUS }}
