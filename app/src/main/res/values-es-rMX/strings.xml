@@ -30,7 +30,6 @@
     <string name="add_new_public_share">Añadir un nuevo enlace publico</string>
     <string name="add_new_secure_file_drop">Añadir una nueva entrega de archivos segura</string>
     <string name="add_to_album">Añadir al álbum</string>
-    <string name="add_to_cloud">Agregar a %1$s</string>
     <string name="album_delete">Eliminar álbum</string>
     <string name="album_rename_conflict">Este nombre ya está en uso.</string>
     <string name="album_stop_sharing">Dejar de compartir</string>
@@ -202,7 +201,6 @@
     <string name="create_folder">Carpeta</string>
     <string name="create_new">Nuevo</string>
     <string name="create_new_document">Nuevo documento</string>
-    <string name="create_new_folder">Carpeta nueva </string>
     <string name="create_new_presentation">Nueva presentación</string>
     <string name="create_new_spreadsheet">Nueva hoja de cálculo</string>
     <string name="create_presentation">Presentación</string>
@@ -496,19 +494,6 @@
     <string name="manage_space_description">Las configuraciones, base de datos y certificados del servidor de los datos de %1$s serán eliminados permanentemente.\n\nLos archivos descargados se mantendrán sin cambios.\n\nEste proceso puede tomar algo de tiempo. </string>
     <string name="manage_space_title">Administrar espacio</string>
     <string name="manage_tags">Administrar etiquetas</string>
-    <string name="media_err_invalid_progressive_playback">No se puede transmitir el archivo multimedia</string>
-    <string name="media_err_io">No fue posible leer el archivo de medios</string>
-    <string name="media_err_malformed">El archivo de medios tiene una codificación incorrecta</string>
-    <string name="media_err_timeout">El intento de reproducir el archivo sobrepasó el tiempo de espera</string>
-    <string name="media_err_unknown">El reproductor de medios integrado es incapaz de reproducir el archivo de medios</string>
-    <string name="media_err_unsupported">Codec no soportado</string>
-    <string name="media_forward_description">Botón de avanzar rápido</string>
-    <string name="media_notif_ticker">Reproductor de música %1$s</string>
-    <string name="media_play_pause_description">Botón de reproducir o pausar</string>
-    <string name="media_player_pause">Pausar</string>
-    <string name="media_player_play">Reproducir</string>
-    <string name="media_rewind_description">Botón de rebobinar</string>
-    <string name="media_state_playing">%1$s (reproduciendo)</string>
     <string name="menu_item_sort_by_date_newest_first">Más reciente primero</string>
     <string name="menu_item_sort_by_date_oldest_first">Más antiguo primero</string>
     <string name="menu_item_sort_by_name_a_z">A - Z</string>
@@ -578,8 +563,7 @@
     <string name="permission_deny">Denegar</string>
     <string name="picture_set_as_no_app">No se encontró una aplicación con la cual establecer la imagen</string>
     <string name="pin_shortcut_label">Abrir %1$s</string>
-    <string name="player_stop">detener</string>
-    <string name="player_toggle">alternar</string>
+    <string name="player_media_controls_close_action_title">Cerrar</string>
     <string name="power_save_check_dialog_message">¡Desactivar la comprobación de ahorro de energía podría resultar en la carga de archivos cuando la batería esté baja!</string>
     <string name="pref_behaviour_entries_delete_file">Borrado</string>
     <string name="pref_behaviour_entries_keep_file">mantenido en la carpeta original</string>
@@ -809,7 +793,6 @@
     <string name="store_short_dev_desc">La plataforma de productividad auto alojada que le mantiene en control (versión preliminar para desarrolladores)</string>
     <string name="stream">Transmitir con...</string>
     <string name="stream_not_possible_headline">La transmisión interna no es posible</string>
-    <string name="stream_not_possible_message">Por favor, descargue el medio o utilice una aplicación externa.</string>
     <string name="sub_folder_rule_day">Año/Mes/Día</string>
     <string name="sub_folder_rule_month">Año/Mes</string>
     <string name="sub_folder_rule_year">Año</string>

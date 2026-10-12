@@ -33,7 +33,6 @@
     <string name="add_new_public_share">Añadir un nuevo enlace público</string>
     <string name="add_new_secure_file_drop">Añadir una nueva entrega de archivos segura</string>
     <string name="add_to_album">Añadir al álbum</string>
-    <string name="add_to_cloud">Añadir a %1$s</string>
     <string name="album_delete">Eliminar álbum</string>
     <string name="album_rename_conflict">Este nombre ya está en uso.</string>
     <string name="album_share">Compartir álbum</string>
@@ -264,8 +263,6 @@
     <string name="create_link">Crear enlace</string>
     <string name="create_new">Nuevo</string>
     <string name="create_new_document">Nuevo documento</string>
-    <string name="create_new_encrypted_folder">Nueva carpeta cifrada</string>
-    <string name="create_new_folder">Nueva carpeta</string>
     <string name="create_new_presentation">Nueva presentación</string>
     <string name="create_new_spreadsheet">Nueva hoja de cálculo</string>
     <string name="create_presentation">Presentación</string>
@@ -632,22 +629,6 @@
     <string name="manage_space_description">Las opciones, certificados y bases de datos de %1$s serán borrados permanentemente.\n\nLos archivos bajados no se tocarán.\n\nEste proceso tardará algún tiempo.</string>
     <string name="manage_space_title">Gestionar espacio</string>
     <string name="manage_tags">Gestionar etiquetas</string>
-    <string name="media_err_invalid_progressive_playback">El archivo multimedia no puede ser transmitido</string>
-    <string name="media_err_io">El archivo de medios no se ha podido leer</string>
-    <string name="media_err_malformed">El archivo de medios tiene una codificación incorrecta</string>
-    <string name="media_err_timeout">Tiempo de espera agotado en el intento de reproducción</string>
-    <string name="media_err_unknown">El reproductor de medios incorporado no puede reproducir el archivo</string>
-    <string name="media_err_unsupported">Códec de medios no soportado</string>
-    <string name="media_forward_description">Botón de avance rápido</string>
-    <string name="media_notif_ticker">Reproductor de música %1$s</string>
-    <string name="media_play_pause_description">Botón de reproducción o pausa </string>
-    <string name="media_player_pause">Pausar</string>
-    <string name="media_player_play">Reproducir</string>
-    <string name="media_player_playing">Reproduciendo multimedia</string>
-    <string name="media_player_seek_backward">Buscar hacia atrás</string>
-    <string name="media_player_seek_forward">Buscar hacia delante</string>
-    <string name="media_rewind_description">Botón de rebobinado</string>
-    <string name="media_state_playing">%1$s (reproduciendo)</string>
     <string name="menu_item_sort_by_date_newest_first">El más reciente primero</string>
     <string name="menu_item_sort_by_date_oldest_first">El más viejo primero</string>
     <string name="menu_item_sort_by_name_a_z">A - Z</string>
@@ -742,8 +723,7 @@
     <string name="picture_set_as_no_app">No se ha encontrado una app para establecer con ella la imagen</string>
     <string name="pin_home">Anclar a la pantalla de inicio</string>
     <string name="pin_shortcut_label">Abrir %1$s</string>
-    <string name="player_stop">parar</string>
-    <string name="player_toggle">cambiar</string>
+    <string name="player_media_controls_close_action_title">Cerrar</string>
     <string name="please_select_a_server">Por favor, seleccione un servidor…</string>
     <string name="power_save_check_dialog_message">Desactivar la comprobación de ahorro de energía puede causar que se suban ficheros aun estando en modo de baja batería</string>
     <string name="pref_behaviour_entries_delete_file">borrado</string>
@@ -1018,7 +998,6 @@
     <string name="store_short_dev_desc">La plataforma de productividad auto-hospedada que te mantiene al mando (versión de prueba para desarrolladores)</string>
     <string name="stream">Retransmisión con...</string>
     <string name="stream_not_possible_headline">La retransmisión interna no es posible</string>
-    <string name="stream_not_possible_message">Por favor, descarga el medio o usa una app externa</string>
     <string name="sub_folder_rule_day">Año/Mes/Día</string>
     <string name="sub_folder_rule_month">Año/Mes</string>
     <string name="sub_folder_rule_year">Año</string>
@@ -1366,4 +1345,4 @@
         <item quantity="many">Quedan %1$d descargas</item>
         <item quantity="other">Quedan %1$d descargas</item>
     </plurals>
-</resources>
+    </resources>

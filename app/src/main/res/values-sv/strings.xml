@@ -34,7 +34,6 @@
     <string name="add_new_public_share">Lägg till en ny offentlig delningslänk</string>
     <string name="add_new_secure_file_drop">Lägg till ett nytt säkert filinkast</string>
     <string name="add_to_album">Lägg till i album</string>
-    <string name="add_to_cloud">Lägg till %1$s</string>
     <string name="album_already_exists">Albumet finns redan</string>
     <string name="album_copy_file_conflict">Finns redan.</string>
     <string name="album_create_new_link">Skapa ny länk</string>
@@ -296,8 +295,6 @@
     <string name="create_link">Skapa länk</string>
     <string name="create_new">Ny</string>
     <string name="create_new_document">Nytt dokument</string>
-    <string name="create_new_encrypted_folder">Ny krypterad mapp</string>
-    <string name="create_new_folder">Ny mapp</string>
     <string name="create_new_presentation">Ny presentation</string>
     <string name="create_new_spreadsheet">Nytt kalkylblad</string>
     <string name="create_presentation">Presentation</string>
@@ -687,23 +684,7 @@
     <string name="manage_space_description">Inställningar, databas och servercertifikat från %1$s kommer att raderas permanent.\n\nHämtade filer kommer inte att raderas eller ändras.\n\nDetta kan ta en stund.</string>
     <string name="manage_space_title">Hantera utrymme</string>
     <string name="manage_tags">Hantera taggar</string>
-    <string name="media_err_invalid_progressive_playback">Mediefilen kan inte strömmas</string>
-    <string name="media_err_io">Kunde inte läsa mediafilen</string>
-    <string name="media_err_malformed">Mediafilen har felaktig kodning</string>
-    <string name="media_err_timeout">Uppspelningen tog för lång tid</string>
-    <string name="media_err_unknown">Den inbyggda mediaspelaren kan inte spela upp mediefilen</string>
-    <string name="media_err_unsupported">Mediekoden stöds inte</string>
-    <string name="media_forward_description">Snabbspolningsknapp</string>
-    <string name="media_notif_ticker">%1$s-musikspelare</string>
     <string name="media_picker_toolbar_title">Välj mediefiler</string>
-    <string name="media_play_pause_description">Knapp för att spela upp eller pausa</string>
-    <string name="media_player_pause">Pausa</string>
-    <string name="media_player_play">Spela</string>
-    <string name="media_player_playing">Spelar upp media</string>
-    <string name="media_player_seek_backward">Spola bakåt</string>
-    <string name="media_player_seek_forward">Spola framåt</string>
-    <string name="media_rewind_description">Bakåtspolningsknapp</string>
-    <string name="media_state_playing">%1$s (spelas upp)</string>
     <string name="menu_item_sort_by_date_newest_first">Nyaste först</string>
     <string name="menu_item_sort_by_date_oldest_first">Äldst först</string>
     <string name="menu_item_sort_by_name_a_z">A–Ö</string>
@@ -798,8 +779,15 @@
     <string name="picture_set_as_no_app">Ingen app hittades för att ställa in en bild med</string>
     <string name="pin_home">Fäst på hemskärmen</string>
     <string name="pin_shortcut_label">Öppna %1$s</string>
-    <string name="player_stop">stopp</string>
-    <string name="player_toggle">växla</string>
+    <string name="player_audio_title_with_artist">%1$s • %2$s</string>
+    <string name="player_control_view_next_button_content_description">Knappen Nästa</string>
+    <string name="player_control_view_play_pause_button_content_description">Knappen Spela upp/pausa</string>
+    <string name="player_control_view_previous_button_content_description">Knappen Föregående</string>
+    <string name="player_control_view_random_button_content_description">Knappen Slumpvis</string>
+    <string name="player_control_view_repeat_button_content_description">Knappen Upprepa</string>
+    <string name="player_error_source_not_found">Källan hittades inte</string>
+    <string name="player_last_modified">Ändrad: %s</string>
+    <string name="player_media_controls_close_action_title">Stäng</string>
     <string name="please_select_a_server">Välj en server…</string>
     <string name="power_save_check_dialog_message">Att inaktivera strömsparningskontrollen kan leda till att filer laddas upp trots låg batterinivå.</string>
     <string name="pref_behaviour_entries_delete_file">raderas</string>
@@ -1076,7 +1064,6 @@
     <string name="store_short_dev_desc">Den självhostade produktivitetsplattformen som ger dig kontroll (förhandsversion för utvecklare)</string>
     <string name="stream">Streama med…</string>
     <string name="stream_not_possible_headline">Intern streaming är inte möjlig</string>
-    <string name="stream_not_possible_message">Hämta mediefilen eller använd en extern app.</string>
     <string name="sub_folder_rule_day">År/Månad/Dag</string>
     <string name="sub_folder_rule_month">År/Månad</string>
     <string name="sub_folder_rule_year">År</string>
@@ -1419,5 +1406,9 @@
     <plurals name="share_download_limit_description">
         <item quantity="one">%1$d återstående nedladdning</item>
         <item quantity="other">%1$d återstående nedladdningar</item>
+    </plurals>
+    <plurals name="export_start">
+        <item quantity="one">Exporten har startat (%d fil)</item>
+        <item quantity="other">Exporten har startat (%d filer)</item>
     </plurals>
 </resources>

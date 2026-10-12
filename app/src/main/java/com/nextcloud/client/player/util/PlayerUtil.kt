@@ -16,10 +16,10 @@ import android.database.ContentObserver
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
-import android.util.LruCache
 import android.os.Handler
 import android.os.Looper
 import android.os.Process
+import android.util.LruCache
 import android.view.SurfaceView
 import android.view.View
 import android.view.ViewGroup
@@ -34,12 +34,13 @@ import com.nextcloud.client.player.model.state.PlaybackState
 import com.nextcloud.client.player.model.state.PlayerState
 import com.nextcloud.client.player.model.state.RepeatMode
 import com.nextcloud.client.player.model.state.VideoSize
+import com.nextcloud.utils.extensions.resolveMimeType
+import com.nextcloud.utils.serialization.AppJson
 import com.owncloud.android.datamodel.OCFile
 import com.owncloud.android.lib.resources.shares.OCShare
 import com.owncloud.android.utils.MimeTypeUtil
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.serialization.json.Json
 import java.io.File
 import java.util.Collections
 
@@ -53,8 +54,6 @@ object PlayerUtil {
     private const val UNKNOWN_CONTENT_LENGTH = -1L
     private const val SECOND_IN_MILLISECONDS = 1000L
     private const val PLAYBACK_FILE_CACHE_SIZE = 512
-
-    private val playbackJson = Json { ignoreUnknownKeys = true }
 
     private val playbackFileCache = LruCache<String, PlaybackFile>(PLAYBACK_FILE_CACHE_SIZE)
 
@@ -177,7 +176,7 @@ object PlayerUtil {
         id = localId.toString(),
         uri = getPlaybackUri().toString(),
         name = fileName,
-        mimeType = mimeType,
+        mimeType = resolveMimeType(),
         contentLength = fileLength,
         lastModified = modificationTimestamp,
         isFavorite = isFavorite
@@ -187,13 +186,13 @@ object PlayerUtil {
         id = fileSource.toString(),
         uri = getPlaybackUri().toString(),
         name = path?.let { File(it).name } ?: "",
-        mimeType = getMimeType(),
+        mimeType = resolveMimeType(),
         contentLength = UNKNOWN_CONTENT_LENGTH,
         lastModified = sharedDate * SECOND_IN_MILLISECONDS,
         isFavorite = isFavorite
     )
 
-    private fun OCShare.getMimeType(): String = mimetype
+    private fun OCShare.resolveMimeType(): String = mimetype
         ?.takeIf { it.isNotEmpty() }
         ?: path?.let { MimeTypeUtil.getMimeTypeFromPath(it) }
         ?: ""
@@ -213,14 +212,14 @@ object PlayerUtil {
         ?.let { pathSegments.firstOrNull()?.toLongOrNull() }
 
     fun Bundle.putPlaybackFile(key: String, playbackFile: PlaybackFile) {
-        putString(key, playbackJson.encodeToString(playbackFile))
+        putString(key, AppJson.instance.encodeToString(playbackFile))
     }
 
     fun Bundle?.getPlaybackFile(key: String): PlaybackFile? {
         val encoded = this?.getString(key) ?: return null
 
         return playbackFileCache[encoded]
-            ?: runCatching { playbackJson.decodeFromString<PlaybackFile>(encoded) }
+            ?: runCatching { AppJson.instance.decodeFromString<PlaybackFile>(encoded) }
                 .getOrNull()
                 ?.also { playbackFileCache.put(encoded, it) }
     }

@@ -25,6 +25,7 @@ import com.nextcloud.client.network.Connectivity
 import com.nextcloud.client.network.ConnectivityService
 import com.nextcloud.client.notifications.AppWideNotificationManager
 import com.nextcloud.model.OCUploadLocalPathData
+import com.nextcloud.utils.SnackbarUtil
 import com.nextcloud.utils.extensions.checkWCFRestrictions
 import com.nextcloud.utils.extensions.createOwncloudClient
 import com.nextcloud.utils.extensions.getUploadIds
@@ -51,7 +52,6 @@ import com.owncloud.android.operations.RemoveFileOperation
 import com.owncloud.android.operations.UploadFileOperation
 import com.owncloud.android.ui.adapter.uploadList.helper.ConflictHandlingResult
 import com.owncloud.android.ui.adapter.uploadList.helper.UploadListAdapterActionHandler
-import com.owncloud.android.utils.DisplayUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -89,6 +89,8 @@ class FileUploadHelper {
         private val TAG = FileUploadWorker::class.java.simpleName
 
         const val MAX_FILE_COUNT = 500
+
+        const val MAX_UPLOADS_PER_QUERY = 500
 
         val mBoundListeners = HashMap<String, OnDatatransferProgressListener>()
 
@@ -377,6 +379,10 @@ class FileUploadHelper {
      * If `null`, uploads matching the given [status] from all accounts are returned.
      * @param status The [UploadStatus] to filter uploads by (e.g., `UPLOAD_FAILED`).
      * @param nameCollisionPolicy The [NameCollisionPolicy] to filter uploads by (e.g., `SKIP`).
+     *
+     * At most [MAX_UPLOADS_PER_QUERY] of the newest uploads are returned. A history that grew into the tens of
+     * thousands of rows cannot be held in memory at once, and neither the upload list nor a retry pass needs more
+     * than a page of it.
      */
     suspend fun getUploadsByStatus(
         accountName: String?,
@@ -386,9 +392,14 @@ class FileUploadHelper {
     ): List<OCUpload> {
         val dao = uploadsStorageManager.uploadDao
         return if (accountName != null) {
-            dao.getUploadsByAccountNameAndStatus(accountName, status.value, nameCollisionPolicy?.serialize())
+            dao.getUploadsByAccountNameAndStatus(
+                accountName,
+                status.value,
+                nameCollisionPolicy?.serialize(),
+                MAX_UPLOADS_PER_QUERY
+            )
         } else {
-            dao.getUploadsByStatus(status.value, nameCollisionPolicy?.serialize())
+            dao.getUploadsByStatus(status.value, nameCollisionPolicy?.serialize(), MAX_UPLOADS_PER_QUERY)
         }.mapNotNull {
             it.toOCUpload(capability)
         }
@@ -608,7 +619,7 @@ class FileUploadHelper {
             MAX_FILE_COUNT,
             MAX_FILE_COUNT
         )
-        DisplayUtils.showSnackMessage(activity, message)
+        SnackbarUtil.show(activity, message)
     }
 
     class UploadNotificationActionReceiver : BroadcastReceiver() {

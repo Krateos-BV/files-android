@@ -29,6 +29,7 @@ import com.nextcloud.client.core.Clock
 import com.nextcloud.client.di.Injectable
 import com.nextcloud.client.documentscan.GeneratePdfFromImagesWork
 import com.nextcloud.client.jobs.autoUpload.AutoUploadLocalDeletionWorker
+import com.nextcloud.client.jobs.autoUpload.AutoUploadRescanWorker
 import com.nextcloud.client.jobs.autoUpload.AutoUploadWorker
 import com.nextcloud.client.jobs.download.FileDownloadWorker
 import com.nextcloud.client.jobs.folderDownload.FolderDownloadWorker
@@ -38,6 +39,7 @@ import com.nextcloud.client.jobs.upload.AlbumFileUploadWorker
 import com.nextcloud.client.jobs.upload.FileUploadHelper
 import com.nextcloud.client.jobs.upload.FileUploadWorker
 import com.nextcloud.client.jobs.worker.WorkerFilesPayload
+import com.nextcloud.client.network.SupportedNetworkTransports
 import com.nextcloud.client.preferences.AppPreferences
 import com.nextcloud.utils.extensions.isWorkScheduled
 import com.owncloud.android.datamodel.OCFile
@@ -135,6 +137,8 @@ internal class BackgroundJobManagerImpl(
         fun formatUserTag(user: User): String = "$TAG_PREFIX_USER:${user.accountName}"
         fun formatClassTag(jobClass: KClass<out ListenableWorker>): String = "$TAG_PREFIX_CLASS:${jobClass.simpleName}"
         fun formatTimeTag(startTimestamp: Long): String = "$TAG_PREFIX_START_TIMESTAMP:$startTimestamp"
+        fun formatFileDownloadTag(accountName: String, fileId: Long): String =
+            JOB_FOLDER_DOWNLOAD + accountName + fileId
 
         fun parseTag(tag: String): Pair<String, String>? {
             val key = tag.substringBefore(":", "")
@@ -491,11 +495,33 @@ internal class BackgroundJobManagerImpl(
 
     private fun autoUploadWorkName(syncedFolderID: Long): String = JOB_IMMEDIATE_FILES_SYNC + "_" + syncedFolderID
 
+    override fun isAutoUploadScheduled(syncedFolderID: Long): Boolean =
+        workManager.getWorkInfosForUniqueWork(autoUploadWorkName(syncedFolderID))
+            .get()
+            .any { !it.state.isFinished }
+
     private fun autoUploadIgnorePowerSavingTag(syncedFolderID: Long): String =
         autoUploadWorkName(syncedFolderID) + "_" + TAG_SUFFIX_IGNORE_POWER_SAVING
 
     override fun isAutoUploadIgnoringPowerSavingScheduled(syncedFolderID: Long): Boolean =
         workManager.isWorkScheduled(autoUploadIgnorePowerSavingTag(syncedFolderID))
+
+    override fun cancelEnqueuedAutoUploads() {
+        workManager.getWorkInfosByTag(formatClassTag(AutoUploadWorker::class))
+            .get()
+            .filter { it.state == WorkInfo.State.ENQUEUED && it.periodicityInfo != null }
+            .forEach { workManager.cancelWorkById(it.id) }
+    }
+
+    override fun schedulePeriodicAutoUpload() {
+        val request = periodicRequestBuilder(
+            jobClass = AutoUploadRescanWorker::class,
+            jobName = JOB_PERIODIC_FILES_SYNC,
+            constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+        ).build()
+
+        workManager.enqueueUniquePeriodicWork(JOB_PERIODIC_FILES_SYNC, ExistingPeriodicWorkPolicy.KEEP, request)
+    }
 
     override fun startAutoUpload(syncedFolder: SyncedFolder, overridePowerSaving: Boolean) {
         val syncedFolderID = syncedFolder.id
@@ -512,10 +538,7 @@ internal class BackgroundJobManagerImpl(
             .putLong(AutoUploadWorker.SYNCED_FOLDER_ID, syncedFolderID)
             .build()
 
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiresCharging(syncedFolder.isChargingOnly)
-            .build()
+        val constraints = SupportedNetworkTransports.getConstraints(requiresCharging = syncedFolder.isChargingOnly)
 
         val requestBuilder = oneTimeRequestBuilder(
             jobClass = AutoUploadWorker::class,
@@ -552,9 +575,10 @@ internal class BackgroundJobManagerImpl(
         workManager.cancelAllWorkByTag(formatClassTag(FileDownloadWorker::class))
     }
 
-    override fun startMetadataSyncJob(currentDirPath: String) {
+    override fun startMetadataSyncJob(currentDirPath: String, folderAlreadySynced: Boolean) {
         val inputData = Data.Builder()
             .putString(MetadataWorker.FILE_PATH, currentDirPath)
+            .putBoolean(MetadataWorker.FOLDER_ALREADY_SYNCED, folderAlreadySynced)
             .build()
 
         val constrains = Constraints.Builder()
@@ -662,9 +686,7 @@ internal class BackgroundJobManagerImpl(
             val batches = uploadIds.toList().chunked(batchSize)
             val tag = startFileUploadJobTag(user.accountName)
 
-            val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build()
+            val constraints = SupportedNetworkTransports.getConstraints()
 
             val dataBuilder = Data.Builder()
                 .putBoolean(
@@ -760,9 +782,6 @@ internal class BackgroundJobManagerImpl(
         }
     }
 
-    private fun startFileDownloadJobTag(accountName: String, fileId: Long): String =
-        JOB_FOLDER_DOWNLOAD + accountName + fileId
-
     override fun startFileDownloadJob(
         user: User,
         file: OCFile,
@@ -772,7 +791,7 @@ internal class BackgroundJobManagerImpl(
         packageName: String,
         conflictUploadId: Long?
     ) {
-        val tag = startFileDownloadJobTag(user.accountName, file.fileId)
+        val tag = formatFileDownloadTag(user.accountName, file.fileId)
 
         val data = workDataOf(
             FileDownloadWorker.ACCOUNT_NAME to user.accountName,
@@ -805,7 +824,7 @@ internal class BackgroundJobManagerImpl(
     }
 
     override fun cancelFilesDownloadJob(accountName: String, fileId: Long) {
-        workManager.cancelAllWorkByTag(startFileDownloadJobTag(accountName, fileId))
+        workManager.cancelAllWorkByTag(formatFileDownloadTag(accountName, fileId))
     }
 
     override fun startPdfGenerateAndUploadWork(
