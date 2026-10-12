@@ -12,8 +12,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
@@ -40,10 +42,10 @@ import com.nextcloud.client.player.model.file.toPlaybackCollection
 import com.nextcloud.client.player.ui.MediaNavigator
 import com.nextcloud.client.player.ui.VideoPictureInPicture
 import com.nextcloud.client.preferences.AppPreferences
-import com.nextcloud.model.WorkerState
+import com.nextcloud.utils.SnackbarUtil
 import com.nextcloud.utils.extensions.getParcelableArgument
 import com.nextcloud.utils.extensions.getSerializableArgument
-import com.nextcloud.utils.extensions.observeWorker
+import com.nextcloud.utils.extensions.toggle
 import com.owncloud.android.MainApp
 import com.owncloud.android.R
 import com.owncloud.android.datamodel.FileDataStorageManager
@@ -62,8 +64,9 @@ import com.owncloud.android.ui.dialog.SendShareDialog
 import com.owncloud.android.ui.fragment.FileFragment
 import com.owncloud.android.ui.fragment.GalleryFragment
 import com.owncloud.android.ui.fragment.GalleryFragmentBottomSheetDialog.MediaState
+import com.owncloud.android.ui.navigation.animator.NavigationAnimator
+import com.owncloud.android.ui.navigation.animator.SharedElementTransition
 import com.owncloud.android.ui.preview.model.PreviewImageActivityState
-import com.owncloud.android.utils.DisplayUtils
 import com.owncloud.android.utils.MimeTypeUtil
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 import kotlinx.coroutines.Job
@@ -101,14 +104,16 @@ class PreviewImageActivity :
     private val downloadFinishReceiver = DownloadFinishReceiver()
 
     private val windowInsetsController: WindowInsetsControllerCompat by lazy {
-        WindowCompat.getInsetsController(window, window.decorView)
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
     }
 
     private var isDownloadWorkStarted = false
     private var screenState = PreviewImageActivityState.Idle
 
-    private val pictureInPicture by lazy { VideoPictureInPicture(this, playbackModel, autoEnter = false) }
-    private var wasSystemUiVisibleBeforePictureInPicture = true
+    private val pictureInPicture by lazy { VideoPictureInPicture(this, playbackModel) }
+    private var wasActionBarVisibleBeforePictureInPicture = true
     private var keepPlaybackOnFinish = false
 
     @Inject
@@ -122,7 +127,7 @@ class PreviewImageActivity :
 
         if (savedInstanceState != null &&
             !savedInstanceState.getBoolean(
-                KEY_SYSTEM_VISIBLE,
+                KEY_ACTION_BAR_VISIBLE,
                 true
             ) &&
             supportActionBar != null
@@ -135,6 +140,7 @@ class PreviewImageActivity :
         setupDrawer(menuItemId)
 
         val chosenFile = intent.getParcelableArgument(EXTRA_FILE, OCFile::class.java)
+        setupSharedElementTransition(savedInstanceState, chosenFile)
 
         supportActionBar?.let {
             updateActionBarTitleAndHomeButton(chosenFile)
@@ -150,19 +156,30 @@ class PreviewImageActivity :
             screenState = PreviewImageActivityState.WaitingForBinder
         }
 
-        observeWorkerState()
         applyDisplayCutOutTopPadding()
 
         handleBackPress()
 
         lifecycle.addObserver(sendShareDownloader)
         sendShareDownloader.restoreState(savedInstanceState)
+        applyDarkSystemBars()
+    }
+
+    private fun applyDarkSystemBars() {
+        windowInsetsController.isAppearanceLightStatusBars = false
+        windowInsetsController.isAppearanceLightNavigationBars = false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
 
-        initializeContent(intent)
+        // every later read goes through getIntent(), so the selection of the new intent would be lost otherwise
+        intent?.let { setIntent(it) }
+
+        initializeContent()
     }
 
     override fun downloadFile(file: OCFile, packageName: String, activityName: String) {
@@ -192,12 +209,8 @@ class PreviewImageActivity :
     private fun displayCutOutSafeInsetTop(): Int =
         ViewCompat.getRootWindowInsets(window.decorView)?.displayCutout?.safeInsetTop ?: 0
 
-    fun toggleActionBarVisibility(hide: Boolean) {
-        if (hide) {
-            supportActionBar?.hide()
-        } else {
-            supportActionBar?.show()
-        }
+    fun toggleActionBarVisibility(show: Boolean) {
+        supportActionBar?.toggle(show)
     }
 
     private fun initViewPager(user: User) {
@@ -291,10 +304,35 @@ class PreviewImageActivity :
             override fun handleOnBackPressed() {
                 sendRefreshSearchEventBroadcast()
                 isEnabled = false
-                onBackPressedDispatcher.onBackPressed()
+                NavigationAnimator(this@PreviewImageActivity).finishWithScaleDown()
             }
         })
     }
+
+    private fun setupSharedElementTransition(savedInstanceState: Bundle?, openedFile: OCFile?) {
+        val sharedElementTransition = SharedElementTransition(this) { openedImageView() }
+        sharedElementTransition.register()
+
+        val isLaunchedWithSharedElement = intent.getBooleanExtra(NavigationAnimator.EXTRA_HAS_SHARED_ELEMENT, false)
+        if (savedInstanceState == null && isLaunchedWithSharedElement &&
+            PreviewImageFragment.canBePreviewed(openedFile)
+        ) {
+            sharedElementTransition.postponeUntilSharedViewReady()
+        }
+    }
+
+    private fun openedImageView(): View? {
+        val openedFileId = intent.getParcelableArgument(EXTRA_FILE, OCFile::class.java)?.fileId
+        val shownFileId = viewPager?.currentItem?.let { previewMediaPagerAdapter?.getFileAt(it) }?.fileId
+        if (openedFileId == null || shownFileId != openedFileId) {
+            return null
+        }
+
+        return shownImageView(openedFileId)
+    }
+
+    private fun shownImageView(fileId: Long): View? =
+        viewPager?.findViewWithTag<View>(fileId)?.takeIf { it.isShown && it.isLaidOut }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId != android.R.id.home) {
@@ -320,53 +358,67 @@ class PreviewImageActivity :
     public override fun onStart() {
         super.onStart()
         registerReceivers()
-        initializeContent(intent)
+        initializeContent()
     }
 
-    private fun initializeContent(newIntent: Intent?) {
-        val intent = newIntent ?: intent
-        livePhotoFile = intent.getParcelableArgument(EXTRA_LIVE_PHOTO_FILE, OCFile::class.java)
-
-        val chosenFile = intent.getParcelableArgument(EXTRA_FILE, OCFile::class.java)
-
+    private fun initializeContent() {
         val optionalUser = user
         if (!optionalUser.isPresent) {
             finish()
             return
         }
 
-        var file: OCFile? = chosenFile ?: file ?: throw IllegalStateException("Instanced with a NULL OCFile")
-        // updateActionBarTitle(file?.fileName)
-        // / Validate handled file (first media item to preview)
-        require(MimeTypeUtil.isImageOrVideo(file)) { "Non-image/video file passed as argument" }
+        livePhotoFile = intent.getParcelableArgument(EXTRA_LIVE_PHOTO_FILE, OCFile::class.java)
 
-        // Update file according to DB file, if it is possible
-        if (file!!.fileId > FileDataStorageManager.ROOT_PARENT_ID) {
-            file = storageManager.getFileById(file.fileId)
-        }
+        val chosenFile = intent.getParcelableArgument(EXTRA_FILE, OCFile::class.java)
+        val requestedFile = chosenFile ?: file ?: throw IllegalStateException("Instanced with a NULL OCFile")
+        require(MimeTypeUtil.isImageOrVideo(requestedFile)) { "Non-image/video file passed as argument" }
 
-        if (file != null) {
-            // / Refresh the activity according to the Account and OCFile set
-            setFile(file) // reset after getting it fresh from storageManager
-            updateActionBarTitle(getFile()?.fileName)
-            if (previewMediaPagerAdapter == null || previewMediaPagerAdapter?.getFilePosition(file) == -1) {
-                savedPosition = null
-                initViewPager(optionalUser.get())
-            } else {
-                previewMediaPagerAdapter?.getFilePosition(file)?.let {
-                    viewPager?.currentItem = it
-                }
-            }
-        } else {
+        val currentFile = requestedFile.refreshedFromDatabase()
+        if (currentFile == null) {
             // handled file not in the current Account
             finish()
+            return
         }
+
+        val isNewSelection = currentFile != file
+
+        setFile(currentFile)
+        showFile(currentFile, optionalUser.get(), isNewSelection)
+    }
+
+    private fun OCFile.refreshedFromDatabase(): OCFile? = if (fileId > FileDataStorageManager.ROOT_PARENT_ID) {
+        storageManager.getFileById(fileId)
+    } else {
+        this
+    }
+
+    private fun showFile(file: OCFile, user: User, isNewSelection: Boolean) {
+        val position = previewMediaPagerAdapter?.getFilePosition(file) ?: NO_POSITION
+        val pagerNeedsRebuild = position == NO_POSITION
+
+        // a restart must not pull the user back to the file the activity was started with
+        if (!pagerNeedsRebuild && !isNewSelection) {
+            return
+        }
+
+        updateActionBarTitle(file.fileName)
+
+        if (pagerNeedsRebuild) {
+            savedPosition = null
+            initViewPager(user)
+            return
+        }
+
+        // a rebuilt pager restores the remembered position, so it has to follow the selection right away
+        savedPosition = position
+        viewPager?.setCurrentItem(position, false)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(KEY_WAITING_FOR_BINDER, screenState == PreviewImageActivityState.WaitingForBinder)
-        outState.putBoolean(KEY_SYSTEM_VISIBLE, isSystemUIVisible)
+        outState.putBoolean(KEY_ACTION_BAR_VISIBLE, isActionBarVisible)
         sendShareDownloader.saveState(outState)
     }
 
@@ -392,17 +444,6 @@ class PreviewImageActivity :
     private fun onSynchronizeFileOperationFinish(result: RemoteOperationResult<*>) {
         if (result.isSuccess) {
             supportInvalidateOptionsMenu()
-        }
-    }
-
-    private fun observeWorkerState() {
-        observeWorker { state: WorkerState? ->
-            when (state) {
-                else -> {
-                    Log_OC.d(TAG, "Worker stopped")
-                    isDownloadWorkStarted = false
-                }
-            }
         }
     }
 
@@ -464,14 +505,18 @@ class PreviewImageActivity :
 
     @SuppressFBWarnings("DLS")
     override fun showDetails(file: OCFile) {
-        val intent = Intent(this, FileDisplayActivity::class.java).apply {
+        val detailsIntent = Intent(this, FileDisplayActivity::class.java).apply {
             setAction(FileDisplayActivity.ACTION_DETAILS)
             putExtra(EXTRA_FILE, file)
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            putExtra(FileDisplayActivity.EXTRA_RETURN_TO_PREVIEW, true)
         }
 
-        startActivity(intent)
-        finish()
+        val imageView = shownImageView(file.fileId)?.also {
+            ViewCompat.setTransitionName(it, NavigationAnimator.sharedElementName(file))
+        }
+
+        val navigationAnimator = NavigationAnimator(this)
+        navigationAnimator.slideUp(detailsIntent, imageView)
     }
 
     override fun showDetails(file: OCFile, activeTab: Int) {
@@ -525,12 +570,12 @@ class PreviewImageActivity :
         updatePagerDisplayCutOutPadding(isInPictureInPictureMode, displayCutOutSafeInsetTop())
 
         if (isInPictureInPictureMode) {
-            wasSystemUiVisibleBeforePictureInPicture = isSystemUIVisible
-            toggleActionBarVisibility(true)
+            wasActionBarVisibleBeforePictureInPicture = isActionBarVisible
+            toggleActionBarVisibility(false)
             return
         }
 
-        toggleActionBarVisibility(!wasSystemUiVisibleBeforePictureInPicture)
+        toggleActionBarVisibility(wasActionBarVisibleBeforePictureInPicture)
 
         if (lifecycle.currentState != Lifecycle.State.CREATED) return
 
@@ -615,19 +660,19 @@ class PreviewImageActivity :
         }
     }
 
-    val isSystemUIVisible: Boolean
+    val isActionBarVisible: Boolean
         get() = supportActionBar == null || supportActionBar?.isShowing == true
 
     fun toggleFullScreen() {
-        val rootInsets = ViewCompat.getRootWindowInsets(window.decorView) ?: return
-
         // the content is laid out edge to edge so that showing and hiding the bars does not move it
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        if (rootInsets.isVisible(WindowInsetsCompat.Type.systemBars())) {
-            windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+        val showBars = !isActionBarVisible
+        toggleActionBarVisibility(showBars)
+        if (showBars) {
+            windowInsetsController.show(WindowInsetsCompat.Type.navigationBars())
         } else {
-            windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
+            windowInsetsController.hide(WindowInsetsCompat.Type.navigationBars())
         }
     }
 
@@ -643,7 +688,7 @@ class PreviewImageActivity :
 
     private fun startEditImageActivity(file: OCFile) {
         if (!file.isDown) {
-            DisplayUtils.showSnackMessage(this, R.string.preview_image_file_is_not_downloaded)
+            SnackbarUtil.show(this, R.string.preview_image_file_is_not_downloaded)
             return
         }
 
@@ -661,7 +706,7 @@ class PreviewImageActivity :
         const val EXTRA_VIRTUAL_TYPE: String = "EXTRA_VIRTUAL_TYPE"
         const val EXTRA_MEDIA_STATE: String = "EXTRA_MEDIA_STATE"
         private const val KEY_WAITING_FOR_BINDER = "WAITING_FOR_BINDER"
-        private const val KEY_SYSTEM_VISIBLE = "TRUE"
+        private const val KEY_ACTION_BAR_VISIBLE = "TRUE"
         private const val NO_POSITION = -1
 
         fun previewFileIntent(context: Context?, user: User?, file: OCFile?): Intent =

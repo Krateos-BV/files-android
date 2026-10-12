@@ -43,12 +43,12 @@ import com.nextcloud.client.account.User
 import com.nextcloud.client.account.UserAccountManager
 import com.nextcloud.client.di.Injectable
 import com.nextcloud.client.jobs.upload.FileUploadWorker
-import com.nextcloud.client.network.ClientFactory
-import com.nextcloud.client.network.ClientFactory.CreationException
 import com.nextcloud.client.utils.IntentUtil
 import com.nextcloud.client.utils.Throttler
+import com.nextcloud.repository.ClientRepository
 import com.nextcloud.ui.albumItemActions.AlbumItemActionsBottomSheet
 import com.nextcloud.ui.fileactions.FileActionsBottomSheet
+import com.nextcloud.utils.SnackbarUtil
 import com.nextcloud.utils.extensions.getTypedActivity
 import com.nextcloud.utils.extensions.isDialogFragmentReady
 import com.nextcloud.utils.extensions.isLandscape
@@ -89,7 +89,6 @@ import com.owncloud.android.ui.helpers.UriUploader
 import com.owncloud.android.ui.interfaces.OCFileListFragmentInterface
 import com.owncloud.android.ui.preview.PreviewImageFragment
 import com.owncloud.android.utils.ClipboardUtil
-import com.owncloud.android.utils.DisplayUtils
 import com.owncloud.android.utils.ErrorMessageAdapter
 import com.owncloud.android.utils.MimeTypeUtil
 import com.owncloud.android.utils.theme.ViewThemeUtils
@@ -122,7 +121,7 @@ class AlbumItemsFragment :
     lateinit var accountManager: UserAccountManager
 
     @Inject
-    lateinit var clientFactory: ClientFactory
+    lateinit var clientRepository: ClientRepository
 
     @Inject
     lateinit var throttler: Throttler
@@ -135,7 +134,6 @@ class AlbumItemsFragment :
 
     private var adapter: GalleryAdapter? = null
     private var addMediaFab: FloatingActionButton? = null
-    private var client: OwnCloudClient? = null
     private var optionalUser: Optional<User>? = null
     private var containerActivity: FileFragment.ContainerActivity? = null
     private var selectionMode: AlbumItemsMultiChoiceModeListener? = null
@@ -286,24 +284,7 @@ class AlbumItemsFragment :
         binding.listFragmentLayout.addView(addMediaFab, layoutParams)
     }
 
-    private fun initializeClient() {
-        if (client != null) {
-            return
-        }
-
-        val user = optionalUser?.takeIf { it.isPresent }?.get() ?: return
-
-        client = try {
-            clientFactory.create(user)
-        } catch (e: CreationException) {
-            Log_OC.e(TAG, "Error initializing client", e)
-            null
-        }
-    }
-
     private fun initializeAdapter() {
-        initializeClient()
-
         if (adapter == null) {
             adapter = GalleryAdapter(
                 requireContext(),
@@ -365,7 +346,7 @@ class AlbumItemsFragment :
         showLoadingMessageWhenReachable()
 
         lifecycleScope.launch(Dispatchers.IO) {
-            val client = client ?: run {
+            val client = clientRepository.getOwncloudClient() ?: run {
                 withContext(Dispatchers.Main) { onAlbumItemsFailed(null) }
                 return@launch
             }
@@ -434,7 +415,7 @@ class AlbumItemsFragment :
     fun refreshAlbumMetaData() {
         lifecycleScope.launch(Dispatchers.IO) {
             val albumsRemoteOperation = ReadAlbumsRemoteOperation(albumName)
-            val result = client?.let { albumsRemoteOperation.execute(it) }
+            val result = clientRepository.getOwncloudClient()?.let { albumsRemoteOperation.execute(it) }
 
             withContext(Dispatchers.Main) {
                 photoAlbumEntry = result
@@ -564,13 +545,13 @@ class AlbumItemsFragment :
             MimeTypeUtil.isVideo(file) ->
                 activity.startImagePreview(file, true, VirtualFolderType.ALBUM)
 
-            file.isDown && activity.canMediaPreviewed(file) ->
-                activity.startMediaPreview(file, showPreview = true, streamMedia = false)
+            file.isDown && activity.canPreviewInAudioPlayer(file) ->
+                activity.startAudioPreview(file, showPreview = true, streamMedia = false)
 
             file.isDown -> containerActivity?.fileOperationsHelper?.openFile(file)
 
-            activity.canMediaPreviewed(file) && !file.isEncrypted ->
-                activity.startMediaPreview(file, showPreview = true, streamMedia = true)
+            activity.canPreviewInAudioPlayer(file) && !file.isEncrypted ->
+                activity.startAudioPreview(file, showPreview = true, streamMedia = true)
 
             else -> Log_OC.d(TAG, "Couldn't handle item click")
         }
@@ -666,18 +647,16 @@ class AlbumItemsFragment :
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMessageEvent(event: FavoriteEvent) {
-        try {
-            val client = clientFactory.create(accountManager.user)
+        lifecycleScope.launch(Dispatchers.IO) {
+            val client = clientRepository.getOwncloudClient() ?: return@launch
             val toggleFavoriteOperation = ToggleAlbumFavoriteRemoteOperation(event.shouldFavorite, event.remotePath)
 
             if (!toggleFavoriteOperation.execute(client).isSuccess) {
-                return
+                return@launch
             }
 
             Handler(Looper.getMainLooper()).post { selectionMode?.exitSelectionMode() }
             adapter?.markAsFavorite(event.remotePath, event.shouldFavorite)
-        } catch (e: CreationException) {
-            Log_OC.e(TAG, "Error processing event", e)
         }
     }
     //endregion
@@ -727,18 +706,13 @@ class AlbumItemsFragment :
         lifecycleScope.launch(Dispatchers.IO) {
             withContext(Dispatchers.Main) { showLoadingDialog() }
 
-            val failedFiles = try {
-                removeFromAlbum(clientFactory.create(accountManager.user), files)
-            } catch (e: CreationException) {
-                Log_OC.e(TAG, "Error removing album files", e)
-                emptyList()
-            }
+            val failedFiles = clientRepository.getOwncloudClient()?.let { removeFromAlbum(it, files) }.orEmpty()
 
             Log_OC.d(TAG, "Files that could not be removed: ${failedFiles.size}")
 
             withContext(Dispatchers.Main) {
                 if (failedFiles.isNotEmpty() && files.size > SINGLE_SELECTION) {
-                    DisplayUtils.showSnackMessage(requireActivity(), getString(R.string.album_delete_failed_message))
+                    SnackbarUtil.show(requireActivity(), getString(R.string.album_delete_failed_message))
                 }
 
                 dismissLoadingDialog()
@@ -762,7 +736,7 @@ class AlbumItemsFragment :
 
             if (files.size == SINGLE_SELECTION) {
                 val message = ErrorMessageAdapter.getErrorCauseMessage(result, operation, resources)
-                withContext(Dispatchers.Main) { DisplayUtils.showSnackMessage(requireActivity(), message) }
+                withContext(Dispatchers.Main) { SnackbarUtil.show(requireActivity(), message) }
             }
         }
 
@@ -815,7 +789,7 @@ class AlbumItemsFragment :
         val mediaUris = contentIntent.mediaUris()
 
         if (mediaUris.isEmpty()) {
-            DisplayUtils.showSnackMessage(requireActivity(), R.string.album_unsupported_file)
+            SnackbarUtil.show(requireActivity(), R.string.album_unsupported_file)
             return
         }
 

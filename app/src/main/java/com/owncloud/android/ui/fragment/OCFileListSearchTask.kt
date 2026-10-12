@@ -15,6 +15,8 @@ import android.content.ContentValues
 import androidx.lifecycle.lifecycleScope
 import com.nextcloud.client.account.User
 import com.nextcloud.client.preferences.AppPreferences
+import com.nextcloud.utils.SnackbarUtil
+import com.nextcloud.utils.share.UnifiedShareSharees
 import com.owncloud.android.R
 import com.owncloud.android.datamodel.FileDataStorageManager
 import com.owncloud.android.datamodel.OCFile
@@ -31,7 +33,6 @@ import com.owncloud.android.lib.resources.files.model.RemoteFile
 import com.owncloud.android.operations.RefreshFolderOperation
 import com.owncloud.android.ui.adapter.OCShareToOCFileConverter
 import com.owncloud.android.ui.events.SearchEvent
-import com.owncloud.android.utils.DisplayUtils
 import com.owncloud.android.utils.FileSortOrder
 import com.owncloud.android.utils.FileStorageUtils
 import com.owncloud.android.utils.MimeTypeUtil
@@ -102,7 +103,7 @@ class OCFileListSearchTask(
     private suspend fun showSnackbarError(fragment: OCFileListFragment) {
         withContext(Dispatchers.Main) {
             fragment.activity?.let {
-                DisplayUtils.showSnackMessage(it, R.string.error_fetching_sharees)
+                SnackbarUtil.show(it, R.string.error_fetching_sharees)
             }
         }
     }
@@ -132,7 +133,7 @@ class OCFileListSearchTask(
                 sortedFilesInDb,
                 resultData,
                 storageManager,
-                currentUser.accountName
+                currentUser
             )
         } else {
             parseAndSaveVirtuals(resultData, fragment)
@@ -210,13 +211,12 @@ class OCFileListSearchTask(
             val resultFiles = ArrayList<OCFile>()
             var cachedClient: Account? = null
 
-            for (obj in data) {
+            val files = data.filterIsInstance<RemoteFile>().mapNotNull(::toLocalOCFile)
+            UnifiedShareSharees.fill(currentUser, files)
+
+            for (file in files) {
                 try {
-                    val remoteFile = (obj as? RemoteFile) ?: continue
-                    var ocFile = FileStorageUtils.fillOCFile(remoteFile)
-                    FileStorageUtils.searchForLocalFileInDefaultPath(ocFile, currentUser.accountName)
-                    resolveLocalFileId(ocFile)
-                    ocFile = storageManager.saveFileWithParent(ocFile, activity)
+                    var ocFile = storageManager.saveFileWithParent(file, activity)
                     ocFile = handleEncryptionIfNeeded(ocFile, storageManager, activity) {
                         cachedClient ?: currentUser.toPlatformAccount().also { cachedClient = it }
                     }
@@ -287,6 +287,16 @@ class OCFileListSearchTask(
         }
 
         return fileDataStorage.saveFileWithParent(ocFile, activity)
+    }
+
+    private fun toLocalOCFile(remoteFile: RemoteFile): OCFile? = try {
+        FileStorageUtils.fillOCFile(remoteFile).also {
+            FileStorageUtils.searchForLocalFileInDefaultPath(it, currentUser.accountName)
+            resolveLocalFileId(it)
+        }
+    } catch (e: Exception) {
+        Log_OC.e(TAG, "toLocalOCFile():", e)
+        null
     }
 
     private fun resolveLocalFileId(ocFile: OCFile) {

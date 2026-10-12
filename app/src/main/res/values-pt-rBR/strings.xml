@@ -34,7 +34,6 @@
     <string name="add_new_public_share">Adicionar novo link de compartilhamento público</string>
     <string name="add_new_secure_file_drop">Adicionar novo depósito de arquivos seguro</string>
     <string name="add_to_album">Adicionar a álbum</string>
-    <string name="add_to_cloud">Adicionar em %1$s</string>
     <string name="album_already_exists">O álbum já existe</string>
     <string name="album_copy_file_conflict">Já existe.</string>
     <string name="album_create_new_link">Criar novo link</string>
@@ -157,7 +156,7 @@
     <string name="autoupload_delete_uploaded_all_dialog_title">Excluir localmente os arquivos enviados em todas as pastas de upload automático</string>
     <string name="autoupload_delete_uploaded_dialog_description">Todos os arquivos já enviados para a nuvem serão removidos do dispositivo atual</string>
     <string name="autoupload_delete_uploaded_dialog_title">Excluir localmente os arquivos enviados</string>
-    <string name="autoupload_delete_uploaded_notif_ended_content">Liberei %1$s removendo %2$s distribuídos por %3$s de %4$s.</string>
+    <string name="autoupload_delete_uploaded_notif_ended_content">Foram liberados %1$s removendo %2$s distribuídos por %3$s de %4$s.</string>
     <string name="autoupload_delete_uploaded_notif_ended_title">Excluir localmente arquivos já enviados</string>
     <string name="autoupload_delete_uploaded_notif_error_title">Não é possível excluir localmente arquivos já enviados</string>
     <string name="autoupload_delete_uploaded_notif_started_title">Iniciou a exclusão local, em segundo plano, dos arquivos já enviados</string>
@@ -296,8 +295,6 @@
     <string name="create_link">Criar link</string>
     <string name="create_new">Novo</string>
     <string name="create_new_document">Novo documento</string>
-    <string name="create_new_encrypted_folder">Nova pasta criptografada</string>
-    <string name="create_new_folder">Nova pasta</string>
     <string name="create_new_presentation">Nova apresentação</string>
     <string name="create_new_spreadsheet">Nova planilha</string>
     <string name="create_presentation">Apresentação</string>
@@ -439,14 +436,17 @@
     <string name="error_choosing_date">Erro ao escolher a data </string>
     <string name="error_comment_file">Erro ao comentar arquivo</string>
     <string name="error_crash_title">%1$s travou</string>
+    <string name="error_creating_file">Erro ao criar o arquivo</string>
     <string name="error_creating_file_from_template">Erro ao criar o arquivo a partir do modelo</string>
     <string name="error_fetching_sharees">Não é possível obter os destinatários do compartilhamento.</string>
     <string name="error_file_actions">Erro ao mostrar as ações do arquivo</string>
     <string name="error_file_lock">Erro ao alterar o status de trancamento do arquivo</string>
+    <string name="error_reading_file">Erro ao ler o arquivo</string>
     <string name="error_report_issue_action">Reportar</string>
     <string name="error_report_issue_text">Reportar problema ao rastreador? (requer uma conta GitHub)</string>
     <string name="error_retrieving_file">Erro ao recuperar o arquivo</string>
     <string name="error_retrieving_templates">Erro recuperando modelos</string>
+    <string name="error_saving_local_file">Erro ao salvar o arquivo local</string>
     <string name="error_setting_status_message">Erro ao definir a mensagem de status!</string>
     <string name="error_showing_encryption_dialog">Erro ao mostrar o diálogo de configuração de criptografia!</string>
     <string name="error_starting_direct_camera_upload">Erro ao inicializar a câmera</string>
@@ -578,6 +578,7 @@
     <string name="filename_forbidden_characters">Caracteres proibidos: / \\ &lt; &gt; : \" | ? *</string>
     <string name="filename_forbidden_charaters_from_server">O nome do arquivo contém pelo menos um caractere inválido  </string>
     <string name="filename_hint">Nome de arquivo</string>
+    <string name="filename_too_long">O nome do arquivo não pode ter mais de 250 caracteres</string>
     <string name="first_run_1_text">Mantenha seus dados seguros e sob seu controle</string>
     <string name="first_run_2_text">Colaboração segura e troca de arquivos</string>
     <string name="first_run_3_text">Webmail, calendário e contatos fáceis de usar</string>
@@ -687,23 +688,7 @@
     <string name="manage_space_description">Configurações, banco de dados e certificados do servidor de dados de %1$s serão excluídos permanentemente.\n\nArquivos baixados serão mantidos intocados.\n\nEste processo pode levar um tempo.</string>
     <string name="manage_space_title">Gerenciar o espaço</string>
     <string name="manage_tags">Gerenciar etiquetas</string>
-    <string name="media_err_invalid_progressive_playback">O arquivo de mídia não pode ser transmitido </string>
-    <string name="media_err_io">Não foi possível ler o arquivo de mídia</string>
-    <string name="media_err_malformed">O arquivo de mídia tem uma codificação incorreta</string>
-    <string name="media_err_timeout">Tempo esgotado tentando reproduzir o arquivo</string>
-    <string name="media_err_unknown">O media player embutido não consegue tocar esta mídia</string>
-    <string name="media_err_unsupported">O codec de mídia não é suportado</string>
-    <string name="media_forward_description">Botão de avanço rápido</string>
-    <string name="media_notif_ticker">%1$s player</string>
     <string name="media_picker_toolbar_title">Selecionar arquivos de mídia</string>
-    <string name="media_play_pause_description">Botão reproduzir ou pausar</string>
-    <string name="media_player_pause">Pausar</string>
-    <string name="media_player_play">Reproduzir</string>
-    <string name="media_player_playing">Reproduzindo mídia</string>
-    <string name="media_player_seek_backward">Buscar para trás</string>
-    <string name="media_player_seek_forward">Buscar para a frente</string>
-    <string name="media_rewind_description">Botão rebobinar</string>
-    <string name="media_state_playing">%1$s (tocando)</string>
     <string name="menu_item_sort_by_date_newest_first">Mais novos primeiro</string>
     <string name="menu_item_sort_by_date_oldest_first">Mais antigos primeiro</string>
     <string name="menu_item_sort_by_name_a_z">A - Z</string>
@@ -798,8 +783,15 @@
     <string name="picture_set_as_no_app">Nenhum aplicativo encontrado para definir uma imagem</string>
     <string name="pin_home">Fixar na tela inicial</string>
     <string name="pin_shortcut_label">Abrir %1$s</string>
-    <string name="player_stop">para</string>
-    <string name="player_toggle">alternar</string>
+    <string name="player_audio_title_with_artist">%1$s • %2$s</string>
+    <string name="player_control_view_next_button_content_description">Botão Próximo</string>
+    <string name="player_control_view_play_pause_button_content_description">Botão Reproduzir/Pausar</string>
+    <string name="player_control_view_previous_button_content_description">Botão Anterior</string>
+    <string name="player_control_view_random_button_content_description">Botão Aleatório</string>
+    <string name="player_control_view_repeat_button_content_description">Botão Repetir</string>
+    <string name="player_error_source_not_found">Fonte não encotrada</string>
+    <string name="player_last_modified">Modificado: %s</string>
+    <string name="player_media_controls_close_action_title">Fechar</string>
     <string name="please_select_a_server">Selecione um servidor…</string>
     <string name="power_save_check_dialog_message">Desativar a verificação de economia de energia pode resultar em uploads com a bateria baixa!</string>
     <string name="pref_behaviour_entries_delete_file">excluído</string>
@@ -955,6 +947,7 @@
     <string name="send">Enviar</string>
     <string name="send_copy_to">Enviar cópia para</string>
     <string name="send_share">Enviar compartilhamento</string>
+    <string name="server_not_allowed">Servidor não permitido</string>
     <string name="server_not_reachable">Não foi possível carregar o conteúdo</string>
     <string name="server_not_reachable_content">O dispositivo provavelmente não está conectado à Internet</string>
     <string name="set_as">Definir como</string>
@@ -1075,7 +1068,6 @@
     <string name="store_short_dev_desc">A plataforma de produtividade auto-hospedada que mantém você no controle (versão preview)</string>
     <string name="stream">Stream com…</string>
     <string name="stream_not_possible_headline">Streaming interno não é possível</string>
-    <string name="stream_not_possible_message">Faça o download da mídia ou use um aplicativo externo.</string>
     <string name="sub_folder_rule_day">Ano/mês/dia</string>
     <string name="sub_folder_rule_month">Ano/mês</string>
     <string name="sub_folder_rule_year">Ano</string>
@@ -1447,5 +1439,10 @@
         <item quantity="one">%1$d download restante</item>
         <item quantity="many">%1$d downloads restantes</item>
         <item quantity="other">%1$d downloads restantes</item>
+    </plurals>
+    <plurals name="export_start">
+        <item quantity="one">Exportação iniciada (%d arquivo)</item>
+        <item quantity="many">Exportações iniciadas (%d de arquivos)</item>
+        <item quantity="other">Exportações iniciadas (%d arquivos)</item>
     </plurals>
 </resources>

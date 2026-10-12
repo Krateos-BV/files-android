@@ -8,10 +8,10 @@
 package com.owncloud.android.ui.adapter
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.view.View
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import com.elyeproj.loaderviewlibrary.LoaderImageView
 import com.nextcloud.android.common.ui.theme.utils.ColorRole
 import com.nextcloud.client.account.User
@@ -19,22 +19,18 @@ import com.nextcloud.client.jobs.download.FileDownloadHelper
 import com.nextcloud.client.jobs.gallery.GalleryImageGenerationJob
 import com.nextcloud.client.jobs.gallery.GalleryImageGenerationListener
 import com.nextcloud.client.jobs.upload.FileUploadHelper
-import com.nextcloud.utils.OCFileUtils
-import com.nextcloud.utils.extensions.getBigThumbnailKey
-import com.nextcloud.utils.extensions.getSmallThumbnailKey
 import com.nextcloud.utils.extensions.makeRounded
+import com.nextcloud.utils.extensions.setMediaPlaceholder
 import com.nextcloud.utils.extensions.setVisibleIf
+import com.nextcloud.utils.extensions.showsMediaThumbnailOf
 import com.nextcloud.utils.extensions.stopShimmer
 import com.nextcloud.utils.mdm.MDMConfig
-import com.nextcloud.utils.extensions.videoOverlayKey
 import com.nextcloud.utils.thumbnail.ThumbnailArguments
 import com.nextcloud.utils.thumbnail.ThumbnailGenerator
-import com.nextcloud.utils.thumbnail.ThumbnailMemoryCache
 import com.owncloud.android.R
 import com.owncloud.android.datamodel.FileDataStorageManager
 import com.owncloud.android.datamodel.OCFile
 import com.owncloud.android.datamodel.SyncedFolderProvider
-import com.owncloud.android.datamodel.ThumbnailsCacheManager
 import com.owncloud.android.lib.common.utils.Log_OC
 import com.owncloud.android.ui.activity.AlbumsPickerActivity
 import com.owncloud.android.ui.activity.ComponentsGetter
@@ -42,10 +38,12 @@ import com.owncloud.android.ui.activity.FolderPickerActivity
 import com.owncloud.android.ui.fragment.SearchType
 import com.owncloud.android.ui.fragment.albums.AlbumItemsFragment
 import com.owncloud.android.ui.interfaces.OCFileListFragmentInterface
+import com.owncloud.android.ui.navigation.animator.NavigationAnimator
 import com.owncloud.android.utils.EncryptionUtils
 import com.owncloud.android.utils.MimeTypeUtil
 import com.owncloud.android.utils.theme.ViewThemeUtils
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
@@ -67,7 +65,6 @@ class OCFileListDelegate(
     private var viewThemeUtils: ViewThemeUtils,
     private val syncFolderProvider: SyncedFolderProvider? = null
 ) {
-    private val tag = "OCFileListDelegate"
     private val checkedFiles: MutableSet<OCFile> = HashSet()
     private var highlightedItem: OCFile? = null
     var isMultiSelect = false
@@ -110,23 +107,24 @@ class OCFileListDelegate(
         imageView: ImageView,
         file: OCFile,
         galleryRowHolder: GalleryRowHolder,
-        imageDimension: Pair<Int, Int>
+        placeholderInset: Int
     ) {
-        GalleryImageGenerationJob.cancelPreviousJob(imageView)
+        bindGalleryRowListeners(imageView, file, galleryRowHolder)
 
-        imageView.tag = file.fileId
-
-        val displayable = file.takeUnless { it.isUpdateThumbnailNeeded }?.displayableThumbnailFromMemory()
-        if (displayable != null) {
-            imageView.setImageBitmap(displayable)
+        if (imageView.showsMediaThumbnailOf(file) && !file.isUpdateThumbnailNeeded) {
+            imageView.tag = file.fileId
             imageView.stopShimmer(shimmer)
-            bindGalleryRowListeners(imageView, file, galleryRowHolder)
             return
         }
 
-        imageView.setImageDrawable(OCFileUtils.getMediaPlaceholder(file, imageDimension))
+        GalleryImageGenerationJob.cancelPreviousJob(imageView)
 
-        val job = ioScope.launch {
+        imageView.tag = file.fileId
+        ViewCompat.setTransitionName(imageView, NavigationAnimator.sharedElementName(file))
+
+        imageView.setMediaPlaceholder(file, placeholderInset)
+
+        val job = ioScope.launch(start = CoroutineStart.LAZY) {
             try {
                 galleryImageGenerationJob.run(
                     file,
@@ -134,22 +132,12 @@ class OCFileListDelegate(
                     object : GalleryImageGenerationListener {
                         override fun onSuccess() {
                             if (imageView.tag == file.fileId) {
-                                Log_OC.d(tag, "setGalleryImage.onSuccess()")
-                                galleryRowHolder.binding.rowLayout.invalidate()
                                 imageView.stopShimmer(shimmer)
-                            }
-                        }
-
-                        override fun onNewGalleryImage() {
-                            if (imageView.tag == file.fileId) {
-                                Log_OC.d(tag, "setGalleryImage.updateRowVisuals()")
-                                galleryRowHolder.updateRowVisuals()
                             }
                         }
 
                         override fun onError() {
                             if (imageView.tag == file.fileId) {
-                                Log_OC.d(tag, "setGalleryImage.onError()")
                                 imageView.stopShimmer(shimmer)
                             }
                         }
@@ -162,30 +150,11 @@ class OCFileListDelegate(
         }
 
         GalleryImageGenerationJob.storeJob(job, imageView)
-
-        bindGalleryRowListeners(imageView, file, galleryRowHolder)
+        job.start()
     }
 
-    private fun OCFile.displayableThumbnailFromMemory(): Bitmap? {
-        val thumbnailKey = listOf(getBigThumbnailKey(), getSmallThumbnailKey())
-            .firstOrNull { ThumbnailMemoryCache.get(it) != null }
-            ?: return null
-        val thumbnail = ThumbnailMemoryCache.get(thumbnailKey)
-
-        return when {
-            thumbnail == null -> null
-            MimeTypeUtil.isVideo(this) -> withVideoOverlay(thumbnailKey, thumbnail)
-            else -> thumbnail
-        }
-    }
-
-    private fun withVideoOverlay(thumbnailKey: String, thumbnail: Bitmap): Bitmap {
-        val overlayKey = videoOverlayKey(thumbnailKey)
-
-        return ThumbnailMemoryCache.get(overlayKey)
-            ?: ThumbnailsCacheManager.addVideoOverlay(thumbnail, context).also {
-                ThumbnailMemoryCache.put(overlayKey, it)
-            }
+    fun cancelGalleryRow(imageView: ImageView) {
+        GalleryImageGenerationJob.cancelPreviousJob(imageView)
     }
 
     private fun bindGalleryRowListeners(imageView: ImageView, file: OCFile, galleryRowHolder: GalleryRowHolder) {
@@ -195,7 +164,7 @@ class OCFileListDelegate(
                     file
                 )
             } else {
-                ocFileListFragmentInterface.onItemClicked(file)
+                ocFileListFragmentInterface.onItemClicked(file, imageView)
                 AlbumItemsFragment.lastMediaItemPosition = galleryRowHolder.absoluteAdapterPosition
             }
         }
