@@ -32,10 +32,11 @@ concurrency:
     cancel-in-progress: false
 
 env:
-    # Single place to flip the Play release status (XNT-266). Play rejects any status other
-    # than `draft` while the listing itself is still a draft, so keep `draft` until the first
-    # release has been through Play Console review, then change this to `completed`.
-    PLAY_STATUS: draft
+    # Single place to set the Play release status (XNT-266, XEN-140). `completed` rolls the
+    # upload out to the internal testing track's testers straight away; Play accepted it for
+    # 26.9.29.0 (run 36550503804). Use `draft` only if Play answers "Only releases with
+    # status draft may be created on draft app"; a draft must then be rolled out by hand.
+    PLAY_STATUS: completed
 
 jobs:
     release:
