@@ -22,7 +22,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-@Suppress("LongParameterList")
 class E2EEActionResolver @Inject constructor(
     private val storageManager: FileDataStorageManager,
     private val arbitraryDataProvider: ArbitraryDataProvider,
@@ -40,7 +39,7 @@ class E2EEActionResolver @Inject constructor(
     }
 
     suspend fun checkFolderMetadataKey(file: OCFile): Boolean = withContext(Dispatchers.IO) {
-        val capability = storageManager.getCapability(accountManager.user)
+        val capability = storageManager.getCapability(accountManager.user.accountName)
         val canDecrypt = inspector.canDecryptFolderMetadata(file, capability)
         storageManager.setReadOnly(file, !canDecrypt)
         return@withContext canDecrypt

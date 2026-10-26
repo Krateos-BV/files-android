@@ -33,7 +33,6 @@
     <string name="add_new_public_share">新しい公開共有リンクを追加する</string>
     <string name="add_new_secure_file_drop">新しい安全なファイルドロップを追加</string>
     <string name="add_to_album">アルバムに追加</string>
-    <string name="add_to_cloud">%1$s に追加</string>
     <string name="album_delete">アルバムの削除</string>
     <string name="album_rename_conflict">この名前は既に使用されています。</string>
     <string name="album_stop_sharing">共有の停止</string>
@@ -259,8 +258,6 @@
     <string name="create_link">リンクを作成する</string>
     <string name="create_new">新規作成</string>
     <string name="create_new_document">新規ドキュメント</string>
-    <string name="create_new_encrypted_folder">新しい暗号化フォルダー</string>
-    <string name="create_new_folder">新しいフォルダー</string>
     <string name="create_new_presentation">新規プレゼンテーション</string>
     <string name="create_new_spreadsheet">新規スプレッドシート</string>
     <string name="create_presentation">プレゼンテーション</string>
@@ -607,19 +604,6 @@
     <string name="manage_space_description">%1$s のデータから 設定、データベース、サーバー証明書が完全に削除されます。\n\n ダウンロードされたファイルはそのまま残ります。\n\n 実行中はしばらく時間がかかります。</string>
     <string name="manage_space_title">管理領域</string>
     <string name="manage_tags">タグを管理</string>
-    <string name="media_err_invalid_progressive_playback">このメディアファイルはストリーミングできません</string>
-    <string name="media_err_io">メディアファイルを読み込めません</string>
-    <string name="media_err_malformed">不正なエンコードのメディアファイルです</string>
-    <string name="media_err_timeout">再生試行がタイムアウトしました</string>
-    <string name="media_err_unknown">ビルトインのメディアプレーヤーはこのメディアファイルを再生できません</string>
-    <string name="media_err_unsupported">サポートされていないメディアコーデックです</string>
-    <string name="media_forward_description">早送りボタン</string>
-    <string name="media_notif_ticker">%1$s ミュージックプレイヤー</string>
-    <string name="media_play_pause_description">再生/一時停止ボタン</string>
-    <string name="media_player_pause">一時停止</string>
-    <string name="media_player_play">再生</string>
-    <string name="media_rewind_description">巻き戻しボタン</string>
-    <string name="media_state_playing">%1$s (再生中)</string>
     <string name="menu_item_sort_by_date_newest_first">日付（降順）</string>
     <string name="menu_item_sort_by_date_oldest_first">日付（昇順）</string>
     <string name="menu_item_sort_by_name_a_z">A - Z</string>
@@ -711,8 +695,7 @@
     <string name="picture_set_as_no_app">画像を設定するアプリが見つかりませんでした</string>
     <string name="pin_home">ホームスクリーンにピン留めする</string>
     <string name="pin_shortcut_label">%1$sを開く</string>
-    <string name="player_stop">中止</string>
-    <string name="player_toggle">切替え</string>
+    <string name="player_media_controls_close_action_title">閉じる</string>
     <string name="please_select_a_server">サーバを選択してください...</string>
     <string name="power_save_check_dialog_message">省電力チェックを無効にすると、バッテリー残量が少ないときにもファイルのアップロードを行う場合があります！</string>
     <string name="pref_behaviour_entries_delete_file">削除しました</string>
@@ -967,7 +950,6 @@
     <string name="store_short_dev_desc">あなたの作業を強力に管理する、自己ホスト型の生産性向上プラットフォーム（開発プレビューバージョン）</string>
     <string name="stream">ストリームと...</string>
     <string name="stream_not_possible_headline">内部ストリーミングは不可能</string>
-    <string name="stream_not_possible_message">代わりにメディアをダウンロードするか、外部アプリを使用してください。</string>
     <string name="sub_folder_rule_day">年/月/日</string>
     <string name="sub_folder_rule_month">年/月</string>
     <string name="sub_folder_rule_year">年</string>
@@ -1138,6 +1120,7 @@
     <string name="uploads_view_upload_status_failed_permission_error">権限エラー</string>
     <string name="uploads_view_upload_status_failed_ssl_certificate_not_trusted">信頼できないサーバー証明書</string>
     <string name="uploads_view_upload_status_service_interrupted">アプリが終了しました</string>
+    <string name="uploads_view_upload_status_skip">スキップ</string>
     <string name="uploads_view_upload_status_succeeded">完了</string>
     <string name="uploads_view_upload_status_succeeded_same_file">同じファイルがリモートに見つかったため、アップロードをスキップします</string>
     <string name="uploads_view_upload_status_unknown_fail">不明なエラー</string>
@@ -1233,4 +1216,4 @@
     <plurals name="share_download_limit_description">
         <item quantity="other">%1$dが未ダウンロード</item>
     </plurals>
-</resources>
+    </resources>

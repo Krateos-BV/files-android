@@ -8,22 +8,20 @@
 package com.nextcloud.client.jobs.gallery
 
 import android.graphics.Bitmap
-import android.graphics.Point
 import android.media.ThumbnailUtils
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Size
-import android.view.WindowManager
 import android.widget.ImageView
-import androidx.core.content.ContextCompat
 import com.nextcloud.client.account.User
-import com.nextcloud.utils.extensions.getBigThumbnail
 import com.nextcloud.utils.extensions.getBigThumbnailKey
 import com.nextcloud.utils.extensions.getSmallThumbnail
 import com.nextcloud.utils.extensions.isPNG
+import com.nextcloud.utils.extensions.setMediaThumbnail
 import com.nextcloud.utils.extensions.toFile
+import com.nextcloud.utils.thumbnail.ResizedImageGenerator
+import com.nextcloud.utils.view.ScreenMetrics
 import com.owncloud.android.MainApp
-import com.owncloud.android.R
 import com.owncloud.android.datamodel.FileDataStorageManager
 import com.owncloud.android.datamodel.OCFile
 import com.owncloud.android.datamodel.ThumbnailsCacheManager
@@ -39,7 +37,7 @@ import kotlinx.coroutines.withContext
 import java.util.Collections
 import java.util.WeakHashMap
 
-@Suppress("DEPRECATION", "TooGenericExceptionCaught", "ReturnCount")
+@Suppress("DEPRECATION")
 class GalleryImageGenerationJob(private val user: User, private val storageManager: FileDataStorageManager) {
 
     companion object {
@@ -98,43 +96,40 @@ class GalleryImageGenerationJob(private val user: User, private val storageManag
                 return
             }
 
-            var newImage = false
-            val bitmap: Bitmap? = getBitmap(file, onNewThumbnail = { newImage = true })
+            val bitmap: Bitmap? = getBitmap(file)
 
             if (bitmap == null) {
                 withContext(Dispatchers.Main) { listener.onError() }
                 return
             }
 
-            setThumbnail(bitmap, file, imageView, newImage, listener)
+            setThumbnail(bitmap, file, imageView, listener)
         } catch (_: Exception) {
             withContext(Dispatchers.Main) { listener.onError() }
         }
     }
 
-    private suspend fun getBitmap(file: OCFile, onNewThumbnail: () -> Unit): Bitmap? = withContext(Dispatchers.IO) {
-        val cached = file.getBigThumbnail()
+    private suspend fun getBitmap(file: OCFile): Bitmap? = withContext(Dispatchers.IO) {
+        val cached = ThumbnailsCacheManager.getBitmapFromDiskCacheWithoutLock(file.getBigThumbnailKey())
         if (cached != null && !file.isUpdateThumbnailNeeded) {
-            return@withContext applyVideoOverlayIfNeeded(file, cached)
+            return@withContext cached
         }
 
         if (file.isDown) {
             val local = decodeLocalThumbnail(file)
             if (local != null) {
                 ThumbnailsCacheManager.addBitmapToCache(file.getBigThumbnailKey(), local)
-                onNewThumbnail()
-                return@withContext applyVideoOverlayIfNeeded(file, local)
+                return@withContext local
             }
         }
 
         val remote = semaphore.withPermit { fetchFromServer(file) }
         if (remote != null) {
-            onNewThumbnail()
-            return@withContext applyVideoOverlayIfNeeded(file, remote)
+            return@withContext remote
         }
 
         file.getSmallThumbnail()?.let { small ->
-            return@withContext applyVideoOverlayIfNeeded(file, small)
+            return@withContext small
         }
 
         null
@@ -147,9 +142,7 @@ class GalleryImageGenerationJob(private val user: User, private val storageManag
     }
 
     private fun createImageThumbnail(file: OCFile): Bitmap? {
-        val wm = MainApp.getAppContext().getSystemService(android.content.Context.WINDOW_SERVICE) as WindowManager
-        val p = Point()
-        wm.defaultDisplay.getSize(p)
+        val p = ScreenMetrics.size()
 
         val pxW = p.x
         val pxH = p.y
@@ -159,7 +152,7 @@ class GalleryImageGenerationJob(private val user: User, private val storageManag
         var bitmap = BitmapUtils.decodeSampledBitmapFromFile(file.storagePath, pxW, pxH) ?: return null
 
         if (file.isPNG()) {
-            bitmap = ThumbnailsCacheManager.handlePNG(bitmap, pxW, pxH)
+            bitmap = BitmapUtils.centerCropOnPngBackground(bitmap, pxW, pxH)
         }
 
         val thumbnail = ThumbnailsCacheManager.addThumbnailToCache(cacheKey, bitmap, file.storagePath, pxW, pxH)
@@ -190,40 +183,22 @@ class GalleryImageGenerationJob(private val user: User, private val storageManag
                 .getClientFor(user.toOwnCloudAccount(), MainApp.getAppContext())
         }
         ThumbnailsCacheManager.setClient(client)
-        ThumbnailsCacheManager.doResizedImageInBackground(file, storageManager)
+        ResizedImageGenerator.getOrCreate(file, client, storageManager)
     } catch (t: Throwable) {
         Log_OC.e(TAG, "Server fetch failed for $file", t)
         null
-    }
-
-    private fun applyVideoOverlayIfNeeded(file: OCFile, bitmap: Bitmap): Bitmap = if (MimeTypeUtil.isVideo(file)) {
-        ThumbnailsCacheManager.addVideoOverlay(bitmap, MainApp.getAppContext())
-    } else {
-        bitmap
     }
 
     private suspend fun setThumbnail(
         bitmap: Bitmap,
         file: OCFile,
         imageView: ImageView,
-        newImage: Boolean,
         listener: GalleryImageGenerationListener
     ) = withContext(Dispatchers.Main) {
         val tagId = file.fileId.toString()
 
         if (imageView.tag.toString() == tagId) {
-            if (file.isPNG()) {
-                imageView.setBackgroundColor(
-                    ContextCompat.getColor(MainApp.getAppContext(), R.color.bg_default)
-                )
-            }
-
-            if (newImage) listener.onNewGalleryImage()
-
-            if (imageView.isAttachedToWindow) {
-                imageView.setImageBitmap(bitmap)
-                imageView.invalidate()
-            }
+            imageView.setMediaThumbnail(file, bitmap)
         }
 
         listener.onSuccess()

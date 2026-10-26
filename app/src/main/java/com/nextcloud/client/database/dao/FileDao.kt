@@ -14,7 +14,6 @@ import com.nextcloud.client.database.entity.FileEntity
 import com.owncloud.android.db.ProviderMeta.ProviderTableMeta
 import com.owncloud.android.utils.MimeType
 
-@Suppress("TooManyFunctions")
 @Dao
 interface FileDao {
     @Update
@@ -202,4 +201,7 @@ interface FileDao {
 
     @Query("UPDATE filelist SET is_read_only = :readOnly WHERE file_owner = :fileOwner AND path = :path")
     fun setReadOnly(fileOwner: String, path: String, readOnly: Int): Int
+
+    @Update
+    fun updateAll(entities: List<FileEntity>)
 }

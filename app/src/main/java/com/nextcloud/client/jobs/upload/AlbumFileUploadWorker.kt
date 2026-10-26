@@ -54,7 +54,6 @@ import kotlin.random.Random
  * this worker is a replica of FileUploadWorker
  * this worker will take care of upload and then copying the uploaded files to selected Album
  */
-@Suppress("LongParameterList", "TooGenericExceptionCaught")
 class AlbumFileUploadWorker(
     val uploadsStorageManager: UploadsStorageManager,
     val connectivityService: ConnectivityService,
@@ -102,6 +101,14 @@ class AlbumFileUploadWorker(
                     cancelUpload(it, accountName)
                 }
             }
+        }
+
+        fun pauseActiveUploads() {
+            activeOperations.values.forEach {
+                Log_OC.d(TAG, "upload operation is paused: ${it.remotePath}")
+                it.pause()
+            }
+            activeOperations.clear()
         }
 
         fun getCurrentUpload(id: Long?): UploadFileOperation? = activeOperations[id]
@@ -184,7 +191,7 @@ class AlbumFileUploadWorker(
             .setSilent(true)
             .build()
 
-    @Suppress("ReturnCount", "LongMethod", "DEPRECATION")
+    @Suppress("LongMethod", "DEPRECATION")
     private suspend fun uploadFiles(): Result = withContext(Dispatchers.IO) {
         val accountName = inputData.getString(ACCOUNT)
         if (accountName == null) {
@@ -328,7 +335,7 @@ class AlbumFileUploadWorker(
         addDataTransferProgressListener(this@AlbumFileUploadWorker)
     }
 
-    @Suppress("TooGenericExceptionCaught", "DEPRECATION")
+    @Suppress("DEPRECATION")
     private suspend fun upload(
         upload: OCUpload,
         operation: UploadFileOperation,

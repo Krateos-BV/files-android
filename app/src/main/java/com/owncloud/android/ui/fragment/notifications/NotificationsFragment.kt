@@ -33,6 +33,8 @@ import com.nextcloud.client.preferences.AppPreferences
 import com.nextcloud.common.NextcloudClient
 import com.nextcloud.utils.BuildHelper
 import com.nextcloud.utils.GlideHelper
+import com.nextcloud.utils.SnackbarUtil
+import com.nextcloud.utils.avatar.AvatarGenerator
 import com.nextcloud.utils.extensions.getTypedActivity
 import com.owncloud.android.R
 import com.owncloud.android.databinding.NotificationsLayoutBinding
@@ -48,7 +50,6 @@ import com.owncloud.android.ui.adapter.NotificationListAdapter
 import com.owncloud.android.ui.asynctasks.NotificationExecuteActionTask
 import com.owncloud.android.ui.fragment.notifications.model.NotificationsUIState
 import com.owncloud.android.ui.notifications.NotificationsContract
-import com.owncloud.android.utils.DisplayUtils
 import com.owncloud.android.utils.PushUtils
 import com.owncloud.android.utils.theme.ViewThemeUtils
 import kotlinx.coroutines.Dispatchers
@@ -57,7 +58,6 @@ import kotlinx.coroutines.withContext
 import java.util.Optional
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions", "ReturnCount")
 class NotificationsFragment :
     Fragment(),
     NotificationsContract.View,
@@ -76,6 +76,9 @@ class NotificationsFragment :
 
     @Inject
     lateinit var preferences: AppPreferences
+
+    @Inject
+    lateinit var avatarGenerator: AvatarGenerator
 
     private var client: NextcloudClient? = null
 
@@ -253,7 +256,7 @@ class NotificationsFragment :
             else -> return
         }
 
-        DisplayUtils.showSnackMessage(this, messageRes)
+        SnackbarUtil.show(this, messageRes)
     }
 
     private fun isUsingOldLogin(): Boolean {
@@ -302,7 +305,7 @@ class NotificationsFragment :
 
     private fun initializeAdapter() {
         if (adapter == null) {
-            adapter = NotificationListAdapter(this@NotificationsFragment, viewThemeUtils, this, accountManager)
+            adapter = NotificationListAdapter(this@NotificationsFragment, viewThemeUtils, this, avatarGenerator)
             binding?.list?.adapter = adapter
         }
     }
@@ -315,7 +318,7 @@ class NotificationsFragment :
 
     @VisibleForTesting
     fun initForTesting(state: NotificationsUIState) {
-        adapter = NotificationListAdapter(this@NotificationsFragment, viewThemeUtils, this, accountManager)
+        adapter = NotificationListAdapter(this@NotificationsFragment, viewThemeUtils, this, avatarGenerator)
         binding?.list?.adapter = adapter
         binding?.list?.layoutManager = LinearLayoutManager(requireContext())
         this.state = state
@@ -329,7 +332,7 @@ class NotificationsFragment :
                 state = NotificationsUIState.Empty
             }
         } else {
-            DisplayUtils.showSnackMessage(requireActivity(), getString(R.string.remove_notification_failed))
+            SnackbarUtil.show(requireActivity(), getString(R.string.remove_notification_failed))
         }
 
         fetchAndSetData(client)
@@ -340,7 +343,7 @@ class NotificationsFragment :
             adapter?.removeAllNotifications()
             state = NotificationsUIState.Empty
         } else {
-            DisplayUtils.showSnackMessage(requireActivity(), getString(R.string.clear_notifications_failed))
+            SnackbarUtil.show(requireActivity(), getString(R.string.clear_notifications_failed))
         }
     }
 
@@ -357,7 +360,7 @@ class NotificationsFragment :
             }
         } else {
             adapter?.bindButtons(holder, notification)
-            DisplayUtils.showSnackMessage(requireActivity(), getString(R.string.notification_action_failed))
+            SnackbarUtil.show(requireActivity(), getString(R.string.notification_action_failed))
         }
     }
 

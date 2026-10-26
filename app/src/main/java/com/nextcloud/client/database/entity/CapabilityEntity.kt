@@ -157,10 +157,12 @@ data class CapabilityEntity(
     @ColumnInfo(name = ProviderTableMeta.CAPABILITIES_MOD_REWRITE_WORKING)
     val modRewriteWorking: Int?,
     @ColumnInfo(name = ProviderTableMeta.CAPABILITIES_CHUNKED_UPLOAD_MAX_SIZE)
-    val chunkedUploadMaxSize: Long?
+    val chunkedUploadMaxSize: Long?,
+    @ColumnInfo(name = ProviderTableMeta.CAPABILITIES_SHARING_JSON)
+    val sharingJson: String?
 )
 
-@Suppress("LongMethod", "ReturnCount")
+@Suppress("LongMethod", "CyclomaticComplexMethod")
 fun CapabilityEntity?.toOCCapability(): OCCapability {
     val capability = OCCapability()
     if (this == null) return capability
