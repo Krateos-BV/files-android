@@ -18,6 +18,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import com.nextcloud.client.account.User
 import com.nextcloud.client.account.UserAccountManager
 import com.nextcloud.utils.ForegroundServiceHelper
@@ -35,16 +36,12 @@ import com.owncloud.android.lib.common.operations.RemoteOperationResult.ResultCo
 import com.owncloud.android.lib.common.utils.Log_OC
 import com.owncloud.android.operations.DownloadFileOperation
 import com.owncloud.android.operations.DownloadType
-import com.owncloud.android.ui.events.EventBusFactory
-import com.owncloud.android.ui.events.FileDownloadProgressEvent
 import com.owncloud.android.utils.theme.ViewThemeUtils
 import java.util.AbstractList
 import java.util.Optional
 import java.util.Vector
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.random.Random
 
-@Suppress("LongParameterList", "TooManyFunctions", "TooGenericExceptionCaught")
 class FileDownloadWorker(
     viewThemeUtils: ViewThemeUtils,
     private val accountManager: UserAccountManager,
@@ -77,6 +74,7 @@ class FileDownloadWorker(
         const val ACTIVITY_NAME = "ACTIVITY_NAME"
         const val PACKAGE_NAME = "PACKAGE_NAME"
         const val CONFLICT_UPLOAD_ID = "CONFLICT_UPLOAD_ID"
+        const val PROGRESS_PERCENT = "PROGRESS_PERCENT"
     }
 
     private var currentDownload: DownloadFileOperation? = null
@@ -93,8 +91,6 @@ class FileDownloadWorker(
         viewThemeUtils
     )
 
-    private var downloadProgressListener = FileDownloadProgressListener()
-
     private var user: User? = null
     private var currentUser = Optional.empty<User>()
 
@@ -103,7 +99,6 @@ class FileDownloadWorker(
 
     private var downloadError: FileDownloadError? = null
 
-    @Suppress("ReturnCount")
     override suspend fun doWork(): Result {
         return try {
             setUser()
@@ -248,7 +243,7 @@ class FileDownloadWorker(
         am.addOnAccountsUpdatedListener(this, null, false)
     }
 
-    @Suppress("TooGenericExceptionCaught", "DEPRECATION")
+    @Suppress("DEPRECATION")
     private suspend fun downloadFile(downloadKey: String) {
         currentDownload = pendingDownloads.get(downloadKey)
 
@@ -412,49 +407,10 @@ class FileDownloadWorker(
             notificationManager.run {
                 updateDownloadProgress(percent, totalToTransfer)
             }
+            setProgressAsync(workDataOf(PROGRESS_PERCENT to percent))
             lastUpdateTime = currentTime
         }
 
         lastPercent = percent
-        EventBusFactory.downloadProgressEventBus.post(FileDownloadProgressEvent(percent))
-        downloadProgressListener.onTransferProgress(progressRate, totalTransferredSoFar, totalToTransfer, filePath)
-    }
-
-    inner class FileDownloadProgressListener : OnDatatransferProgressListener {
-        private val boundListeners = ConcurrentHashMap<Long, OnDatatransferProgressListener>()
-
-        fun addDataTransferProgressListener(listener: OnDatatransferProgressListener?, file: OCFile?) {
-            if (file == null || listener == null) {
-                return
-            }
-
-            boundListeners[file.fileId] = listener
-        }
-
-        fun removeDataTransferProgressListener(listener: OnDatatransferProgressListener?, file: OCFile?) {
-            if (file == null || listener == null) {
-                return
-            }
-
-            val fileId = file.fileId
-            if (boundListeners[fileId] === listener) {
-                boundListeners.remove(fileId)
-            }
-        }
-
-        override fun onTransferProgress(
-            progressRate: Long,
-            totalTransferredSoFar: Long,
-            totalToTransfer: Long,
-            fileName: String
-        ) {
-            val listener = boundListeners[currentDownload?.file?.fileId]
-            listener?.onTransferProgress(
-                progressRate,
-                totalTransferredSoFar,
-                totalToTransfer,
-                fileName
-            )
-        }
     }
 }

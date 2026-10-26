@@ -18,7 +18,6 @@ import com.owncloud.android.operations.DownloadType
  * This interface allows to control, schedule and monitor all application
  * long-running background tasks, such as periodic checks or synchronization.
  */
-@Suppress("TooManyFunctions") // we expect this implementation to have rich API
 interface BackgroundJobManager {
 
     /**
@@ -145,11 +144,13 @@ interface BackgroundJobManager {
     fun startAlbumFilesUploadJob(user: User, uploadIds: LongArray, albumName: String)
     fun getFileUploads(user: User): LiveData<List<JobInfo>>
     fun cancelFilesUploadJob(user: User)
+    fun isAutoUploadScheduled(syncedFolderID: Long): Boolean
     fun isStartFileUploadJobScheduled(accountName: String): Boolean
     fun isAutoUploadIgnoringPowerSavingScheduled(syncedFolderID: Long): Boolean
+    fun schedulePeriodicAutoUpload()
+    fun cancelEnqueuedAutoUploads()
     fun cancelFilesDownloadJob(accountName: String, fileId: Long)
 
-    @Suppress("LongParameterList")
     fun startFileDownloadJob(
         user: User,
         file: OCFile,
@@ -173,8 +174,9 @@ interface BackgroundJobManager {
     fun startOfflineOperations()
     fun startPeriodicallyOfflineOperation()
     fun scheduleInternal2WaySync(intervalMinutes: Long)
+    fun runNowInternal2WaySync()
     fun cancelAllFilesDownloadJobs()
-    fun startMetadataSyncJob(currentDirPath: String)
+    fun startMetadataSyncJob(currentDirPath: String, folderAlreadySynced: Boolean = false)
     fun downloadFolder(folder: OCFile, accountName: String)
     fun cancelFolderDownload()
     fun locallyDeleteAutoUploadedFiles(syncedFolders: List<SyncedFolder>)

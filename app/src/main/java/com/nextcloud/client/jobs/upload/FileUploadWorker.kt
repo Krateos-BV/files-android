@@ -27,6 +27,7 @@ import com.nextcloud.client.preferences.AppPreferences
 import com.nextcloud.utils.ForegroundServiceHelper
 import com.nextcloud.utils.extensions.getPercent
 import com.nextcloud.utils.extensions.isNonRetryable
+import com.nextcloud.utils.extensions.isUserCancellation
 import com.nextcloud.utils.extensions.toFile
 import com.owncloud.android.R
 import com.owncloud.android.datamodel.ForegroundServiceType
@@ -57,7 +58,6 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
 
-@Suppress("LongParameterList", "TooGenericExceptionCaught")
 class FileUploadWorker(
     val uploadsStorageManager: UploadsStorageManager,
     val connectivityService: ConnectivityService,
@@ -119,10 +119,31 @@ class FileUploadWorker(
             }
         }
 
+        fun pauseActiveUploads() {
+            activeOperations.values.forEach {
+                Log_OC.d(TAG, "upload operation is paused: ${it.remotePath}")
+                it.pause()
+            }
+            activeOperations.clear()
+        }
+
         fun getCurrentUpload(id: Long?): UploadFileOperation? = activeOperations[id]
 
         fun isUploading(remotePath: String?, accountName: String?): Boolean = activeOperations.values.any {
             it.remotePath == remotePath && it.user.accountName == accountName
+        }
+
+        /**
+         * [activeOperations] tracks every upload running in this process, not only the ones this worker started.
+         * Auto upload has to register here too, otherwise a retry pass sees its in-progress row as abandoned and
+         * reschedules it, and the cancel action in the upload list has nothing to cancel.
+         */
+        fun registerActiveUpload(operation: UploadFileOperation) {
+            activeOperations[operation.ocUploadId] = operation
+        }
+
+        fun unregisterActiveUpload(uploadId: Long) {
+            activeOperations.remove(uploadId)
         }
 
         fun getUploadAction(action: String): Int = when (action) {
@@ -220,7 +241,7 @@ class FileUploadWorker(
         }
     }
 
-    @Suppress("ReturnCount", "LongMethod", "DEPRECATION")
+    @Suppress("LongMethod", "DEPRECATION", "CyclomaticComplexMethod")
     private suspend fun uploadFiles(): Result = withContext(Dispatchers.IO) {
         val accountName = inputData.getString(ACCOUNT)
         if (accountName == null) {
@@ -277,6 +298,11 @@ class FileUploadWorker(
                 continue
             }
 
+            if (isUploading(upload.remotePath, accountName)) {
+                Log_OC.d(TAG, "skipping upload, another worker is still transferring it: ${upload.remotePath}")
+                continue
+            }
+
             delay(retryPolicy.getDelay().milliseconds)
 
             if (!skipAutoUploadCheck && isBelongToAnySyncedFolder(upload, syncFolderHelper, syncedFolders)) {
@@ -326,11 +352,9 @@ class FileUploadWorker(
                 break
             }
 
-            // check upload result for worker
-            val uploadResult = UploadResult.fromOperationResult(result)
-            if (!result.isSuccess) {
+            if (!result.isSuccess && !result.code.isUserCancellation()) {
                 Log_OC.e(TAG, "upload failed for ${upload.remotePath}: ${result.code}")
-                if (uploadResult.isNonRetryable()) {
+                if (UploadResult.fromOperationResult(result).isNonRetryable()) {
                     hasNonRetryableFailure = true
                 } else {
                     hasRetryableFailure = true
@@ -355,12 +379,11 @@ class FileUploadWorker(
     }
 
     private fun skip(upload: OCUpload): Boolean = when (upload.uploadStatus) {
-        UploadStatus.UPLOAD_SUCCEEDED -> true
+        UploadStatus.UPLOAD_SUCCEEDED, UploadStatus.UPLOAD_CANCELLED -> true
         UploadStatus.UPLOAD_FAILED -> upload.lastResult.isNonRetryable()
         else -> false
     }
 
-    @Suppress("ReturnCount")
     suspend fun isBelongToAnySyncedFolder(
         upload: OCUpload,
         syncFolderHelper: SyncFolderHelper,
@@ -410,7 +433,7 @@ class FileUploadWorker(
         return result
     }
 
-    @Suppress("TooGenericExceptionCaught", "DEPRECATION")
+    @Suppress("DEPRECATION")
     private suspend fun upload(
         operation: UploadFileOperation,
         user: User,

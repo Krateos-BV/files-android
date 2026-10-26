@@ -18,6 +18,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.nextcloud.client.account.User
+import com.nextcloud.utils.avatar.AvatarGenerationListener
+import com.nextcloud.utils.avatar.AvatarGenerator
 import com.nextcloud.utils.mdm.MDMConfig.shareViaLink
 import com.owncloud.android.R
 import com.owncloud.android.databinding.FileDetailsShareInternalShareLinkBinding
@@ -29,14 +31,12 @@ import com.owncloud.android.datamodel.SharesType
 import com.owncloud.android.lib.resources.shares.OCShare
 import com.owncloud.android.lib.resources.shares.ShareType
 import com.owncloud.android.ui.activity.FileActivity
-import com.owncloud.android.utils.DisplayUtils.AvatarGenerationListener
 import com.owncloud.android.utils.theme.ViewThemeUtils
 import kotlin.math.min
 
 /**
  * Adapter to show a user/group/email/remote in Sharing list in file details view.
  */
-@Suppress("LongParameterList")
 class ShareeListAdapter(
     private val fileActivity: FileActivity,
     @JvmField var shares: ArrayList<OCShare>,
@@ -45,7 +45,8 @@ class ShareeListAdapter(
     private val user: User?,
     private val viewThemeUtils: ViewThemeUtils,
     private val encrypted: Boolean,
-    private val sharesType: SharesType?
+    private val sharesType: SharesType?,
+    private val avatarGenerator: AvatarGenerator
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder?>(),
     AvatarGenerationListener {
     private val avatarRadiusDimension: Float = fileActivity.getResources().getDimension(R.dimen.user_icon_radius)
@@ -86,7 +87,7 @@ class ShareeListAdapter(
 
             else -> {
                 val binding = FileDetailsShareShareItemBinding.inflate(inflater, parent, false)
-                ShareViewHolder(binding, user, fileActivity, viewThemeUtils, encrypted)
+                ShareViewHolder(binding, user, fileActivity, viewThemeUtils, encrypted, avatarGenerator)
             }
         }
     }
@@ -152,11 +153,10 @@ class ShareeListAdapter(
         }
     }
 
-    override fun shouldCallGeneratedCallback(tag: String, callContext: Any?): Boolean {
+    override fun shouldCallGeneratedCallback(tag: String?, callContext: Any?): Boolean {
         if (callContext is ImageView) {
             // needs to be changed once federated users have avatars
-            return callContext.tag.toString() == tag.split("@".toRegex()).dropLastWhile { it.isEmpty() }
-                .toTypedArray()[0]
+            return callContext.tag.toString() == tag?.substringBefore('@')
         }
         return false
     }

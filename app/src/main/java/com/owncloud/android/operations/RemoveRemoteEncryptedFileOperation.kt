@@ -28,8 +28,8 @@ import com.owncloud.android.utils.theme.CapabilityUtils
 import org.apache.commons.httpclient.HttpStatus
 import org.apache.commons.httpclient.NameValuePair
 import org.apache.jackrabbit.webdav.client.methods.DeleteMethod
+import com.nextcloud.utils.AppConstants.DEFAULT_CONNECTION_TIMEOUT_MS
 
-@Suppress("LongParameterList")
 class RemoveRemoteEncryptedFileOperation internal constructor(
     private val remotePath: String,
     private val user: User,
@@ -40,7 +40,6 @@ class RemoveRemoteEncryptedFileOperation internal constructor(
 ) : RemoteOperation<Void>() {
 
     @Deprecated("Deprecated in Java")
-    @Suppress("TooGenericExceptionCaught")
     override fun run(client: OwnCloudClient): RemoteOperationResult<Void> {
         var result: RemoteOperationResult<Void>
         var delete: DeleteMethod? = null
@@ -104,7 +103,7 @@ class RemoveRemoteEncryptedFileOperation internal constructor(
             setQueryString(arrayOf(NameValuePair(E2E_TOKEN, token)))
         }
 
-        val status = client.executeMethod(delete, REMOVE_READ_TIMEOUT, REMOVE_CONNECTION_TIMEOUT)
+        val status = client.executeMethod(delete, REMOVE_READ_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT_MS)
         delete.getResponseBodyAsString() // exhaust the response, although not interesting
 
         val result = RemoteOperationResult<Void>(delete.succeeded() || status == HttpStatus.SC_NOT_FOUND, delete)
@@ -207,6 +206,5 @@ class RemoveRemoteEncryptedFileOperation internal constructor(
     companion object {
         private val TAG = RemoveRemoteEncryptedFileOperation::class.java.getSimpleName()
         private const val REMOVE_READ_TIMEOUT = 30000
-        private const val REMOVE_CONNECTION_TIMEOUT = 5000
     }
 }

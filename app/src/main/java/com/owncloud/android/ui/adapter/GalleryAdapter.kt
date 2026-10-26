@@ -23,22 +23,27 @@ import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter
 import com.afollestad.sectionedrecyclerview.SectionedViewHolder
 import com.nextcloud.client.account.User
+import com.nextcloud.utils.date.DateFormatPattern
 import com.nextcloud.utils.extensions.toGalleryItems
+import com.nextcloud.utils.text.DisplayTextFormatter
 import com.nextcloud.utils.thumbnail.ThumbnailGenerator
+import com.owncloud.android.R
 import com.owncloud.android.databinding.GalleryHeaderBinding
 import com.owncloud.android.databinding.GalleryRowBinding
 import com.owncloud.android.datamodel.FileDataStorageManager
 import com.owncloud.android.datamodel.GalleryItems
+import com.owncloud.android.datamodel.GalleryRow
+import com.owncloud.android.datamodel.GalleryRowLayout
 import com.owncloud.android.datamodel.OCFile
 import com.owncloud.android.lib.common.utils.Log_OC
 import com.owncloud.android.ui.activity.ComponentsGetter
+import com.owncloud.android.ui.adapter.filelist.CommonOCFileListAdapterInterface
+import com.owncloud.android.ui.adapter.filelist.item.OCFileListDelegate
 import com.owncloud.android.ui.interfaces.OCFileListFragmentInterface
-import com.owncloud.android.utils.DisplayUtils
 import com.owncloud.android.utils.FileSortOrder
 import com.owncloud.android.utils.theme.ViewThemeUtils
 import me.zhanghai.android.fastscroll.PopupTextProvider
 
-@Suppress("LongParameterList", "TooManyFunctions")
 class GalleryAdapter(
     val context: Context,
     user: User,
@@ -159,13 +164,16 @@ class GalleryAdapter(
         } else {
             GalleryRowHolder(
                 GalleryRowBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-                defaultThumbnailSize.toFloat(),
                 ocFileListDelegate,
-                storageManager,
                 this,
                 viewThemeUtils
             )
         }
+
+    override fun onViewRecycled(holder: SectionedViewHolder) {
+        super.onViewRecycled(holder)
+        (holder as? GalleryRowHolder)?.recycle()
+    }
 
     override fun onBindViewHolder(
         holder: SectionedViewHolder?,
@@ -179,10 +187,10 @@ class GalleryAdapter(
         }
     }
 
-    override fun getPopupText(p0: View, position: Int): CharSequence = DisplayUtils.getDateByPattern(
+    override fun getPopupText(p0: View, position: Int): CharSequence = DisplayTextFormatter.formatDate(
         files[getRelativePosition(position).section()].date,
-        context,
-        DisplayUtils.MONTH_YEAR_PATTERN
+        DateFormatPattern.FullMonthWithYear,
+        context
     )
 
     override fun onBindHeaderViewHolder(holder: SectionedViewHolder?, section: Int, expanded: Boolean) {
@@ -190,23 +198,63 @@ class GalleryAdapter(
             val headerViewHolder = holder as GalleryHeaderViewHolder
             val galleryItem = files[section]
 
-            headerViewHolder.binding.month.text = DisplayUtils.getDateByPattern(
+            headerViewHolder.binding.month.text = DisplayTextFormatter.formatDate(
                 galleryItem.date,
-                context,
-                DisplayUtils.MONTH_PATTERN
+                DateFormatPattern.FullMonth,
+                context
             )
-            headerViewHolder.binding.year.text = DisplayUtils.getDateByPattern(
+            headerViewHolder.binding.year.text = DisplayTextFormatter.formatDate(
                 galleryItem.date,
-                context,
-                DisplayUtils.YEAR_PATTERN
+                DateFormatPattern.Year,
+                context
             )
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateList(items: List<GalleryItems>) {
+        val previous = files
         files = items
-        notifyDataSetChanged()
+
+        if (!hasSameSectionLayout(previous, items)) {
+            notifyDataSetChanged()
+            return
+        }
+
+        items.forEachIndexed { section, galleryItems ->
+            galleryItems.rows.forEachIndexed { row, galleryRow ->
+                if (!galleryRow.contentEquals(previous[section].rows[row])) {
+                    notifyItemChanged(getAbsolutePosition(section, row))
+                }
+            }
+        }
+    }
+
+    private fun hasSameSectionLayout(previous: List<GalleryItems>, current: List<GalleryItems>): Boolean {
+        if (previous.size != current.size) {
+            return false
+        }
+
+        return previous.indices.all { section ->
+            previous[section].date == current[section].date &&
+                previous[section].rows.size == current[section].rows.size
+        }
+    }
+
+    private fun GalleryRow.contentEquals(other: GalleryRow): Boolean {
+        if (cellSizes != other.cellSizes || files.size != other.files.size) {
+            return false
+        }
+
+        return files.indices.all { index ->
+            val file = files[index]
+            val otherFile = other.files[index]
+
+            file.fileId == otherFile.fileId &&
+                file.etag == otherFile.etag &&
+                file.isFavorite == otherFile.isFavorite &&
+                file.isUpdateThumbnailNeeded == otherFile.isUpdateThumbnailNeeded
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -300,9 +348,16 @@ class GalleryAdapter(
         columns = newColumn
     }
 
+    fun rowLayout(): GalleryRowLayout = GalleryRowLayout(
+        columns,
+        context.resources.displayMetrics.widthPixels,
+        context.resources.getDimensionPixelSize(R.dimen.gallery_cell_spacing),
+        defaultThumbnailSize
+    )
+
     @SuppressLint("NotifyDataSetChanged")
     fun showAlbumItems(albumItems: List<OCFile>) {
-        files = albumItems.toGalleryItems(columns, defaultThumbnailSize)
+        files = albumItems.toGalleryItems(rowLayout())
         notifyDataSetChanged()
     }
 
@@ -314,7 +369,7 @@ class GalleryAdapter(
         val allFiles = getAllFiles()
         allFiles.firstOrNull { it.remotePath == remotePath }?.also { file ->
             file.isFavorite = favorite
-            files = allFiles.toGalleryItems(columns, defaultThumbnailSize)
+            files = allFiles.toGalleryItems(rowLayout())
             notifyItemChanged(file)
         }
     }
@@ -337,7 +392,7 @@ class GalleryAdapter(
 
     override fun setHighlightedItem(file: OCFile) = Unit
 
-    override fun setSortOrder(mFile: OCFile, sortOrder: FileSortOrder) = Unit
+    override fun setSortOrder(mFile: OCFile?, sortOrder: FileSortOrder) = Unit
 
     fun cleanup() {
         ocFileListDelegate.cleanup()

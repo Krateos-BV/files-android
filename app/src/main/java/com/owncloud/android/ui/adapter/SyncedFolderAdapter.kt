@@ -29,6 +29,7 @@ import com.nextcloud.utils.extensions.calculateScanInterval
 import com.nextcloud.utils.extensions.filterEnabledOrWithoutEnabledParent
 import com.nextcloud.utils.extensions.hasEnabledParent
 import com.nextcloud.utils.extensions.setVisibleIf
+import com.nextcloud.utils.thumbnail.job.MediaThumbnailGenerationJob
 import com.owncloud.android.R
 import com.owncloud.android.databinding.GridSyncItemBinding
 import com.owncloud.android.databinding.SyncedFoldersEmptyBinding
@@ -38,8 +39,6 @@ import com.owncloud.android.datamodel.MediaFolderType
 import com.owncloud.android.datamodel.SyncedFolder
 import com.owncloud.android.datamodel.SyncedFolderDisplayItem
 import com.owncloud.android.datamodel.ThumbnailsCacheManager
-import com.owncloud.android.datamodel.ThumbnailsCacheManager.AsyncMediaThumbnailDrawable
-import com.owncloud.android.datamodel.ThumbnailsCacheManager.MediaThumbnailGenerationTask
 import com.owncloud.android.utils.FileUtil
 import com.owncloud.android.utils.theme.ViewThemeUtils
 import kotlinx.coroutines.Dispatchers
@@ -47,14 +46,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.Locale
-import java.util.concurrent.Executor
-import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 /**
  * Adapter to display all auto-synced folders and/or instant upload media folders.
  */
-@Suppress("LongParameterList", "TooManyFunctions")
 class SyncedFolderAdapter(
     private val lifecycleScope: LifecycleCoroutineScope,
     private val context: Context,
@@ -71,7 +67,7 @@ class SyncedFolderAdapter(
     private val syncFolderItems: MutableList<SyncedFolderDisplayItem> = ArrayList()
     private val filteredSyncFolderItems: MutableList<SyncedFolderDisplayItem> = ArrayList()
     private var hideItems = true
-    private val thumbnailThreadPool: Executor = Executors.newCachedThreadPool()
+    private val mediaThumbnailGenerationJob = MediaThumbnailGenerationJob(context, viewThemeUtils)
 
     private val minimumSizeForTouchableArea
         by lazy { context.resources.getDimensionPixelSize(R.dimen.minimum_size_for_touchable_area) }
@@ -429,24 +425,10 @@ class SyncedFolderAdapter(
 
             val file = File(filteredSyncFolderItems[section].filePaths[relativePosition])
 
-            val task =
-                MediaThumbnailGenerationTask(
-                    holder.binding.thumbnail,
-                    context,
-                    viewThemeUtils
-                )
-
-            val asyncDrawable =
-                AsyncMediaThumbnailDrawable(
-                    context.resources,
-                    ThumbnailsCacheManager.mDefaultImg
-                )
-            holder.binding.thumbnail.setImageDrawable(asyncDrawable)
-
-            task.executeOnExecutor(thumbnailThreadPool, file)
-
-            // set proper tag
-            holder.binding.thumbnail.tag = file.hashCode()
+            val thumbnail = holder.binding.thumbnail
+            thumbnail.setImageBitmap(ThumbnailsCacheManager.mDefaultImg)
+            thumbnail.tag = file.hashCode()
+            lifecycleScope.launch { mediaThumbnailGenerationJob.load(file, thumbnail) }
 
             holder.itemView.tag = relativePosition % gridWidth
 

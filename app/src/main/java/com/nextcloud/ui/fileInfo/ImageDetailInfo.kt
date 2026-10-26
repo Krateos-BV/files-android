@@ -18,14 +18,15 @@ import androidx.exifinterface.media.ExifInterface
 import androidx.lifecycle.lifecycleScope
 import com.nextcloud.android.common.ui.theme.utils.ColorRole
 import com.nextcloud.client.NominatimClient
+import com.nextcloud.client.utils.IntentUtil
 import com.nextcloud.ui.fileInfo.model.ImageMetadata
+import com.nextcloud.utils.HumanReadableFormatter
 import com.nextcloud.utils.extensions.getSmallThumbnail
 import com.owncloud.android.MainApp
 import com.owncloud.android.R
 import com.owncloud.android.databinding.FileInfoFragmentBinding
 import com.owncloud.android.datamodel.OCFile
 import com.owncloud.android.utils.BitmapUtils
-import com.owncloud.android.utils.DisplayUtils
 import com.owncloud.android.utils.theme.ViewThemeUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -180,7 +181,7 @@ class ImageDetailInfo(private val fragment: FileInfoFragment, private val viewTh
     }
 
     fun gatherMetadata(file: OCFile): ImageMetadata {
-        val fileSize = DisplayUtils.bytesToHumanReadable(file.fileLength)
+        val fileSize = HumanReadableFormatter.formatBytes(file.fileLength)
         val timestamp = maxOf(file.modificationTimestamp, file.creationTimestamp)
         return if (file.isDown) {
             gatherLocalMetadata(file, fileSize, timestamp)
@@ -223,7 +224,6 @@ class ImageDetailInfo(private val fragment: FileInfoFragment, private val viewTh
             SimpleDateFormat("y:M:d H:m:s", Locale.ROOT).parse(it)?.time
         } ?: fallback
 
-    @Suppress("ReturnCount")
     private fun parseExposure(exif: ExifInterface): String? {
         val shutterSpeed = exif.getAttribute(ExifInterface.TAG_SHUTTER_SPEED_VALUE)
         val exposureTime = exif.getAttribute(ExifInterface.TAG_EXPOSURE_TIME)
@@ -269,7 +269,7 @@ class ImageDetailInfo(private val fragment: FileInfoFragment, private val viewTh
         object : ItemizedIconOverlay.OnItemGestureListener<OverlayItem> {
             override fun onItemSingleTapUp(index: Int, item: OverlayItem): Boolean {
                 val intent = Intent(Intent.ACTION_VIEW, "geo:0,0?q=$latitude,$longitude".toUri())
-                DisplayUtils.startIntentIfAppAvailable(intent, fragment.activity, R.string.no_map_app_availble)
+                IntentUtil.startIntentIfAppAvailable(intent, fragment.requireActivity(), R.string.no_map_app_availble)
                 return true
             }
 

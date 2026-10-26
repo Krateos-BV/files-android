@@ -25,6 +25,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.nextcloud.client.account.User
 import com.nextcloud.client.di.Injectable
+import com.nextcloud.utils.SnackbarUtil
 import com.nextcloud.utils.extensions.getParcelableArgument
 import com.nextcloud.utils.fileNameValidator.FileNameValidator
 import com.owncloud.android.R
@@ -47,7 +48,6 @@ import com.owncloud.android.ui.fragment.EmptyListState
 import com.owncloud.android.ui.fragment.FileFragment
 import com.owncloud.android.ui.fragment.OCFileListFragment
 import com.owncloud.android.utils.DataHolderUtil
-import com.owncloud.android.utils.DisplayUtils
 import com.owncloud.android.utils.ErrorMessageAdapter
 import com.owncloud.android.utils.FileSortOrder
 import com.owncloud.android.utils.PathUtils
@@ -56,7 +56,6 @@ import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
-@Suppress("Detekt.TooManyFunctions")
 open class FolderPickerActivity :
     FileActivity(),
     FileFragment.ContainerActivity,
@@ -376,7 +375,6 @@ open class FolderPickerActivity :
         updateNavigationElementsInActionBar()
     }
 
-    @Suppress("ReturnCount")
     private fun toggleChooseEnabled() {
         if (this is FilePickerActivity) {
             return
@@ -401,7 +399,7 @@ open class FolderPickerActivity :
         checkButtonStates(isFolderPathValid)
 
         if (!isFolderPathValid) {
-            DisplayUtils.showSnackMessage(
+            SnackbarUtil.show(
                 this,
                 R.string.file_name_validator_error_contains_reserved_names_or_invalid_characters
             )
@@ -521,7 +519,7 @@ open class FolderPickerActivity :
             fileListFragment?.onItemClicked(storageManager.getFileByPath(operation.remotePath))
         } else {
             try {
-                DisplayUtils.showSnackMessage(
+                SnackbarUtil.show(
                     this,
                     ErrorMessageAdapter.getErrorCauseMessage(result, operation, resources)
                 )
@@ -549,9 +547,8 @@ open class FolderPickerActivity :
          * [BroadcastReceiver] to enable syncing feedback in UI
          */
         @Suppress(
-            "Detekt.ComplexMethod",
+            "Detekt.CyclomaticComplexMethod",
             "Detekt.NestedBlockDepth",
-            "Detekt.TooGenericExceptionCaught",
             "Detekt.LongMethod"
         ) // legacy code
         override fun onReceive(context: Context, intent: Intent) {
@@ -623,7 +620,7 @@ open class FolderPickerActivity :
         }
 
         private fun browseRootForRemovedFolder() {
-            DisplayUtils.showSnackMessage(
+            SnackbarUtil.show(
                 activity,
                 R.string.sync_current_folder_was_removed,
                 currentFolder?.fileName
