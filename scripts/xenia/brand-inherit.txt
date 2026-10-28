@@ -1,0 +1,5 @@
+# SPDX-FileCopyrightText: 2026 XeniaCloud
+# SPDX-License-Identifier: GPL-3.0-or-later
+ecosystem_apps_more  # brand heading, every locale shows the base value
+prefs_show_ecosystem_apps_summary  # brand heading, every locale shows the base value
+compose_activity_label  # product name, every locale shows the base value

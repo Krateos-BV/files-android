@@ -1,0 +1,29 @@
+# SPDX-FileCopyrightText: 2026 XeniaCloud
+# SPDX-License-Identifier: GPL-3.0-or-later
+store_short_desc  # upstream F-Droid metadata (scripts/metadata), not shown in the app
+store_full_desc  # upstream F-Droid metadata (scripts/metadata), not shown in the app
+store_short_dev_desc  # upstream F-Droid metadata (scripts/metadata), not shown in the app
+store_full_dev_desc  # upstream F-Droid metadata (scripts/metadata), not shown in the app
+placeholder_sso  # layout preview text (tools:text), not shown in the app
+placeholder_search_in_nextcloud  # layout preview text (tools:text), not shown in the app
+placeholder_random_link  # layout preview text (tools:text), not shown in the app
+placeholder_random_account  # layout preview text (tools:text), not shown in the app
+placeholder_example_mail  # layout preview text (tools:text), not shown in the app
+db_file  # database file name; renaming it would lose data on upgrade
+db_name  # database name; renaming it would lose data on upgrade
+nextcloud_user_agent  # the server matches the Nextcloud-android token
+office_user_agent  # the server matches the Nextcloud-android token
+push_server_url  # push proxy endpoint, XEN-120/XEN-122
+firebase_database_url  # Firebase project of the push proxy, XEN-120/XEN-122
+google_storage_bucket  # Firebase project of the push proxy, XEN-120/XEN-122
+project_id  # Firebase project of the push proxy, XEN-120/XEN-122
+osm_geocoder_contact  # sent to Nominatim, not shown; XEN-287 F-12
+provider_registration_server  # only behind the onboarding signup button, off via show_onboarding_provider_options
+url_server_install  # only behind the onboarding self-host link, off via show_onboarding_provider_options
+fdroid_beta_link  # Community screen only, off via participate_enabled
+beta_apk_link  # Community screen only, off via participate_enabled
+translation_link  # Community screen only, off via participate_enabled
+contributing_link  # Community screen only, off via participate_enabled
+dev_link  # dev builds only (is_beta)
+dev_latest  # dev builds only (is_beta)
+dev_changelog  # dev builds only (is_beta)
