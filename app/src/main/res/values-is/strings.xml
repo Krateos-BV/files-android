@@ -132,7 +132,7 @@
     <string name="authenticator_activity_no_web_browser_found">Enginn vafri er ekki tiltækur sem getur opnað þennan tengil.</string>
     <string name="authenticator_activity_please_complete_login_process">Ljúktu innskráningarferlinu í vafranum þínum</string>
     <string name="auto_upload_background_activity_action">Leyfa bakgrunnsaðgerðir</string>
-    <string name="auto_upload_battery_optimization_reason">Bakgrunnsvirkni Nextcloud er takmörkuð af rafhlöðusparnaði.</string>
+    <string name="auto_upload_battery_optimization_reason">Bakgrunnsvirkni XeniaCloud er takmörkuð af rafhlöðusparnaði.</string>
     <string name="auto_upload_battery_saver_action">Opna stillingar rafhlöðusparnaðar</string>
     <string name="auto_upload_battery_saver_reason">Rafhlöðusparnaðarkerfi er virkt og gæti gert hlé á innsendingu.</string>
     <string name="auto_upload_delete_dialog_description">Þetta mun fjarlægja möppuna og grunnstillingar sjálfvirkra innsendinga. Hætt verður við allar óloknar innsendingar.</string>
@@ -241,7 +241,6 @@
     <string name="community_testing_bug_text">Fannstu villu? Skringilegheit?</string>
     <string name="community_testing_headline">Hjálpaðu til við prófanir</string>
     <string name="community_testing_report_text">Tilkynntu um vandamál á GitHub</string>
-    <string name="compose_activity_label">Nextcloud Assistant meðhjálpari</string>
     <string name="configure_new_media_folder_detection_notifications">Stilla</string>
     <string name="confirm_removal">Fjarlægja staðværa dulritun</string>
     <string name="confirmation_remove_file_alert">Viltu virkilega eyða \'%s\'?</string>
@@ -390,7 +389,6 @@
     <string name="e2e_signature_is_empty">Tókst ekki að sannreyna lýsigögn, undirritun er auð.</string>
     <string name="ecosystem_apps_display_assistant">Meðhjálpari</string>
     <string name="ecosystem_apps_display_more">Meira</string>
-    <string name="ecosystem_apps_more">Fleiri Nextcloud-forrit</string>
     <string name="editor_web_view_cannot_open_file">Tókst ekki að opna skráaval</string>
     <string name="email_pick_failed">Mistókst að velja tölvupóstfang.</string>
     <string name="empty_albums_message">Þú getur skipulagt allar myndirnar þínar í eins mörgum albúmum og þú kýst. Þú hefur enn ekki útbúið nein albúm.</string>
@@ -536,7 +534,7 @@
     <string name="file_migration_cleaning">Hreinsun</string>
     <string name="file_migration_dialog_title">Uppfæri möppu fyrir geymslu gagna</string>
     <string name="file_migration_directory_already_exists">Gagnamappa er þegar til. Veldu eitt af eftirfarandi:</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud-mappa er þegar til staðar</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud-mappa er þegar til staðar</string>
     <string name="file_migration_failed_not_enough_space">Þarf meira geymslupláss</string>
     <string name="file_migration_failed_not_readable">Gat ekki lesið upprunaskrána</string>
     <string name="file_migration_failed_not_writable">Gat ekki skrifað í úttaksskrá</string>
@@ -862,7 +860,6 @@
     <string name="prefs_renew_e2e_certificate">Endurnýja skilríki dulritunar</string>
     <string name="prefs_setup_e2e">Setja upp enda-í-enda dulritun</string>
     <string name="prefs_show_ecosystem_apps">Sýna forritaskipti</string>
-    <string name="prefs_show_ecosystem_apps_summary">Tillögur Nextcloud-forrita í flakkfyrirsögn</string>
     <string name="prefs_show_hidden_files">Sýna faldar skrár</string>
     <string name="prefs_sourcecode">Náðu í grunnkóðann</string>
     <string name="prefs_sycned_folders_summary">Sýsla með möppur vegna sjálfvirkra innsendinga</string>
@@ -1026,7 +1023,7 @@
     <string name="show_video">Sýna myndskeið</string>
     <string name="sign_tos_failed">Þú þarft að merkja handvirkt við þjónustuskilmálana!</string>
     <string name="signup_with_provider">Skráðu þig hjá þjónustu</string>
-    <string name="single_sign_on_request_token" formatted="true">Leyfa %1$s að að fá aðgang að %2$s Nextcloud-aðgangnum þínum?</string>
+    <string name="single_sign_on_request_token" formatted="true">Leyfa %1$s að að fá aðgang að %2$s XeniaCloud-aðgangnum þínum?</string>
     <string name="sort_by">Raða eftir</string>
     <string name="sort_favorites_first">Raða eftirlætum fremst</string>
     <string name="sort_folders_before_files">Raða möppum á undan skrám</string>

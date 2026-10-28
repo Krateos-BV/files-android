@@ -349,7 +349,7 @@
     <string name="file_migration_cleaning">Limpiando…</string>
     <string name="file_migration_dialog_title">Actualizando la carpeta de almacenamiento de datos</string>
     <string name="file_migration_directory_already_exists">La carpeta de datos ya existe. Selecciona una de las siguientes:</string>
-    <string name="file_migration_failed_dir_already_exists">La carpeta Nextcloud ya existe</string>
+    <string name="file_migration_failed_dir_already_exists">La carpeta XeniaCloud ya existe</string>
     <string name="file_migration_failed_not_enough_space">Se necesita más espacio</string>
     <string name="file_migration_failed_not_readable">No fue posible leer el archivo fuente</string>
     <string name="file_migration_failed_not_writable">No fue posible escribir al archivo destino</string>
@@ -695,7 +695,7 @@
     <string name="show_less">Mostrar menos</string>
     <string name="show_video">Mostrar videos</string>
     <string name="signup_with_provider">Registrarse con el proveedor</string>
-    <string name="single_sign_on_request_token" formatted="true">¿Permitir que %1$s acceda a tu cuenta de Nextcloud %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">¿Permitir que %1$s acceda a tu cuenta de XeniaCloud %2$s?</string>
     <string name="sort_by">Ordenar por</string>
     <string name="sort_favorites_first">Ordenar primero los favoritos.</string>
     <string name="ssl_validator_btn_details_hide">Ocultar</string>

@@ -116,7 +116,7 @@
     <string name="authenticator_activity_no_web_browser_found">هیچ مرورگری برای باز کردن این پیوند در دسترس نیست.</string>
     <string name="authenticator_activity_please_complete_login_process">لطفاً فرآیند ورود را در مرورگر خود تکمیل کنید</string>
     <string name="auto_upload_background_activity_action">فعالیت پس‌زمینه را مجاز کنید</string>
-    <string name="auto_upload_battery_optimization_reason">فعالیت پس‌زمینه نکست‌کلود توسط بهینه‌سازی باتری محدود شده است.</string>
+    <string name="auto_upload_battery_optimization_reason">فعالیت پس‌زمینه XeniaCloud توسط بهینه‌سازی باتری محدود شده است.</string>
     <string name="auto_upload_battery_saver_action">تنظیمات ذخیره‌ی باتری را باز کنید</string>
     <string name="auto_upload_battery_saver_reason">ذخیره‌ساز باتری فعال است و ممکن است بارگذاری‌ها را متوقف کند.</string>
     <string name="auto_upload_delete_dialog_description">این کار پوشه و تنظیمات بارگذاری خودکار را حذف می‌کند. هرگونه بارگذاری ناتمام لغو خواهد شد.</string>
@@ -209,7 +209,6 @@
     <string name="community_testing_bug_text">خطایی پیدا کردید؟ عجیب و غریب؟</string>
     <string name="community_testing_headline">با آزمایش کردن کمک کنید</string>
     <string name="community_testing_report_text">گزارش یک مورد در GitHub</string>
-    <string name="compose_activity_label">دستیار نکست‌کلود</string>
     <string name="configure_new_media_folder_detection_notifications">پیکربندی</string>
     <string name="confirm_removal">رمزگذاری محلی را حذف کنید.</string>
     <string name="confirmation_remove_file_alert">آیا واقعاً می‌خواهید %1$s را حذف کنید؟</string>
@@ -351,7 +350,6 @@
     <string name="e2e_signature_is_empty">تأیید فراداده ممکن نیست، امضا خالی است.</string>
     <string name="ecosystem_apps_display_assistant">دستیار</string>
     <string name="ecosystem_apps_display_more">بیشتر</string>
-    <string name="ecosystem_apps_more">برنامه‌های بیشتر نکست‌کلود</string>
     <string name="editor_web_view_cannot_open_file">باز کردن انتخاب‌گر فایل ممکن نیست</string>
     <string name="email_pick_failed">خطا در دریافت نشانی ایمیل</string>
     <string name="encrypted">به صورت رمزگذاری‌شده تنظیم شده است</string>
@@ -476,7 +474,7 @@
     <string name="file_migration_cleaning">در حال پاک‌سازی…</string>
     <string name="file_migration_dialog_title">به‌روزرسانی مسیر ذخیره‌سازی</string>
     <string name="file_migration_directory_already_exists">پوشه داده از قبل وجود دارد. یکی از موارد زیر را انتخاب کنید:</string>
-    <string name="file_migration_failed_dir_already_exists">پوشه نکست‌کلود از قبل موجود است</string>
+    <string name="file_migration_failed_dir_already_exists">پوشه XeniaCloud از قبل موجود است</string>
     <string name="file_migration_failed_not_enough_space">فضای بیشتری لازم است</string>
     <string name="file_migration_failed_not_readable">فایل منبع قابل خواندن نیست</string>
     <string name="file_migration_failed_not_writable">نمی‌توان در فایل مقصد نوشت</string>
@@ -794,7 +792,6 @@
     <string name="prefs_remove_e2e_keys_and_files">حذف فایل‌های رمزگذاری‌شده و کلیدها</string>
     <string name="prefs_setup_e2e">رمزگذاری سرتاسری را تنظیم کنید.</string>
     <string name="prefs_show_ecosystem_apps">نمایش تغییردهنده برنامه</string>
-    <string name="prefs_show_ecosystem_apps_summary">پیشنهادات برنامه نکست‌کلود در عنوان ناوبری</string>
     <string name="prefs_show_hidden_files">نمایش فایل‌های مخفی</string>
     <string name="prefs_sourcecode">دریافت کد منبع</string>
     <string name="prefs_sycned_folders_summary">مدیریت پوشه‌ها برای بارگذاری خودکار</string>
@@ -952,7 +949,7 @@
     <string name="show_video">نمایش ویدیوها</string>
     <string name="sign_tos_failed">لطفاً شرایط خدمات را به‌صورت دستی بررسی کنید!</string>
     <string name="signup_with_provider">ثبت‌نام با ارائه‌دهنده</string>
-    <string name="single_sign_on_request_token" formatted="true">به %1$s اجازه دسترسی به حساب %2$s نکست‌کلود داده شود؟</string>
+    <string name="single_sign_on_request_token" formatted="true">به %1$s اجازه دسترسی به حساب %2$s XeniaCloud داده شود؟</string>
     <string name="sort_by">مرتب‌سازی بر اساس</string>
     <string name="sort_favorites_first">ابتدا موارد دلخواه را مرتب کنید</string>
     <string name="sort_folders_before_files">پوشه‌ها را قبل از فایل‌ها مرتب کن</string>

@@ -131,7 +131,7 @@
     <string name="authenticator_activity_no_web_browser_found">Ingen webbläsare finns tillgänglig för att öppna denna länk.</string>
     <string name="authenticator_activity_please_complete_login_process">Slutför inloggningen i webbläsaren</string>
     <string name="auto_upload_background_activity_action">Tillåt bakgrundsaktivitet</string>
-    <string name="auto_upload_battery_optimization_reason">Nextclouds bakgrundsaktivitet begränsas av batterioptimering.</string>
+    <string name="auto_upload_battery_optimization_reason">XeniaClouds bakgrundsaktivitet begränsas av batterioptimering.</string>
     <string name="auto_upload_battery_saver_action">Öppna inställningar för batterisparläge</string>
     <string name="auto_upload_battery_saver_reason">Batterisparläge är aktivt och kan pausa uppladdningar.</string>
     <string name="auto_upload_delete_dialog_description">Detta tar bort mappen och konfigurationen för automatisk uppladdning. Alla pågående uppladdningar avbryts.</string>
@@ -240,7 +240,6 @@
     <string name="community_testing_bug_text">Hittat en bugg? Något som är konstigt?</string>
     <string name="community_testing_headline">Hjälp till att testa</string>
     <string name="community_testing_report_text">Rapportera ditt problem på GitHub</string>
-    <string name="compose_activity_label">Nextcloud Assistant</string>
     <string name="configure_new_media_folder_detection_notifications">Konfigurera</string>
     <string name="confirm_removal">Ta bort lokal kryptering</string>
     <string name="confirmation_remove_file_alert">Vill du verkligen ta bort %1$s?</string>
@@ -389,7 +388,6 @@
     <string name="e2e_signature_is_empty">Metadata kunde inte verifieras eftersom signaturen är tom.</string>
     <string name="ecosystem_apps_display_assistant">Assistent</string>
     <string name="ecosystem_apps_display_more">Mer</string>
-    <string name="ecosystem_apps_more">Fler Nextcloud-appar</string>
     <string name="editor_web_view_cannot_open_file">Kan inte öppna filväljaren</string>
     <string name="email_pick_failed">Det gick inte att välja e-postadress.</string>
     <string name="empty_albums_message">Du kan ordna alla dina foton i så många album du vill. Du har inte skapat något album ännu.</string>
@@ -535,7 +533,7 @@
     <string name="file_migration_cleaning">Rensar upp…</string>
     <string name="file_migration_dialog_title">Uppdaterar datalagringsmappen</string>
     <string name="file_migration_directory_already_exists">Datamappen finns redan. Välj något av följande:</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud-mappen finns redan</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud-mappen finns redan</string>
     <string name="file_migration_failed_not_enough_space">Mer utrymme krävs</string>
     <string name="file_migration_failed_not_readable">Det gick inte att läsa källfilen</string>
     <string name="file_migration_failed_not_writable">Det gick inte att skriva till målfilen</string>
@@ -804,7 +802,7 @@
     <string name="power_save_check_dialog_message">Att inaktivera strömsparningskontrollen kan leda till att filer laddas upp trots låg batterinivå.</string>
     <string name="pref_behaviour_entries_delete_file">raderas</string>
     <string name="pref_behaviour_entries_keep_file">behålls i originalmappen</string>
-    <string name="pref_behaviour_entries_move">flyttas till Nextcloud-mappen</string>
+    <string name="pref_behaviour_entries_move">flyttas till XeniaCloud-mappen</string>
     <string name="pref_instant_name_collision_policy_dialogTitle">Vad ska göras om filen redan finns?</string>
     <string name="pref_instant_name_collision_policy_entries_always_ask">Fråga mig varje gång</string>
     <string name="pref_instant_name_collision_policy_entries_cancel">Hoppa över uppladdning</string>
@@ -862,7 +860,6 @@
     <string name="prefs_renew_e2e_certificate">Förnya krypteringscertifikatet</string>
     <string name="prefs_setup_e2e">Ställ in ände-till-ände-kryptering</string>
     <string name="prefs_show_ecosystem_apps">Visa appväxlare</string>
-    <string name="prefs_show_ecosystem_apps_summary">Nextcloud-appförslag i navigeringsrubriken</string>
     <string name="prefs_show_hidden_files">Visa dolda filer</string>
     <string name="prefs_sourcecode">Hämta källkod</string>
     <string name="prefs_sycned_folders_summary">Hantera mappar för automatisk uppladdning</string>
@@ -1025,7 +1022,7 @@
     <string name="show_video">Visa video</string>
     <string name="sign_tos_failed">Kontrollera användarvillkoren manuellt!</string>
     <string name="signup_with_provider">Registrera dig hos en leverantör</string>
-    <string name="single_sign_on_request_token" formatted="true">Tillåt %1$s att komma åt ditt Nextcloud-konto %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Tillåt %1$s att komma åt ditt XeniaCloud-konto %2$s?</string>
     <string name="sort_by">Sortera efter</string>
     <string name="sort_favorites_first">Sortera favoriter först</string>
     <string name="sort_folders_before_files">Sortera mappar före filer</string>

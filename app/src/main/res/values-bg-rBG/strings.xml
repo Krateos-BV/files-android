@@ -173,7 +173,6 @@
     <string name="community_testing_bug_text">Открили сте грешка? Нещо странно?</string>
     <string name="community_testing_headline">Помогни с тестването</string>
     <string name="community_testing_report_text">Докладвайте за проблем чрез Github</string>
-    <string name="compose_activity_label">Асистент на \"Nextcloud\"</string>
     <string name="configure_new_media_folder_detection_notifications">Настройки</string>
     <string name="confirm_removal">Премахване на локалното криптиране</string>
     <string name="confirmation_remove_file_alert">Наистина ли желаете %1$s да бъде изтрит?</string>
@@ -376,7 +375,7 @@
     <string name="file_migration_cleaning">Почистване…</string>
     <string name="file_migration_dialog_title">Обновяване на папката за съхранение на данни</string>
     <string name="file_migration_directory_already_exists">Данните вече съществуват. Изберете действие.</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud папката вече съществува</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud папката вече съществува</string>
     <string name="file_migration_failed_not_enough_space">Нужно е повече пространство</string>
     <string name="file_migration_failed_not_readable">Файлът не може да бъде прочетен</string>
     <string name="file_migration_failed_not_writable">Файлът не може да бъде записан</string>
@@ -720,7 +719,7 @@
     <string name="show_less">Покажи по-малко</string>
     <string name="show_video">Показване на видеата</string>
     <string name="signup_with_provider">Абониране при доставчик</string>
-    <string name="single_sign_on_request_token" formatted="true">Разрешавате ли на %1$s да достъпва вашия Nextcloud профил %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Разрешавате ли на %1$s да достъпва вашия XeniaCloud профил %2$s?</string>
     <string name="sort_by">Сортиране по</string>
     <string name="sort_favorites_first">Първо сортирайте любимите</string>
     <string name="sort_folders_before_files">Сортиране на папки преди файлове</string>

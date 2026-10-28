@@ -108,7 +108,7 @@
     <string name="authenticator_activity_empty_base_url">Insira um endereço de servidor válido.</string>
     <string name="authenticator_activity_no_web_browser_found">Não há nenhum navegador disponível para abrir este link.</string>
     <string name="authenticator_activity_please_complete_login_process">Por favor, conclua o processo de login no seu navegador</string>
-    <string name="auto_upload_battery_optimization_reason">A atividade em segundo plano do Nextcloud é limitada pela otimização da bateria.</string>
+    <string name="auto_upload_battery_optimization_reason">A atividade em segundo plano do XeniaCloud é limitada pela otimização da bateria.</string>
     <string name="auto_upload_battery_saver_reason">O modo de economia de bateria está ativado e pode interromper os envios.</string>
     <string name="auto_upload_delete_dialog_description">Isso removerá a pasta e a configuração de upload automático. Quaisquer envios em andamento serão cancelados.</string>
     <string name="auto_upload_file_behaviour_kept_in_folder">mantido na pasta original, dado ser readonly</string>
@@ -197,7 +197,6 @@
     <string name="community_testing_bug_text">Encontrou um erro? Ocorrências estranhas?</string>
     <string name="community_testing_headline">Ajude-nos, testando</string>
     <string name="community_testing_report_text">Reportar um problema no Github</string>
-    <string name="compose_activity_label">Nextcloud Assistente</string>
     <string name="configure_new_media_folder_detection_notifications">Configure</string>
     <string name="confirm_removal">Remove encriptação local</string>
     <string name="confirmation_remove_file_alert">Deseja realmente apagar %1$s?</string>
@@ -332,7 +331,6 @@
     <string name="e2e_signature_does_not_match">Assinatura não coincide</string>
     <string name="ecosystem_apps_display_assistant">Assistente</string>
     <string name="ecosystem_apps_display_more">Mais</string>
-    <string name="ecosystem_apps_more">Mais Aplicações Nextcloud</string>
     <string name="email_pick_failed">Erro ao escolher endereço de email.</string>
     <string name="encrypted">Definir como encriptado</string>
     <string name="end_to_end_encryption_certificate_unavailable">Não foi possível obter o certificado do servidor</string>
@@ -449,7 +447,7 @@
     <string name="file_migration_cleaning">Limpando…</string>
     <string name="file_migration_dialog_title">A atualizar a pasta de armazenamento de dados</string>
     <string name="file_migration_directory_already_exists">Pasta já existe. Escolha uma das seguintes opções:</string>
-    <string name="file_migration_failed_dir_already_exists">A pasta já existe na Nextcloud </string>
+    <string name="file_migration_failed_dir_already_exists">A pasta já existe na XeniaCloud </string>
     <string name="file_migration_failed_not_enough_space">É necessário mais espaço</string>
     <string name="file_migration_failed_not_readable">Impossível ler o ficheiro de origem</string>
     <string name="file_migration_failed_not_writable">Impossível escrever no ficheiro de destino</string>
@@ -741,7 +739,6 @@
     <string name="prefs_remove_e2e_keys_and_files">Remover arquivos criptografados e chaves</string>
     <string name="prefs_setup_e2e">Configurar a encriptação ponta-a-ponta</string>
     <string name="prefs_show_ecosystem_apps">Mostrar alternador de aplicações</string>
-    <string name="prefs_show_ecosystem_apps_summary">Sugestões de aplicações Nextcloud no cabeçalho da navegação</string>
     <string name="prefs_show_hidden_files">Mostrar ficheiros ocultados</string>
     <string name="prefs_sourcecode">Obter código fonte</string>
     <string name="prefs_sycned_folders_summary">Gerir as pastas para o envio automático</string>
@@ -888,7 +885,7 @@
     <string name="show_less">Mostrar menos</string>
     <string name="show_video">Mostrar vídeos</string>
     <string name="signup_with_provider">Registar com fornecedor</string>
-    <string name="single_sign_on_request_token" formatted="true">Permitir que %1$s aceda à sua conta Nextcloud %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Permitir que %1$s aceda à sua conta XeniaCloud %2$s?</string>
     <string name="sort_by">Ordenar por</string>
     <string name="sort_favorites_first">Ordenar por favoritos primeiro</string>
     <string name="sort_folders_before_files">Ordenar as pastas antes dos ficheiros.</string>

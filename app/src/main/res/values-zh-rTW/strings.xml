@@ -131,7 +131,7 @@
     <string name="authenticator_activity_no_web_browser_found">沒有瀏覽器可以開啟此連結。</string>
     <string name="authenticator_activity_please_complete_login_process">請在瀏覽器中完成登入流程</string>
     <string name="auto_upload_background_activity_action">允許背景活動</string>
-    <string name="auto_upload_battery_optimization_reason">Nextcloud 的背景活動受電池最佳化限制。</string>
+    <string name="auto_upload_battery_optimization_reason">XeniaCloud 的背景活動受電池最佳化限制。</string>
     <string name="auto_upload_battery_saver_action">開啟電池省電設定</string>
     <string name="auto_upload_battery_saver_reason">省電模式已啟用，可能會暫停上傳</string>
     <string name="auto_upload_delete_dialog_description">此操作將刪除該資料夾及自動上傳設定。任何尚未完成的上傳作業都將被取消。</string>
@@ -240,7 +240,6 @@
     <string name="community_testing_bug_text">發現問題或瑕疵？</string>
     <string name="community_testing_headline">協助測試</string>
     <string name="community_testing_report_text">在 GitHub 上回報問題</string>
-    <string name="compose_activity_label">Nextcloud 小幫手</string>
     <string name="configure_new_media_folder_detection_notifications">設定</string>
     <string name="confirm_removal">移除本機加密</string>
     <string name="confirmation_remove_file_alert">您真的想要刪除 %1$s 嗎？</string>
@@ -389,7 +388,6 @@
     <string name="e2e_signature_is_empty">無法驗證中介資料，簽章為空。</string>
     <string name="ecosystem_apps_display_assistant">助理</string>
     <string name="ecosystem_apps_display_more">更多</string>
-    <string name="ecosystem_apps_more">更多 Nextcloud 應用程式</string>
     <string name="editor_web_view_cannot_open_file">無法開啟檔案選取程式</string>
     <string name="email_pick_failed">挑選電子郵件地址失敗。</string>
     <string name="empty_albums_message">您可以將所有照片整理到任意數量的相簿中。您目前尚未建立任何相簿。</string>
@@ -535,7 +533,7 @@
     <string name="file_migration_cleaning">正在清理…</string>
     <string name="file_migration_dialog_title">正在更新資料儲存資料夾</string>
     <string name="file_migration_directory_already_exists">資料儲存資料夾已存在。請從下列選擇一個：</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud 資料夾已經存在</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud 資料夾已經存在</string>
     <string name="file_migration_failed_not_enough_space">需要更多空間</string>
     <string name="file_migration_failed_not_readable">無法讀取來源檔案</string>
     <string name="file_migration_failed_not_writable">無法寫入目標檔案</string>
@@ -861,7 +859,6 @@
     <string name="prefs_renew_e2e_certificate">更新加密憑證</string>
     <string name="prefs_setup_e2e">設置端對端加密</string>
     <string name="prefs_show_ecosystem_apps">顯示應用程式切換器</string>
-    <string name="prefs_show_ecosystem_apps_summary">導覽標頭中的 Nextcloud 應用程式建議</string>
     <string name="prefs_show_hidden_files">顯示隱藏檔案</string>
     <string name="prefs_sourcecode">取得原始碼</string>
     <string name="prefs_sycned_folders_summary">管理自動上傳使用的資料夾</string>
@@ -1024,7 +1021,7 @@
     <string name="show_video">顯示影片</string>
     <string name="sign_tos_failed">請手動檢查服務條款！</string>
     <string name="signup_with_provider">向提供者註冊</string>
-    <string name="single_sign_on_request_token" formatted="true">允許 %1$s 存取您的 Nextcloud 帳號 %2$s？</string>
+    <string name="single_sign_on_request_token" formatted="true">允許 %1$s 存取您的 XeniaCloud 帳號 %2$s？</string>
     <string name="sort_by">排序依照</string>
     <string name="sort_favorites_first">先排序最愛</string>
     <string name="sort_folders_before_files">將資料夾排序在檔案前</string>

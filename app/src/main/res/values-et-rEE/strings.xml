@@ -131,7 +131,7 @@
     <string name="authenticator_activity_no_web_browser_found">Selle lingi avamiseks ei leidu ühtegi brauserit.</string>
     <string name="authenticator_activity_please_complete_login_process">Palun lõpeta sisselogimisprotsess oma veebibrauseris</string>
     <string name="auto_upload_background_activity_action">Luba rakenduse töö taustal</string>
-    <string name="auto_upload_battery_optimization_reason">Nextcloudi tegevus taustateenusena on piiratud akukasutuse optimeerimise poolt</string>
+    <string name="auto_upload_battery_optimization_reason">XeniaCloudi tegevus taustateenusena on piiratud akukasutuse optimeerimise poolt</string>
     <string name="auto_upload_battery_saver_action">Ava akukasutuse seadistused</string>
     <string name="auto_upload_battery_saver_reason">Akukasutuse optimeerimine on aktiivne ja see võib üleslaadimisi peatada.</string>
     <string name="auto_upload_delete_dialog_description">Järgnevaga eemaldad kausta ja automaatse üleslaadimise seadistused. Kõik lõpetamata üleslaadimised katkestatakse.</string>
@@ -239,7 +239,6 @@
     <string name="community_testing_bug_text">Leidsid vea? Midagi veidrat?</string>
     <string name="community_testing_headline">Aita testimisega</string>
     <string name="community_testing_report_text">Teavita probleemist GitHubis</string>
-    <string name="compose_activity_label">Nextcloudi Abiline</string>
     <string name="configure_new_media_folder_detection_notifications">Seadista</string>
     <string name="confirm_removal">Eemalda kohalik krüptimine</string>
     <string name="confirmation_remove_file_alert">Oled sa kindel, et soovid %1$s kustutada?</string>
@@ -388,7 +387,6 @@
     <string name="e2e_signature_is_empty">Kuna allkiri on tühi, siis metainfo verifitseerimine ei õnnestunud</string>
     <string name="ecosystem_apps_display_assistant">Abiline</string>
     <string name="ecosystem_apps_display_more">Veel</string>
-    <string name="ecosystem_apps_more">Veel Nextcloudi rakendusi</string>
     <string name="editor_web_view_cannot_open_file">Failivalija avamine ei õnnestu</string>
     <string name="email_pick_failed">Ei õnnestu valida e-posti aadressi</string>
     <string name="empty_albums_message">Sa võid oma fotosid hallata nii mitme albumine, kui parasjagu tahad. Hetkel sa pole veel ühtegi albumit koostanud.</string>
@@ -534,7 +532,7 @@
     <string name="file_migration_cleaning">Puhastan...</string>
     <string name="file_migration_dialog_title">Uuendan andmeruumi kausta</string>
     <string name="file_migration_directory_already_exists">Andmekaust on juba olemas. Vali üks alljärgnevast:</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloudi kaust on juba olemas</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloudi kaust on juba olemas</string>
     <string name="file_migration_failed_not_enough_space">On vaja rohkem ruumi</string>
     <string name="file_migration_failed_not_readable">Lähtefaili lugemine ei õnnestunud</string>
     <string name="file_migration_failed_not_writable">Sihtfaili kirjutamine ei õnnestu.</string>
@@ -860,7 +858,6 @@
     <string name="prefs_renew_e2e_certificate">Uuenda krüptimise sertifikaati</string>
     <string name="prefs_setup_e2e">Võta läbiv krüptimine kasutusele</string>
     <string name="prefs_show_ecosystem_apps">Näita rakenduste vahetajat</string>
-    <string name="prefs_show_ecosystem_apps_summary">Nextcloudi rakenduste soovitused päises</string>
     <string name="prefs_show_hidden_files">Näita peidetud faile</string>
     <string name="prefs_sourcecode">Vaata lähtekoodi</string>
     <string name="prefs_sycned_folders_summary">Halda automaatse üleslaadimise kaustu</string>
@@ -1023,7 +1020,7 @@
     <string name="show_video">Näita videoid</string>
     <string name="sign_tos_failed">Palun tutvu kasutustingimustega!</string>
     <string name="signup_with_provider">Või liitu teenusepakkujaga</string>
-    <string name="single_sign_on_request_token" formatted="true">Kas lubad „%1$s“ teenusel ligipääsu sinu Nextcloudi kasutajakontole „%2$s“?</string>
+    <string name="single_sign_on_request_token" formatted="true">Kas lubad „%1$s“ teenusel ligipääsu sinu XeniaCloudi kasutajakontole „%2$s“?</string>
     <string name="sort_by">Sorteeri</string>
     <string name="sort_favorites_first">Järjesta lemmikud esimesena</string>
     <string name="sort_folders_before_files">Järjesta kaustad enne faile</string>

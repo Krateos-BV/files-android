@@ -118,7 +118,7 @@
     <string name="authenticator_activity_no_web_browser_found">Відсутній бравзер для відкриття цього посилання.</string>
     <string name="authenticator_activity_please_complete_login_process">Завершити авторизацію у бравзері</string>
     <string name="auto_upload_background_activity_action">Дозволити фонову активність</string>
-    <string name="auto_upload_battery_optimization_reason">Фонова активність Nextcloud обмежено оптимізацією батареї</string>
+    <string name="auto_upload_battery_optimization_reason">Фонова активність XeniaCloud обмежено оптимізацією батареї</string>
     <string name="auto_upload_battery_saver_action">Відкрити налаштування заощадження батареї</string>
     <string name="auto_upload_battery_saver_reason">Увімкнено заощадження батареї, що може призвести до призупинення завантаження.</string>
     <string name="auto_upload_delete_dialog_description">Таким чином буде вилучено каталог та налаштування автоматичного завантаження. Всі незавершені завантаження буде скасовано.</string>
@@ -211,7 +211,6 @@
     <string name="community_testing_bug_text">Помітили ваду чи помилку?</string>
     <string name="community_testing_headline">Допомогти з тестуванням</string>
     <string name="community_testing_report_text">Повідомити про помилку на GitHub</string>
-    <string name="compose_activity_label">Асистент Nextcloud</string>
     <string name="configure_new_media_folder_detection_notifications">Налаштування</string>
     <string name="confirm_removal">Вилучити шифрування на пристрої</string>
     <string name="confirmation_remove_file_alert">Ви справді бажаєте вилучити %1$s?</string>
@@ -356,7 +355,6 @@
     <string name="e2e_signature_is_empty">Не вдалося перевірити метадані, сиґнатура порожня.</string>
     <string name="ecosystem_apps_display_assistant">Помічник</string>
     <string name="ecosystem_apps_display_more">Більше</string>
-    <string name="ecosystem_apps_more">Більше застосунків Nextcloud</string>
     <string name="editor_web_view_cannot_open_file">Неможливо відкрити вибір файлів</string>
     <string name="email_pick_failed">Не вдалося вибрати ел. адресу.</string>
     <string name="encrypted">Позначити як зашифроване</string>
@@ -483,7 +481,7 @@
     <string name="file_migration_cleaning">Очищення...</string>
     <string name="file_migration_dialog_title">Оновлення каталогу для збереження даних</string>
     <string name="file_migration_directory_already_exists">Каталог з даними вже існує. Виберіть один з таких:</string>
-    <string name="file_migration_failed_dir_already_exists">Каталог сервера Nextcloud вже існує</string>
+    <string name="file_migration_failed_dir_already_exists">Каталог сервера XeniaCloud вже існує</string>
     <string name="file_migration_failed_not_enough_space">Потрібно більше місця</string>
     <string name="file_migration_failed_not_readable">Неможливо прочитати вихідний файл</string>
     <string name="file_migration_failed_not_writable">Неможливо записати до файлу призначення</string>
@@ -805,7 +803,6 @@
     <string name="prefs_renew_e2e_certificate">Оновити сертифікат шифрування</string>
     <string name="prefs_setup_e2e">Налаштувати наскрізне шифрування</string>
     <string name="prefs_show_ecosystem_apps">Показувати перемикач застосунків</string>
-    <string name="prefs_show_ecosystem_apps_summary">Пропозиції застосунків Nextcloud у заголовку навігації</string>
     <string name="prefs_show_hidden_files">Показувати приховані файли</string>
     <string name="prefs_sourcecode">Отримати вихідний код</string>
     <string name="prefs_sycned_folders_summary">Налаштуйте каталоги, які будуть автоматично завантажуватися</string>
@@ -967,7 +964,7 @@
     <string name="show_video">Показувати відео</string>
     <string name="sign_tos_failed">Перегляньте умови користування вручну!</string>
     <string name="signup_with_provider">Зареєструватися у провайдейра</string>
-    <string name="single_sign_on_request_token" formatted="true">Дозволити %1$s мати доступ до вашого облікового запису у Nextcloud %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Дозволити %1$s мати доступ до вашого облікового запису у XeniaCloud %2$s?</string>
     <string name="sort_by">Впорядкувати за</string>
     <string name="sort_favorites_first">Спочатку показувати із зірочкою</string>
     <string name="sort_folders_before_files">Показувати каталоги перед файлами</string>

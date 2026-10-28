@@ -201,7 +201,6 @@
     <string name="community_testing_bug_text">Pronašli ste nedostatak? Pogrešku u radu?</string>
     <string name="community_testing_headline">Pomozite nam testiranjem</string>
     <string name="community_testing_report_text">Prijavite problem na GitHubu</string>
-    <string name="compose_activity_label">Nextcloud Asistent</string>
     <string name="configure_new_media_folder_detection_notifications">Konfiguriraj</string>
     <string name="confirm_removal">Ukloni lokalno šifriranje</string>
     <string name="confirmation_remove_file_alert">Želite li zaista izbrisati %1$s?</string>
@@ -341,7 +340,6 @@
     <string name="e2e_signature_is_empty">Nije moguće provjeriti metapodatke, potpis je prazan.</string>
     <string name="ecosystem_apps_display_assistant">Asistent</string>
     <string name="ecosystem_apps_display_more">Više</string>
-    <string name="ecosystem_apps_more">Više Nextcloud aplikacija</string>
     <string name="editor_web_view_cannot_open_file">Nije moguće otvoriti odabir datoteke</string>
     <string name="email_pick_failed">Odabir adrese e‑pošte nije uspio.</string>
     <string name="encrypted">Postavi kao šifrirano</string>
@@ -466,7 +464,7 @@
     <string name="file_migration_cleaning">Čišćenje…</string>
     <string name="file_migration_dialog_title">Ažuriranje mape za pohranu datoteka</string>
     <string name="file_migration_directory_already_exists">Mapa za podatke već postoji. Odaberite jedno od sljedećeg:</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud mapa već postoji</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud mapa već postoji</string>
     <string name="file_migration_failed_not_enough_space">Potrebno je više prostora</string>
     <string name="file_migration_failed_not_readable">Nije moguće pročitati izvornu datoteku</string>
     <string name="file_migration_failed_not_writable">Nije moguće pisati u odredišnu datoteku</string>
@@ -780,7 +778,6 @@
     <string name="prefs_remove_e2e">Ukloni šifriranje s kraja na kraj</string>
     <string name="prefs_setup_e2e">Postavi šifriranje s kraja na kraj</string>
     <string name="prefs_show_ecosystem_apps">Prikaži aplikacije ekosustava</string>
-    <string name="prefs_show_ecosystem_apps_summary">Prikaži preporučene aplikacije iz Nextcloud ekosustava</string>
     <string name="prefs_show_hidden_files">Prikaz skrivenih datoteka</string>
     <string name="prefs_sourcecode">Preuzmi izvorni kod</string>
     <string name="prefs_sycned_folders_summary">Upravljanje mapama za automatsko otpremanje</string>
@@ -934,7 +931,7 @@
     <string name="show_video">Prikaži video</string>
     <string name="sign_tos_failed">Neuspjelo prihvaćanje uvjeta korištenja</string>
     <string name="signup_with_provider">Prijavite se kod davatelja usluga</string>
-    <string name="single_sign_on_request_token" formatted="true">Dopusti %1$s pristup Nextcloud računu %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Dopusti %1$s pristup XeniaCloud računu %2$s?</string>
     <string name="sort_by">Razvrstaj prema</string>
     <string name="sort_favorites_first">Poredaj favorite na početku</string>
     <string name="sort_folders_before_files">Poredaj mape prije datoteka</string>

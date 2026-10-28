@@ -117,7 +117,7 @@
     <string name="authenticator_activity_no_web_browser_found">Nem érhető el böngésző a hivatkozás megnyitásához.</string>
     <string name="authenticator_activity_please_complete_login_process">Fejezze be a bejelentkezési folyamatot a böngészőben</string>
     <string name="auto_upload_background_activity_action">Háttérfolyamatok futásának engedélyezése</string>
-    <string name="auto_upload_battery_optimization_reason">A Nextcloud háttértevékenységét az akkumulátoroptimalizálás korlátozza.</string>
+    <string name="auto_upload_battery_optimization_reason">A XeniaCloud háttértevékenységét az akkumulátoroptimalizálás korlátozza.</string>
     <string name="auto_upload_battery_saver_action">Akkumulátorkímélő beállítások megnyitása</string>
     <string name="auto_upload_battery_saver_reason">Az akkumulátorkímélő mód aktív, és szüneteltetheti a feltöltéseket.</string>
     <string name="auto_upload_delete_dialog_description">Ez eltávolítja a mappát és az automatikus feltöltési beállításokat. A befejezetlen feltöltések meg lesznek szakítva.</string>
@@ -210,7 +210,6 @@
     <string name="community_testing_bug_text">Hibát talált? Vagy furcsaságot?</string>
     <string name="community_testing_headline">Segítsen a teszteléssel</string>
     <string name="community_testing_report_text">Jelentse az esetet a GitHubon</string>
-    <string name="compose_activity_label">Nextcloud Asszisztens</string>
     <string name="configure_new_media_folder_detection_notifications">Beállítás</string>
     <string name="confirm_removal">Helyi titkosítás eltávolítása</string>
     <string name="confirmation_remove_file_alert">Biztos, hogy törli ezt: %1$s?</string>
@@ -352,7 +351,6 @@
     <string name="e2e_signature_is_empty">Nem sikerült ellenőrizni a metaadatokat, az aláírás üres.</string>
     <string name="ecosystem_apps_display_assistant">Asszisztens</string>
     <string name="ecosystem_apps_display_more">Továbbiak</string>
-    <string name="ecosystem_apps_more">További nextcloudos alkalmazások</string>
     <string name="editor_web_view_cannot_open_file">Nem lehet megnyitni a fájlválasztót</string>
     <string name="email_pick_failed">Az e-mail-cím kiválasztása sikertelen.</string>
     <string name="encrypted">Titkosítás bekapcsolása</string>
@@ -477,7 +475,7 @@
     <string name="file_migration_cleaning">Tisztítás…</string>
     <string name="file_migration_dialog_title">Adattároló mappa frissítése</string>
     <string name="file_migration_directory_already_exists">Már létezik az adatmappa. Válasszon egyet a következőkből:</string>
-    <string name="file_migration_failed_dir_already_exists">A Nextcloud mappa már létezik</string>
+    <string name="file_migration_failed_dir_already_exists">A XeniaCloud mappa már létezik</string>
     <string name="file_migration_failed_not_enough_space">Több helyre van szükség</string>
     <string name="file_migration_failed_not_readable">A forrásfájl nem olvasható</string>
     <string name="file_migration_failed_not_writable">A célfájl nem írható</string>
@@ -794,7 +792,6 @@
     <string name="prefs_remove_e2e_keys_and_files">Titkosított fájlok és kulcsok eltávolítása</string>
     <string name="prefs_setup_e2e">Végpontok közti titkosítás beállítása</string>
     <string name="prefs_show_ecosystem_apps">Alkalmazásváltó megjelenítése</string>
-    <string name="prefs_show_ecosystem_apps_summary">Nextcloud alkalmazásjavaslatok a navigációs fejlécben</string>
     <string name="prefs_show_hidden_files">Rejtett fájlok megjelenítése</string>
     <string name="prefs_sourcecode">Forráskód beszerzése</string>
     <string name="prefs_sycned_folders_summary">Mappák kezelése az automatikus feltöltéshez</string>
@@ -950,7 +947,7 @@
     <string name="show_video">Videók megjelenítése</string>
     <string name="sign_tos_failed">Kézileg nézze meg a szolgáltatási feltételeket!</string>
     <string name="signup_with_provider">Regisztráció egy szolgáltatóval</string>
-    <string name="single_sign_on_request_token" formatted="true">Engedélyezi, hogy a(z) %1$s hozzáférjen a(z) %2$s Nextcloud-fiókjához?</string>
+    <string name="single_sign_on_request_token" formatted="true">Engedélyezi, hogy a(z) %1$s hozzáférjen a(z) %2$s XeniaCloud-fiókjához?</string>
     <string name="sort_by">Rendezés elve</string>
     <string name="sort_favorites_first">Kedvencek előre rendezése</string>
     <string name="sort_folders_before_files">Mappák fájlok elé rendezése</string>

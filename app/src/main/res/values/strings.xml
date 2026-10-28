@@ -132,7 +132,7 @@
     <string name="conversation_screen_delete_error_title">Failed to delete conversation</string>
     <string name="conversation_screen_delete_button_title">Delete conversation</string>
 
-    <string name="compose_activity_label">Nextcloud Assistant</string>
+    <string name="compose_activity_label">Xenia Assistant</string>
     <string name="assistant_screen_text_selected">Text copied from another app</string>
 
     <!-- Assistant General -->
@@ -667,7 +667,7 @@
     <string name="file_migration_failed_not_enough_space">More space needed</string>
     <string name="file_migration_failed_not_writable">Could not write to destination file</string>
     <string name="file_migration_failed_not_readable">Could not read source file</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud folder already exists</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud folder already exists</string>
     <string name="file_migration_failed_while_coping">Failed during migration</string>
     <string name="file_migration_failed_while_updating_index">Failed to update index</string>
     <string name="file_migration_free_space">%1$s\n(%2$s / %3$s)</string>
@@ -1111,7 +1111,7 @@
     <string name="fab_label">Add or upload</string>
     <string name="account_creation_failed">Account creation failed</string>
     <string name="hidden_file_name_warning">Name will result in a hidden file</string>
-    <string name="single_sign_on_request_token" formatted="true">Allow %1$s to access your Nextcloud account %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Allow %1$s to access your XeniaCloud account %2$s?</string>
     <string name="permission_deny">Deny</string>
     <string name="permission_allow">Allow</string>
     <string name="share_send_note">Note to recipient</string>
@@ -1565,7 +1565,7 @@
     <string name="open_in_app">Open in %1$s</string>
     <string name="auto_upload_delete_dialog_title">Delete auto-upload folder?</string>
     <string name="auto_upload_battery_saver_reason">Battery saver is active and may pause uploads.</string>
-    <string name="auto_upload_battery_optimization_reason">Nextcloud\'s background activity is limited by battery optimization.</string>
+    <string name="auto_upload_battery_optimization_reason">XeniaCloud\'s background activity is limited by battery optimization.</string>
     <string name="auto_upload_battery_saver_action">Open battery saver settings</string>
     <string name="auto_upload_background_activity_action">Allow background activity</string>
     <string name="auto_upload_sync_now_action">Sync now</string>

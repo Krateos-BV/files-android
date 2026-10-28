@@ -117,7 +117,7 @@
     <string name="authenticator_activity_no_web_browser_found">Geen browser beschikbaar om deze link te oppenen.</string>
     <string name="authenticator_activity_please_complete_login_process">Vervolg de aanmelding in je browser</string>
     <string name="auto_upload_background_activity_action">Sta achtergrond activiteit toe.</string>
-    <string name="auto_upload_battery_optimization_reason">De achtergrondactiviteit van Nextcloud wordt beperkt door spaarstand.</string>
+    <string name="auto_upload_battery_optimization_reason">De achtergrondactiviteit van XeniaCloud wordt beperkt door spaarstand.</string>
     <string name="auto_upload_battery_saver_action">Open de spaarstand instellingen</string>
     <string name="auto_upload_battery_saver_reason">Spaarstand is actief en kan uploads tijdelijk onderbreken.</string>
     <string name="auto_upload_delete_dialog_description">Hierdoor worden de map en de instellingen voor automatisch uploaden verwijderd. Eventuele nog niet voltooide uploads worden geannuleerd.</string>
@@ -210,7 +210,6 @@
     <string name="community_testing_bug_text">Bug gevonden? Rare dingen?</string>
     <string name="community_testing_headline">Help bij testen</string>
     <string name="community_testing_report_text">Meld een probleem op GitHub</string>
-    <string name="compose_activity_label">Nextcloud Assistent</string>
     <string name="configure_new_media_folder_detection_notifications">Configureren</string>
     <string name="confirm_removal">Verwijder lokale encryptie</string>
     <string name="confirmation_remove_file_alert">Wil je %1$s echt verwijderen?</string>
@@ -352,7 +351,6 @@
     <string name="e2e_signature_is_empty">De metagegevens konden niet worden geverifieerd; de handtekening is leeg.</string>
     <string name="ecosystem_apps_display_assistant">Assistent</string>
     <string name="ecosystem_apps_display_more">Meer</string>
-    <string name="ecosystem_apps_more">Meer Nextcloud Apps</string>
     <string name="editor_web_view_cannot_open_file">Bestandskeuzescherm kan niet worden geopend</string>
     <string name="email_pick_failed">Email adres ophalen mislukt.</string>
     <string name="encrypted">Instellen als versleuteld</string>
@@ -477,7 +475,7 @@
     <string name="file_migration_cleaning">Opruimen…</string>
     <string name="file_migration_dialog_title">Bijwerken gegevensopslagmap</string>
     <string name="file_migration_directory_already_exists">Datamap bestaat al. Kies een van de volgende:</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud map bestaat al</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud map bestaat al</string>
     <string name="file_migration_failed_not_enough_space">Meer ruimte nodig</string>
     <string name="file_migration_failed_not_readable">Kan bestand niet lezen</string>
     <string name="file_migration_failed_not_writable">Kon niet schrijven naar bestand</string>
@@ -794,7 +792,6 @@
     <string name="prefs_remove_e2e_keys_and_files">Verwijder versleutelde bestanden en sleutels</string>
     <string name="prefs_setup_e2e">End-to-end versleuteling instellen</string>
     <string name="prefs_show_ecosystem_apps">Toon app switcher</string>
-    <string name="prefs_show_ecosystem_apps_summary">Nextcloud app suggesties in navigatiekopregel</string>
     <string name="prefs_show_hidden_files">Verborgen bestanden weergeven</string>
     <string name="prefs_sourcecode">Krijg broncode</string>
     <string name="prefs_sycned_folders_summary">Mappen beheren voor automatisch uploaden</string>
@@ -950,7 +947,7 @@
     <string name="show_video">Toon video\'s</string>
     <string name="sign_tos_failed">Lees alstublieft de servicevoorwaarden!</string>
     <string name="signup_with_provider">Aanmelden bij provider</string>
-    <string name="single_sign_on_request_token" formatted="true">Toestaan dat%1$s je Nextcloud account %2$sbenadert?</string>
+    <string name="single_sign_on_request_token" formatted="true">Toestaan dat%1$s je XeniaCloud account %2$sbenadert?</string>
     <string name="sort_by">Sorteer op</string>
     <string name="sort_favorites_first">Sorteer eerst favorieten</string>
     <string name="sort_folders_before_files">Sorteer mappen voor bestanden</string>

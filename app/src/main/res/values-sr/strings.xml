@@ -187,7 +187,6 @@
     <string name="community_testing_bug_text">Нашли сте грешку? Нешто чудно?</string>
     <string name="community_testing_headline">Помози тестирајући</string>
     <string name="community_testing_report_text">Пријавите проблем на Гитхабу</string>
-    <string name="compose_activity_label">Nextcloud Асистент</string>
     <string name="configure_new_media_folder_detection_notifications">Подеси</string>
     <string name="confirm_removal">Уклони локално шифровање</string>
     <string name="confirmation_remove_file_alert">Заиста желите да обришете %1$s?</string>
@@ -321,7 +320,6 @@
     <string name="e2e_signature_does_not_match">Потпис се не подудара</string>
     <string name="ecosystem_apps_display_assistant">Асистент</string>
     <string name="ecosystem_apps_display_more">Више</string>
-    <string name="ecosystem_apps_more">Још Nextcloud апликација</string>
     <string name="email_pick_failed">Није успело бирање и-мејл адресе.</string>
     <string name="encrypted">Постави као шифровано</string>
     <string name="end_to_end_encryption_certificate_unavailable">Серверски сертификат није могао да се преузме</string>
@@ -744,7 +742,6 @@
     <string name="prefs_remove_e2e">Локално уклони шифрирање</string>
     <string name="prefs_setup_e2e">Подешавање шифровања од-краја-до-краја</string>
     <string name="prefs_show_ecosystem_apps">Прикажи мењач апликација</string>
-    <string name="prefs_show_ecosystem_apps_summary">Предлози Nextcloud апликација у заглављу навигације</string>
     <string name="prefs_show_hidden_files">Прикажи скривене фајлове</string>
     <string name="prefs_sourcecode">Узми изворни кôд</string>
     <string name="prefs_sycned_folders_summary">Управљање фолдерима за аутоматско отпремање</string>

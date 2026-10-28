@@ -261,7 +261,7 @@
     <string name="file_migration_checking_destination">Pārbauda galamērķi…</string>
     <string name="file_migration_cleaning">Tīra…</string>
     <string name="file_migration_directory_already_exists">Datu mape jau pastāv. Jāizvēlas viena no zemāk esošajām:</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud mape jau pastāv</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud mape jau pastāv</string>
     <string name="file_migration_failed_not_enough_space">Nepieciešams vairāk vietas</string>
     <string name="file_migration_failed_not_readable">Nevarēja nolasīt avota datni</string>
     <string name="file_migration_failed_not_writable">Nevarēja rakstīt uz norādīto datni</string>
@@ -460,7 +460,6 @@
     <string name="prefs_manage_accounts">Pārvaldīt kontus</string>
     <string name="prefs_recommend">Ieteikt draugam</string>
     <string name="prefs_show_ecosystem_apps">Rādīt lietotņu pārslēdzēju</string>
-    <string name="prefs_show_ecosystem_apps_summary">Nextcloud lietoņu ieteikumi pārvietošanās galvenē</string>
     <string name="prefs_show_hidden_files">Rādīt slēptās datnes</string>
     <string name="prefs_sourcecode">Iegūt pirmkodu</string>
     <string name="prefs_sycned_folders_summary">Automātiski augšupielādējamo mapju pārvaldīšana</string>
@@ -532,7 +531,7 @@
     <string name="shared_icon_shared">koplietots</string>
     <string name="sharee_add_failed">Dalībnieka pievienošana neizdevās</string>
     <string name="signup_with_provider">Reģistrēties ar pakalpojumu sniedzēju</string>
-    <string name="single_sign_on_request_token" formatted="true">Ļaut %1$s piekļūt Tavam Nextcloud kontam %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Ļaut %1$s piekļūt Tavam XeniaCloud kontam %2$s?</string>
     <string name="sort_by">Kārtot pēc</string>
     <string name="sort_folders_before_files">Kārtot mapes pirms datnēm</string>
     <string name="ssl_validator_btn_details_hide">Paslēpt</string>

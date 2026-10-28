@@ -191,7 +191,6 @@
     <string name="community_testing_bug_text">Fundet en fejl? Mærkværdighed?</string>
     <string name="community_testing_headline">Hjælp med at test</string>
     <string name="community_testing_report_text">Rapportér et problem på Github</string>
-    <string name="compose_activity_label">Nextcloud Assistent</string>
     <string name="configure_new_media_folder_detection_notifications">Konfigurer</string>
     <string name="confirm_removal">Fjern lokal kryptering</string>
     <string name="confirmation_remove_file_alert">Er du sikker på at du vil slette %1$s ?</string>
@@ -324,7 +323,6 @@
     <string name="e2e_signature_does_not_match">Signaturen matcher ikke</string>
     <string name="ecosystem_apps_display_assistant">Assistent</string>
     <string name="ecosystem_apps_display_more">Mere</string>
-    <string name="ecosystem_apps_more">Flere Nextcloud apps</string>
     <string name="email_pick_failed">Kunne ikke plukke e-mailadresse.</string>
     <string name="encrypted">Angiv som krypteret</string>
     <string name="end_to_end_encryption_certificate_unavailable">Servercertifikatet kunne ikke hentes</string>
@@ -442,7 +440,7 @@
     <string name="file_migration_cleaning">Renser ud...</string>
     <string name="file_migration_dialog_title">Opdaterer data lagringsmappe</string>
     <string name="file_migration_directory_already_exists">Datamappen findes allerede. Vælg en af følgende:</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud mappe eksisterer allerede</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud mappe eksisterer allerede</string>
     <string name="file_migration_failed_not_enough_space">Brug for mere plads</string>
     <string name="file_migration_failed_not_readable">Kunne ikke læse oprindelig fil</string>
     <string name="file_migration_failed_not_writable">Kunne ikke skrive til destinationsfil</string>
@@ -743,7 +741,6 @@
     <string name="prefs_remove_e2e">Fjern kryptering lokalt</string>
     <string name="prefs_setup_e2e">Opsæt end-to-end kryptering</string>
     <string name="prefs_show_ecosystem_apps">Vis app skifter</string>
-    <string name="prefs_show_ecosystem_apps_summary">Nextcloud app anbefalinger i navigationspanelet</string>
     <string name="prefs_show_hidden_files">Vis skjulte filer</string>
     <string name="prefs_sourcecode">Hent kildetekst</string>
     <string name="prefs_sycned_folders_summary">Administrér mapper til auto upload</string>
@@ -896,7 +893,7 @@
     <string name="show_video">Vis videoer</string>
     <string name="sign_tos_failed">Tjek venligst servicevilkårene manuelt!</string>
     <string name="signup_with_provider">Indskrivning hos udbyder</string>
-    <string name="single_sign_on_request_token" formatted="true">Tillad %1$s adgang til din Nextcloud konto %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Tillad %1$s adgang til din XeniaCloud konto %2$s?</string>
     <string name="sort_by">Sorter efter</string>
     <string name="sort_favorites_first">Vis favoritter først</string>
     <string name="sort_folders_before_files">Sorter mapper før filer</string>

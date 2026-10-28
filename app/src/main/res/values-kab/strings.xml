@@ -178,7 +178,6 @@
     <string name="community_contribute_translate_translate">Suqel</string>
     <string name="community_testing_headline">Mudd tallelt deg usekyed</string>
     <string name="community_testing_report_text">Mmel ugur deg GitHub</string>
-    <string name="compose_activity_label">Amallal n Nextcloud</string>
     <string name="configure_new_media_folder_detection_notifications">Swel</string>
     <string name="confirm_removal">Kkes awgelhen adigan</string>
     <string name="confirmation_remove_file_alert">Tebɣiḍ ad tekkseḍ s tidet %1$s?</string>
@@ -306,7 +305,6 @@
     <string name="e2e_signature_is_empty">Ur yezmir ara ad isenqed idfersefka, azmul d ilem.</string>
     <string name="ecosystem_apps_display_assistant">Amallal</string>
     <string name="ecosystem_apps_display_more">Ugar</string>
-    <string name="ecosystem_apps_more">Ugar n isnasen Nextcloud</string>
     <string name="editor_web_view_cannot_open_file">Ur yezmir ara ad yeldi amsefran n yifuyla</string>
     <string name="email_pick_failed">Ur yezmir ara ad d-yawi tansa imayl.</string>
     <string name="encrypted">Sbadu-t d awgelhan</string>
@@ -408,7 +406,7 @@
     <string name="file_migration_cleaning">Asfaḍ...</string>
     <string name="file_migration_dialog_title">Aleqqem n ukaram usekles n isefka</string>
     <string name="file_migration_directory_already_exists">Akaram n isefka yella yakan. Fren yiwen seg wayen d-itteddun:</string>
-    <string name="file_migration_failed_dir_already_exists">Akaram n Nextcloud yella yakan</string>
+    <string name="file_migration_failed_dir_already_exists">Akaram n XeniaCloud yella yakan</string>
     <string name="file_migration_failed_not_enough_space">Ugar n tallunt yettwasran</string>
     <string name="file_migration_failed_not_readable">Ulamek taɣuri n ufaylu aɣbalu</string>
     <string name="file_migration_failed_not_writable">Ulamek tira ɣer ufaylu n wawwaḍ</string>

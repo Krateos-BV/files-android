@@ -157,7 +157,6 @@
     <string name="community_testing_bug_text">¿Encontró una falla? ¿Hay algo raro?</string>
     <string name="community_testing_headline">Ayúdenos probando</string>
     <string name="community_testing_report_text">Reportar un error en GitHub</string>
-    <string name="compose_activity_label">Asistente de Nextcloud</string>
     <string name="configure_new_media_folder_detection_notifications">Configurar</string>
     <string name="confirm_removal">Eliminar encriptación local</string>
     <string name="confirmation_remove_file_alert">¿Realmente quieres eliminar %1$s?</string>
@@ -265,7 +264,6 @@
     <string name="e2e_offline">No es posible sin conexión a Internet</string>
     <string name="ecosystem_apps_display_assistant">Asistente</string>
     <string name="ecosystem_apps_display_more">Más</string>
-    <string name="ecosystem_apps_more">Más apps de Nextcloud</string>
     <string name="email_pick_failed">No se pudo seleccionar la dirección de correo electrónico.</string>
     <string name="encrypted">Establecer como cifrado</string>
     <string name="end_to_end_encryption_confirm_button">Configurar cifrado</string>
@@ -362,7 +360,7 @@
     <string name="file_migration_cleaning">Limpiando…</string>
     <string name="file_migration_dialog_title">Actualización de la carpeta de almacenamiento de datos</string>
     <string name="file_migration_directory_already_exists">La carpeta de datos ya existe. Elige uno de los siguientes:</string>
-    <string name="file_migration_failed_dir_already_exists">La carpeta de Nextcloud ya existe</string>
+    <string name="file_migration_failed_dir_already_exists">La carpeta de XeniaCloud ya existe</string>
     <string name="file_migration_failed_not_enough_space">Se necesita más espacio</string>
     <string name="file_migration_failed_not_readable">No se pudo leer el archivo fuente</string>
     <string name="file_migration_failed_not_writable">No se pudo escribir en el archivo de destino</string>
@@ -614,7 +612,6 @@
     <string name="prefs_remove_e2e">Eliminar encriptación localmente</string>
     <string name="prefs_setup_e2e">Configurar encriptación de extremo a extremo</string>
     <string name="prefs_show_ecosystem_apps">Mostrar el conmutador de aplicaciones</string>
-    <string name="prefs_show_ecosystem_apps_summary">Sugerencias de aplicaciones de Nextcloud en el encabezado de navegación</string>
     <string name="prefs_show_hidden_files">Mostrar archivos ocultos</string>
     <string name="prefs_sourcecode">Obtener el código fuente</string>
     <string name="prefs_sycned_folders_summary">Administrar carpetas para carga automática</string>
@@ -738,7 +735,7 @@
     <string name="show_images">Mostrar fotos</string>
     <string name="show_video">Mostrar videos</string>
     <string name="signup_with_provider">Registrarse con el proveedor</string>
-    <string name="single_sign_on_request_token" formatted="true">Permitir que %1$s acceda a su cuenta de Nextcloud %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Permitir que %1$s acceda a su cuenta de XeniaCloud %2$s?</string>
     <string name="sort_by">Ordenar por</string>
     <string name="ssl_validator_btn_details_hide">Ocultar</string>
     <string name="ssl_validator_btn_details_see">Detalles</string>

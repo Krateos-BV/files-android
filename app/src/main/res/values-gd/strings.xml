@@ -274,7 +274,7 @@
     <string name="file_migration_cleaning">’Ga ghlanadh…</string>
     <string name="file_migration_dialog_title">Ag ùrachadh pasgan a stòrais</string>
     <string name="file_migration_directory_already_exists">Tha am pasgan dàta ann mu thràth. Tagh aon dhe na nithean a leanas:</string>
-    <string name="file_migration_failed_dir_already_exists">Tha am pasgan Nextcloud ann mu thràth</string>
+    <string name="file_migration_failed_dir_already_exists">Tha am pasgan XeniaCloud ann mu thràth</string>
     <string name="file_migration_failed_not_enough_space">Tha àite a dhìth</string>
     <string name="file_migration_failed_not_readable">Cha b’ urrainn dhuinn am faidhle tùsail a leughadh</string>
     <string name="file_migration_failed_not_writable">Cha b’ urrainn dhuinn sgrìobhadh dhan fhaidhle sa cheann-uidhe</string>
@@ -559,7 +559,7 @@
     <string name="shared_with_you_by">Ga cho-roinneadh leat le %1$s</string>
     <string name="sharee_add_failed">Cha deach leinn neach co-roinnidh a chur ris</string>
     <string name="signup_with_provider">Clàraich leinn le solaraiche</string>
-    <string name="single_sign_on_request_token" formatted="true">Am faod %1$s an cunntas Nextcloud %2$s agad inntrigeadh?</string>
+    <string name="single_sign_on_request_token" formatted="true">Am faod %1$s an cunntas XeniaCloud %2$s agad inntrigeadh?</string>
     <string name="sort_by">Seòrsaich a-rèir</string>
     <string name="ssl_validator_btn_details_hide">Cuir am falach</string>
     <string name="ssl_validator_btn_details_see">Mion-fhiosrachadh</string>

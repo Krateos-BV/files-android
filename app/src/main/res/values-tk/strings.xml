@@ -273,7 +273,7 @@
     <string name="file_migration_cleaning">Arassalamak...</string>
     <string name="file_migration_dialog_title">Maglumat saklaýyş bukjasyny täzelemek</string>
     <string name="file_migration_directory_already_exists">Maglumat bukjasy eýýäm bar. Aşakdakylardan birini saýlaň</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud bukjasy eýýäm bar</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud bukjasy eýýäm bar</string>
     <string name="file_migration_failed_not_enough_space">Has köp ýer gerek</string>
     <string name="file_migration_failed_not_readable">Papka döredip bolmady </string>
     <string name="file_migration_failed_not_writable">Niýetlenen faýla ýazyp bolmady</string>
@@ -552,7 +552,7 @@
     <string name="shared_with_you_by">%1$sSiziň bilen paýlaşdy</string>
     <string name="sharee_add_failed">Şari meýdançasyny goşmak</string>
     <string name="signup_with_provider">Prowaýder bilen ýazylyň</string>
-    <string name="single_sign_on_request_token" formatted="true">Nextcloud hasabyňyza girmäge rugsat beriň?%1$s%2$s</string>
+    <string name="single_sign_on_request_token" formatted="true">XeniaCloud hasabyňyza girmäge rugsat beriň?%1$s%2$s</string>
     <string name="sort_by">Tertipleşdir</string>
     <string name="ssl_validator_btn_details_hide">Gizläň</string>
     <string name="ssl_validator_btn_details_see">Jikme-jiklikler</string>

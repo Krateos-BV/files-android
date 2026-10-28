@@ -265,7 +265,7 @@
     <string name="file_migration_checking_destination">Duke kontrolluar destinacionin…</string>
     <string name="file_migration_cleaning">Duke pastruar…</string>
     <string name="file_migration_directory_already_exists">Dosja e të dhënave tashmë ekziston. Zgjidhni një nga të mëposhtmet:</string>
-    <string name="file_migration_failed_dir_already_exists">Dosja Nextcloud ekziston tashmë</string>
+    <string name="file_migration_failed_dir_already_exists">Dosja XeniaCloud ekziston tashmë</string>
     <string name="file_migration_failed_not_enough_space">Ka nevojë për më shumë hapësirë</string>
     <string name="file_migration_failed_not_readable">Nuk mund të lexohet skedari i burimit</string>
     <string name="file_migration_failed_not_writable">Nuk mund të shkruhet në skedarin e destinacionit</string>
@@ -527,7 +527,7 @@
     <string name="shared_with_you_by">Ndahet me ju nga %1$s</string>
     <string name="sharee_add_failed">Duke shtuar përdëruesit e dështuar</string>
     <string name="signup_with_provider">Regjistrohu me ofruesin</string>
-    <string name="single_sign_on_request_token" formatted="true">Lejo %1$s të hyjë në llogarinë tënde Nextcloud %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Lejo %1$s të hyjë në llogarinë tënde XeniaCloud %2$s?</string>
     <string name="sort_by">Rendit sipas</string>
     <string name="ssl_validator_btn_details_hide">Fshihe</string>
     <string name="ssl_validator_btn_details_see">Hollësi</string>

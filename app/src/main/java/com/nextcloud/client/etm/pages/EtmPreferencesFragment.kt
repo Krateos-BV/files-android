@@ -56,7 +56,7 @@ class EtmPreferencesFragment : EtmBaseFragment() {
 
     private fun onClickedShare() {
         val intent = Intent(Intent.ACTION_SEND)
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Nextcloud preferences")
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Xenia Files preferences")
         intent.putExtra(Intent.EXTRA_TEXT, binding.etmPreferencesText.text)
         intent.type = "text/plain"
         startActivity(intent)

@@ -320,7 +320,7 @@
     <string name="file_migration_cleaning">Чистење…</string>
     <string name="file_migration_dialog_title">Ажурирање на папка за складиште на податоци</string>
     <string name="file_migration_directory_already_exists">Папка со податоци веќе постои. Изберете една од следните:</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud папка веќе постои</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud папка веќе постои</string>
     <string name="file_migration_failed_not_enough_space">Потребен е повеќе простор</string>
     <string name="file_migration_failed_not_readable">Неможе да се прочита датотеката</string>
     <string name="file_migration_failed_not_writable">Неможам да се запише во папката</string>
@@ -621,7 +621,7 @@
     <string name="show_all">Прикажи ги сите</string>
     <string name="show_less">Помалку</string>
     <string name="signup_with_provider">Пријавете се преку провајдер</string>
-    <string name="single_sign_on_request_token" formatted="true">Дозволи му на %1$s да пристапи на твојата Nextcloud сметка %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Дозволи му на %1$s да пристапи на твојата XeniaCloud сметка %2$s?</string>
     <string name="sort_by">Сортирај по</string>
     <string name="sort_favorites_first">Прво омилените</string>
     <string name="sort_folders_before_files">Подреди ги папките пред датотеките</string>

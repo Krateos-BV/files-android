@@ -144,7 +144,6 @@
     <string name="community_testing_bug_text">Found a bug? Oddments?</string>
     <string name="community_testing_headline">Help by testing</string>
     <string name="community_testing_report_text">Report an issue on GitHub</string>
-    <string name="compose_activity_label">Nextcloud-ის ასისტენტი</string>
     <string name="configure_new_media_folder_detection_notifications">Configure</string>
     <string name="confirm_removal">Remove local encryption</string>
     <string name="confirmation_remove_file_alert">Do you really want to delete %1$s?</string>
@@ -249,7 +248,6 @@
     <string name="e2e_not_yet_setup">E2E not yet setup</string>
     <string name="e2e_offline">Not possible without internet connection</string>
     <string name="ecosystem_apps_display_more">More</string>
-    <string name="ecosystem_apps_more">More Nextcloud Apps</string>
     <string name="email_pick_failed">Failed to pick email address.</string>
     <string name="encrypted">Set as encrypted</string>
     <string name="end_to_end_encryption_confirm_button">Set up encryption</string>
@@ -346,7 +344,7 @@
     <string name="file_migration_cleaning">Cleaning…</string>
     <string name="file_migration_dialog_title">Updating data storage folder</string>
     <string name="file_migration_directory_already_exists">Data folder already exists. Choose one of the following:</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud folder already exists</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud folder already exists</string>
     <string name="file_migration_failed_not_enough_space">More space needed</string>
     <string name="file_migration_failed_not_readable">Could not read source file</string>
     <string name="file_migration_failed_not_writable">Could not write to destination file</string>
@@ -587,7 +585,6 @@
     <string name="prefs_remove_e2e">Remove encryption locally</string>
     <string name="prefs_setup_e2e">Set up end-to-end encryption</string>
     <string name="prefs_show_ecosystem_apps">Show app switcher</string>
-    <string name="prefs_show_ecosystem_apps_summary">Nextcloud app suggestions in navigation heading</string>
     <string name="prefs_show_hidden_files">Show hidden files</string>
     <string name="prefs_sourcecode">Get source code</string>
     <string name="prefs_sycned_folders_summary">Manage folders for auto upload</string>
@@ -704,7 +701,7 @@
     <string name="show_less">Show less</string>
     <string name="show_video">Show videos</string>
     <string name="signup_with_provider">Sign up with provider</string>
-    <string name="single_sign_on_request_token" formatted="true">Allow %1$s to access your Nextcloud account %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Allow %1$s to access your XeniaCloud account %2$s?</string>
     <string name="sort_by">Sort by</string>
     <string name="sort_favorites_first">Sort favorites first</string>
     <string name="ssl_validator_btn_details_hide">Hide</string>

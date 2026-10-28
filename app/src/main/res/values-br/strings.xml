@@ -263,7 +263,6 @@
     <string name="e2e_offline">Ne c\'hall ket bezañ graet hep kevreadenn genrouedad</string>
     <string name="ecosystem_apps_display_assistant">Skoazeller</string>
     <string name="ecosystem_apps_display_more">Muioc\'h</string>
-    <string name="ecosystem_apps_more">Arloadoù Nextcloud all</string>
     <string name="email_pick_failed">N\'eus ket bet gallet tapout ar chomlec\'h postel</string>
     <string name="encrypted">Merkañ evel sifret</string>
     <string name="end_to_end_encryption_confirm_button">Arventenniñ ar sifradur</string>
@@ -357,7 +356,7 @@
     <string name="file_migration_checking_destination">O wiriañ ar pal...</string>
     <string name="file_migration_cleaning">O naetaat...</string>
     <string name="file_migration_directory_already_exists">An teuliad roadenn a zo outañ dija. Choazit unan eus ar re mañ :</string>
-    <string name="file_migration_failed_dir_already_exists">Bez ez eus dija eus an teuliad Nextcloud mañ</string>
+    <string name="file_migration_failed_dir_already_exists">Bez ez eus dija eus an teuliad XeniaCloud mañ</string>
     <string name="file_migration_failed_not_enough_space">Eus muioc\'h a blas ez eus ezhomp</string>
     <string name="file_migration_failed_not_readable">N\'eo ket posuple lenn ar restr orin</string>
     <string name="file_migration_failed_not_writable">N\'eo ket posuple skrivañ er restr termenn</string>
@@ -629,7 +628,7 @@
     <string name="shared_with_you_by">Rannet ganeoc\'h dre %1$s</string>
     <string name="sharee_add_failed">C\'huitet ouzhpennan ar rannedoù</string>
     <string name="signup_with_provider">En em kemprenn gant ur pourvezher</string>
-    <string name="single_sign_on_request_token" formatted="true">Aotreiñ %1$s mont war o c\'hont Nextcloud %2$s ?</string>
+    <string name="single_sign_on_request_token" formatted="true">Aotreiñ %1$s mont war o c\'hont XeniaCloud %2$s ?</string>
     <string name="sort_by">Renkañ dre</string>
     <string name="ssl_validator_btn_details_hide">Kouacha</string>
     <string name="ssl_validator_btn_details_see">Munudoù</string>

@@ -203,7 +203,6 @@
     <string name="community_testing_bug_text">Našli jste chybu? Něco podivného?</string>
     <string name="community_testing_headline">Pomozte testováním</string>
     <string name="community_testing_report_text">Nahlásit problém prostřednictvím portálu Github</string>
-    <string name="compose_activity_label">Nextcloud Asistent</string>
     <string name="configure_new_media_folder_detection_notifications">Nastavit</string>
     <string name="confirm_removal">Odebrat lokální šifrování</string>
     <string name="confirmation_remove_file_alert">Opravdu chcete %1$s odstranit?</string>
@@ -345,7 +344,6 @@
     <string name="e2e_signature_is_empty">Nebylo možné ověřit metadata, podpis je prázdný.</string>
     <string name="ecosystem_apps_display_assistant">Asistent</string>
     <string name="ecosystem_apps_display_more">Další</string>
-    <string name="ecosystem_apps_more">Další Nextcloud aplikace</string>
     <string name="editor_web_view_cannot_open_file">Nebylo možné otevřít výběr souborů</string>
     <string name="email_pick_failed">Nepodařilo se vybrat e-mailovou adresu.</string>
     <string name="encrypted">Nastavit jako šifrované</string>
@@ -470,7 +468,7 @@
     <string name="file_migration_cleaning">Čištění …</string>
     <string name="file_migration_dialog_title">Aktualizuje se složka pro ukládání dat</string>
     <string name="file_migration_directory_already_exists">Složka s daty už existuje. Vyberte z následujících možností:</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud složka už existuje</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud složka už existuje</string>
     <string name="file_migration_failed_not_enough_space">Je zapotřebí více místa</string>
     <string name="file_migration_failed_not_readable">Ze zdrojového souboru se nedaří číst</string>
     <string name="file_migration_failed_not_writable">Do cílového souboru se nedaří zapsat</string>
@@ -785,7 +783,6 @@
     <string name="prefs_remove_e2e">Odebrat šifrování lokálně</string>
     <string name="prefs_setup_e2e">Nastavit šifrování mezi koncovými body</string>
     <string name="prefs_show_ecosystem_apps">Zobrazit přepínač aplikací</string>
-    <string name="prefs_show_ecosystem_apps_summary">Doporučování Nextcloud aplikací v záhlaví navigace</string>
     <string name="prefs_show_hidden_files">Zobrazit skryté soubory</string>
     <string name="prefs_sourcecode">Získat zdrojové kódy</string>
     <string name="prefs_sycned_folders_summary">Spravovat složky pro automatické nahrávání</string>
@@ -939,7 +936,7 @@
     <string name="show_video">Zobrazit videa</string>
     <string name="sign_tos_failed">Prosíme ručně zkontrolujte všeobecné podmínky!</string>
     <string name="signup_with_provider">Zaregistrovat se u poskytovatele</string>
-    <string name="single_sign_on_request_token" formatted="true">Povolit %1$s přístup k vašemu Nextcloud účtu %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Povolit %1$s přístup k vašemu XeniaCloud účtu %2$s?</string>
     <string name="sort_by">Řadit podle</string>
     <string name="sort_favorites_first">Seřadit od oblíbených</string>
     <string name="sort_folders_before_files">Při řazení zobrazovat složky a pak až soubory</string>

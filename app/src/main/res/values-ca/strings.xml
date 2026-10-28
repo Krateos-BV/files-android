@@ -177,7 +177,6 @@
     <string name="community_testing_bug_text">Heu trobat cap error? Alguna cosa fora del corrent?</string>
     <string name="community_testing_headline">Ajudar fent proves</string>
     <string name="community_testing_report_text">Informar d\'una incidència a GitHub</string>
-    <string name="compose_activity_label">Assistent del Nextcloud</string>
     <string name="configure_new_media_folder_detection_notifications">Configura</string>
     <string name="confirm_removal">Suprimeix el xifratge local</string>
     <string name="confirmation_remove_file_alert">Esteu segur que voleu suprimir%1$s?</string>
@@ -302,7 +301,6 @@
     <string name="e2e_signature_does_not_match">La signatura no coincideix</string>
     <string name="ecosystem_apps_display_assistant">Assistent</string>
     <string name="ecosystem_apps_display_more">Més</string>
-    <string name="ecosystem_apps_more">Més aplicacions de Nextcloud</string>
     <string name="email_pick_failed">No s\'ha pogut triar l\'adreça electrònica.</string>
     <string name="encrypted">Activa el xifrat</string>
     <string name="end_to_end_encryption_certificate_unavailable">No s\'ha pogut obtenir el certificat del servidor</string>
@@ -408,7 +406,7 @@
     <string name="file_migration_cleaning">S\'està netejant…</string>
     <string name="file_migration_dialog_title">Actualitzant la carpeta de dades</string>
     <string name="file_migration_directory_already_exists">La carpeta de dades ja existeix. Escolliu-ne una de les següents:</string>
-    <string name="file_migration_failed_dir_already_exists">La carpeta de Nextcloud ja existeix</string>
+    <string name="file_migration_failed_dir_already_exists">La carpeta de XeniaCloud ja existeix</string>
     <string name="file_migration_failed_not_enough_space">Es necessita més espai</string>
     <string name="file_migration_failed_not_readable">El fitxer d\'origen no es pot llegir</string>
     <string name="file_migration_failed_not_writable">No es pot escriure al fitxer de destinació</string>
@@ -688,7 +686,6 @@
     <string name="prefs_remove_e2e">Suprimeix el xifratge localment</string>
     <string name="prefs_setup_e2e">Configureu el xifratge d\'extrem a extrem</string>
     <string name="prefs_show_ecosystem_apps">Mostra el selector d\'aplicacions</string>
-    <string name="prefs_show_ecosystem_apps_summary">Suggeriments de l\'aplicació Nextcloud a la capçalera de navegació</string>
     <string name="prefs_show_hidden_files">Mostra els fitxers ocults</string>
     <string name="prefs_sourcecode">Aconseguiu el codi font</string>
     <string name="prefs_sycned_folders_summary">Gestiona les carpetes per a la pujada automàtica</string>
@@ -812,7 +809,7 @@
     <string name="show_less">Mostra\'n menys</string>
     <string name="show_video">Mostrar vídeos</string>
     <string name="signup_with_provider">Registreu-vos amb el proveïdor</string>
-    <string name="single_sign_on_request_token" formatted="true">Voleu permetre que %1$s accedeixi al vostre compte de Nextcloud %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Voleu permetre que %1$s accedeixi al vostre compte de XeniaCloud %2$s?</string>
     <string name="sort_by">Ordena per</string>
     <string name="sort_favorites_first">Ordena primer els preferits</string>
     <string name="sort_folders_before_files">Ordena les carpetes abans dels fitxers</string>

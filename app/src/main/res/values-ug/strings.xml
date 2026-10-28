@@ -191,7 +191,6 @@
     <string name="community_testing_bug_text">خاتالىق بايقالدى؟ قالدۇق؟</string>
     <string name="community_testing_headline">سىناق ئارقىلىق ياردەم</string>
     <string name="community_testing_report_text">GitHub دىكى بىر مەسىلىنى دوكلات قىلىڭ</string>
-    <string name="compose_activity_label">Nextcloud ياردەمچىسى</string>
     <string name="configure_new_media_folder_detection_notifications">سەپلەڭ</string>
     <string name="confirm_removal">يەرلىك مەخپىيلەشتۈرۈشنى ئۆچۈرۈڭ</string>
     <string name="confirmation_remove_file_alert">راستىنلا%1$s نى ئۆچۈرمەكچىمۇ؟</string>
@@ -330,7 +329,6 @@
     <string name="e2e_signature_is_empty">خام-ئۇچۇرنى تەكشۈرەلمىدى، ئىمزاسى يوق.</string>
     <string name="ecosystem_apps_display_assistant">ياردەمچى</string>
     <string name="ecosystem_apps_display_more">تېخىمۇ كۆپ</string>
-    <string name="ecosystem_apps_more">تېخىمۇ كۆپ Nextcloud ئەپلىرى</string>
     <string name="editor_web_view_cannot_open_file">ھۆججەت تاللىغۇچنى ئاچالمىدى</string>
     <string name="email_pick_failed">ئېلېكترونلۇق خەت ئادرېسىنى تاللىيالمىدى.</string>
     <string name="encrypted">شىفىرلانغان قىلىپ تەڭشەڭ</string>
@@ -452,7 +450,7 @@
     <string name="file_migration_cleaning">تازىلاش…</string>
     <string name="file_migration_dialog_title">سانلىق مەلۇمات ساقلاش قىسقۇچىنى يېڭىلاش</string>
     <string name="file_migration_directory_already_exists">سانلىق مەلۇمات قىسقۇچ مەۋجۇت. تۆۋەندىكىلەردىن بىرىنى تاللاڭ:</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud ھۆججەت قىسقۇچى ئاللىبۇرۇن مەۋجۇت</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud ھۆججەت قىسقۇچى ئاللىبۇرۇن مەۋجۇت</string>
     <string name="file_migration_failed_not_enough_space">تېخىمۇ كۆپ بوشلۇق لازىم</string>
     <string name="file_migration_failed_not_readable">مەنبە ھۆججىتىنى ئوقۇيالمىدى</string>
     <string name="file_migration_failed_not_writable">مەنزىل ھۆججىتىگە يازالمىدى</string>
@@ -761,7 +759,6 @@
     <string name="prefs_remove_e2e">يەرلىك شىفىرنى ئۆچۈرۈڭ</string>
     <string name="prefs_setup_e2e">ئاخىرىدىن ئاخىرىغىچە مەخپىيلەشتۈرۈشنى تەڭشەڭ</string>
     <string name="prefs_show_ecosystem_apps">ئەپ ئالماشتۇرغۇچنى كۆرسەت</string>
-    <string name="prefs_show_ecosystem_apps_summary">يول باشلاش ماۋزۇسىدىكى Nextcloud ئەپ تەكلىپلىرى</string>
     <string name="prefs_show_hidden_files">يوشۇرۇن ھۆججەتلەرنى كۆرسەت</string>
     <string name="prefs_sourcecode">ئەسلى كودقا ئېرىشىش</string>
     <string name="prefs_sycned_folders_summary">ئاپتوماتىك يوللاش ئۈچۈن ھۆججەت قىسقۇچلارنى باشقۇرۇڭ</string>
@@ -914,7 +911,7 @@
     <string name="show_video">سىنلارنى كۆرسەت</string>
     <string name="sign_tos_failed">مۇلازىمەت ماددىلىرىنى قولدا تەكشۈرۈڭ!</string>
     <string name="signup_with_provider">تەمىنلىگۈچى بىلەن تىزىملىتىڭ</string>
-    <string name="single_sign_on_request_token" formatted="true">%1$s نىڭ Nextcloud ھېساباتىڭىزنى زىيارەت قىلىشىغا يول قويۇڭ%2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">%1$s نىڭ XeniaCloud ھېساباتىڭىزنى زىيارەت قىلىشىغا يول قويۇڭ%2$s?</string>
     <string name="sort_by">تەرتىپلەش</string>
     <string name="sort_favorites_first">ياقتۇرىدىغانلارنى رەتلەڭ</string>
     <string name="sort_folders_before_files">ھۆججەتلەرنى ھۆججەتتىن بۇرۇن تەرتىپلەڭ</string>
