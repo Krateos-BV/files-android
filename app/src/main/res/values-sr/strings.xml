@@ -437,7 +437,7 @@
     <string name="file_migration_cleaning">Чистим…</string>
     <string name="file_migration_dialog_title">Ажурирам фасциклу са подацима</string>
     <string name="file_migration_directory_already_exists">Фасцикла већ постоји. Одаберите нешто од следећег:</string>
-    <string name="file_migration_failed_dir_already_exists">Некстклауд фасцикла већ постоји</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud фасцикла већ постоји</string>
     <string name="file_migration_failed_not_enough_space">Потребно је још простора</string>
     <string name="file_migration_failed_not_readable">Не могу да читам изворни фајл</string>
     <string name="file_migration_failed_not_writable">Не могу да пишем у одредишни фајл </string>
@@ -893,7 +893,7 @@
     <string name="show_video">Прикажи видео снимке</string>
     <string name="sign_tos_failed">Молимо вас да ручно погледате услове коришћења!</string>
     <string name="signup_with_provider">Пријавите се преко провајдера</string>
-    <string name="single_sign_on_request_token" formatted="true">Може ли %1$s да приступи Некстклауд налогу %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Може ли %1$s да приступи XeniaCloud налогу %2$s?</string>
     <string name="sort_by">Разврстај</string>
     <string name="sort_favorites_first">Сортирај прво омиљене</string>
     <string name="sort_folders_before_files">Поређај фолдере испред фајлова</string>

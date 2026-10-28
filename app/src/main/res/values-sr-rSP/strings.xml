@@ -247,7 +247,7 @@
     <string name="file_migration_checking_destination">Proveravam odredište…</string>
     <string name="file_migration_cleaning">Čistim…</string>
     <string name="file_migration_directory_already_exists">Fascikla sa podacima već postoji. Odaberite jedno od sledećeg:</string>
-    <string name="file_migration_failed_dir_already_exists">Nekstklaud fascikla već postoji</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud fascikla već postoji</string>
     <string name="file_migration_failed_not_enough_space">Potrebno je više praznog mesta</string>
     <string name="file_migration_failed_not_readable">Ne mogu da čitam iz izvornog fajla</string>
     <string name="file_migration_failed_not_writable">Ne mogu da pišem u odredišni fajl </string>
@@ -501,7 +501,7 @@
     <string name="shared_with_you_by">Deli sa vama %1$s</string>
     <string name="sharee_add_failed">Dodavanje osobe za deljenje nije uspelo</string>
     <string name="signup_with_provider">Prijavite se preko provajdera</string>
-    <string name="single_sign_on_request_token" formatted="true">Dozvoli da %1$s pristupa Vašem Nekstklaud nalogu %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Dozvoli da %1$s pristupa Vašem XeniaCloud nalogu %2$s?</string>
     <string name="sort_by">Razvrstaj</string>
     <string name="ssl_validator_btn_details_hide">Sakrij</string>
     <string name="ssl_validator_btn_details_see">Podaci</string>

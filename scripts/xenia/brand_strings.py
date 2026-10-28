@@ -27,9 +27,8 @@ REPLACEMENTS = [
     ("Nextcloud Notes", "Xenia Notes"),
     ("Nextcloud Assistant", "Xenia Assistant"),
     ("Nextcloud", "XeniaCloud"),
-    ("نكست كلاود", "XeniaCloud"),
-    ("نکست\u200cکلود", "XeniaCloud"),
 ]
+TRANSLITERATIONS = re.compile(r"некст\s?клауд[а-яђјљњћџ]*|nekst\s?klaud|nexcloud|نكست كلاود|نکست\u200cکلود", re.I)
 OTHER_SPELLINGS = re.compile(r"(?<![./@\w])nextcloud", re.I)
 
 STRING = re.compile(r"(<string\b([^>]*)>)(.*?)(</string>)", re.S)
@@ -37,7 +36,7 @@ GROUP = re.compile(r"(<(plurals|string-array)\b([^>]*)>)(.*?)(</\2>)", re.S)
 ITEM = re.compile(r"(<item\b[^>]*>)(.*?)(</item>)", re.S)
 COMMENT = re.compile(r"<!--.*?-->", re.S)
 NAME = re.compile(r'\bname="([^"]+)"')
-BRAND = re.compile("nextcloud|نكست كلاود|نکست\u200cکلود", re.I)
+BRAND = re.compile("nextcloud|" + TRANSLITERATIONS.pattern, re.I)
 
 
 def resource_files():
@@ -66,6 +65,7 @@ def is_translatable(attributes):
 def rebrand(text):
     for old, new in REPLACEMENTS:
         text = text.replace(old, new)
+    text = TRANSLITERATIONS.sub("XeniaCloud", text)
     return OTHER_SPELLINGS.sub("XeniaCloud", text)
 
 
