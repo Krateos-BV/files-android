@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ SPDX-FileCopyrightText: 2026 XeniaCloud
+  ~ SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+    <string name="bad_oc_version">Es wurde keine gültige XeniaCloud-Version auf dem Server gefunden</string>
+    <string name="instance_not_configured">Der XeniaCloud-Server ist nicht konfiguriert!</string>
+    <string name="notification_channel_name">XeniaCloud-Verbindung</string>
+</resources>
