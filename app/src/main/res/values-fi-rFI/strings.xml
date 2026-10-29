@@ -172,7 +172,6 @@
     <string name="community_testing_bug_text">Löysitkö bugin tai jotain muuta outoa?</string>
     <string name="community_testing_headline">Auta testaamalla</string>
     <string name="community_testing_report_text">Ilmoita ongelmasta GitHubissa</string>
-    <string name="compose_activity_label">Nextcloud-avustaja</string>
     <string name="configure_new_media_folder_detection_notifications">Asetukset</string>
     <string name="confirm_removal">Poista paikallinen salaus</string>
     <string name="confirmation_remove_file_alert">Haluatko varmasti poistaa kohteen %1$s?</string>
@@ -294,7 +293,6 @@
     <string name="e2e_offline">Ei mahdollista ilman internetyhteyttä</string>
     <string name="ecosystem_apps_display_assistant">Avustaja</string>
     <string name="ecosystem_apps_display_more">Lisää</string>
-    <string name="ecosystem_apps_more">Lisää Nextcloud-sovelluksia</string>
     <string name="editor_web_view_cannot_open_file">Tiedostovalitsinta ei voi avata</string>
     <string name="email_pick_failed">Sähköpostiosoitteen valinta epäonnistui.</string>
     <string name="encrypted">Salaa</string>
@@ -404,7 +402,7 @@
     <string name="file_migration_cleaning">Siivotaan…</string>
     <string name="file_migration_dialog_title">Päivitetään tietojen tallennuspolkua</string>
     <string name="file_migration_directory_already_exists">Data-kansio on jo olemassa, Valitse yksi seuraavista:</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud-kansio on jo olemassa</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud-kansio on jo olemassa</string>
     <string name="file_migration_failed_not_enough_space">Tarvitaan enemmän tilaa</string>
     <string name="file_migration_failed_not_readable">Lähdetiedostosta ei voinut lukea</string>
     <string name="file_migration_failed_not_writable">Kohdetiedostoon ei voinut kirjoittaa</string>
@@ -680,7 +678,6 @@ GNU yleinen lisenssi, versio 2</string>
     <string name="prefs_remove_e2e">Poista salaus paikallisesti</string>
     <string name="prefs_setup_e2e">Määritä päästä päähän -salaus</string>
     <string name="prefs_show_ecosystem_apps">Näytä sovellusvaihdin</string>
-    <string name="prefs_show_ecosystem_apps_summary">Nextcloud-sovellusehdotukset navigointipalkissa</string>
     <string name="prefs_show_hidden_files">Näytä piilotetut tiedostot</string>
     <string name="prefs_sourcecode">Hanki lähdekoodi</string>
     <string name="prefs_sycned_folders_summary">Hallinnoi kansioita automaattista latausta varten</string>
@@ -815,7 +812,7 @@ GNU yleinen lisenssi, versio 2</string>
     <string name="show_less">Näytä vähemmän</string>
     <string name="show_video">Näytä videot</string>
     <string name="signup_with_provider">Kirjaudu sisään palvelutarjoajan kautta</string>
-    <string name="single_sign_on_request_token" formatted="true">Salli käyttäjälle %1$s pääsy Nextcloud -tilillesi %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Salli käyttäjälle %1$s pääsy XeniaCloud -tilillesi %2$s?</string>
     <string name="sort_by">Lajittelujärjestys</string>
     <string name="sort_favorites_first">Järjestä suosikit ensiksi</string>
     <string name="sort_folders_before_files">Järjestä kansiot ennen tiedostoja</string>

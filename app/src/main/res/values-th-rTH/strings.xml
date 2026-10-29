@@ -256,7 +256,6 @@
     <string name="drawer_synced_folders">อัปโหลดอัตโนมัติ</string>
     <string name="e2e_offline">ใช้โดยไม่มีการเชื่อมต่ออินเทอร์เน็ตไม่ได้</string>
     <string name="ecosystem_apps_display_more">เพิ่มเติม</string>
-    <string name="ecosystem_apps_more">แอพ Nextcloud เพิ่มเติม</string>
     <string name="end_to_end_encryption_decrypting">กำลังถอดรหัส…</string>
     <string name="end_to_end_encryption_dialog_close">ปิด</string>
     <string name="end_to_end_encryption_folder_not_empty">โฟลเดอร์นี้ไม่ว่าง</string>
@@ -308,7 +307,7 @@
     <string name="file_migration_cleaning">กำลังล้าง…</string>
     <string name="file_migration_dialog_title">กำลังอัปเดตโฟลเดอร์จัดเก็บข้อมูล</string>
     <string name="file_migration_directory_already_exists">มีโฟลเดอร์ข้อมูลอยู่แล้ว เลือกอย่างใดอย่างหนึ่งต่อไปนี้:</string>
-    <string name="file_migration_failed_dir_already_exists">โฟลเดอร์ Nextcloud มีอยู่แล้ว</string>
+    <string name="file_migration_failed_dir_already_exists">โฟลเดอร์ XeniaCloud มีอยู่แล้ว</string>
     <string name="file_migration_failed_not_enough_space">ต้องการพื้นที่เพิ่มเติม</string>
     <string name="file_migration_failed_not_readable">ไม่สามารถอ่านไฟล์ต้นทาง</string>
     <string name="file_migration_failed_not_writable">ไม่สามารถเขียนไปยังไฟล์ปลายทาง</string>

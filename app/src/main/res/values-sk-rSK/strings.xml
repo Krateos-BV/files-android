@@ -131,7 +131,7 @@
     <string name="authenticator_activity_no_web_browser_found">Pre tento odkaz nie je k dispozícii žiadny prehliadač.</string>
     <string name="authenticator_activity_please_complete_login_process">Prosím, dokončite proces prihlasovania vo vašom prehliadači</string>
     <string name="auto_upload_background_activity_action">Povoliť aktivitu na pozadí</string>
-    <string name="auto_upload_battery_optimization_reason">Aktivita Nextcloudu na pozadí je obmedzená optimalizáciou batérie.</string>
+    <string name="auto_upload_battery_optimization_reason">Aktivita XeniaCloudu na pozadí je obmedzená optimalizáciou batérie.</string>
     <string name="auto_upload_battery_saver_action">Otvoriť nastavenia šetrenia batérie</string>
     <string name="auto_upload_battery_saver_reason">Šetrenie batérie je aktívne a môže pozastaviť nahrávanie.</string>
     <string name="auto_upload_delete_dialog_description">Týmto sa odstráni priečinok a konfigurácia automatického nahrávania. Všetky nedokončené nahrávania budú zrušené.</string>
@@ -240,7 +240,6 @@
     <string name="community_testing_bug_text">Našli ste chybu? Niečo nefunguje?</string>
     <string name="community_testing_headline">Pomôžte s testovaním</string>
     <string name="community_testing_report_text">Nahlásiť chybu na Githube</string>
-    <string name="compose_activity_label">Nextcloud Asistent</string>
     <string name="configure_new_media_folder_detection_notifications">Nastaviť</string>
     <string name="confirm_removal">Odstrániť lokálne šifrovanie</string>
     <string name="confirmation_remove_file_alert">Naozaj chcete odstrániť %1$s?</string>
@@ -389,7 +388,6 @@
     <string name="e2e_signature_is_empty">Nebolo možné overiť metadata, podpis je prázdny.</string>
     <string name="ecosystem_apps_display_assistant">Asistent</string>
     <string name="ecosystem_apps_display_more">Viac</string>
-    <string name="ecosystem_apps_more">Ďalšie Nextcloud aplikácie</string>
     <string name="editor_web_view_cannot_open_file">Nie je možné otvoriť výber súboru</string>
     <string name="email_pick_failed">Nepodarilo sa vybrať e-mailovú adresu.</string>
     <string name="empty_albums_message">Svoje fotografie môžete usporiadať do ľubovoľného počtu albumov. Zatiaľ ste nevytvorili žiadny album.</string>
@@ -535,7 +533,7 @@
     <string name="file_migration_cleaning">Čistenie…</string>
     <string name="file_migration_dialog_title">Aktualizujem priečinok dátového úložiska</string>
     <string name="file_migration_directory_already_exists">Dátový priečinok uz existuje. Vyberte jednu z možností:</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud priečinok už existuje</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud priečinok už existuje</string>
     <string name="file_migration_failed_not_enough_space">Nedostatok priestoru</string>
     <string name="file_migration_failed_not_readable">Nepodarilo sa prečítať zdrojový súbor</string>
     <string name="file_migration_failed_not_writable">Nepodarilo sa zapísať do cieľového súboru</string>
@@ -861,7 +859,6 @@
     <string name="prefs_renew_e2e_certificate">Obnoviť šifrovací certifikát</string>
     <string name="prefs_setup_e2e">Nastaviť šifrovanie end-to-end</string>
     <string name="prefs_show_ecosystem_apps">Zobraziť prepínač aplikácií</string>
-    <string name="prefs_show_ecosystem_apps_summary">Návrhy Nextcloud aplikácií v navigačnom záhlaví</string>
     <string name="prefs_show_hidden_files">Zobraziť skryté súbory</string>
     <string name="prefs_sourcecode">Získajte zdrojový kód</string>
     <string name="prefs_sycned_folders_summary">Spravovať adresáre pre automatické nahrávanie</string>
@@ -1024,7 +1021,7 @@
     <string name="show_video">Zobraziť videá</string>
     <string name="sign_tos_failed">Prosím manuálne skontrolujte podmienky poskytovania služby!</string>
     <string name="signup_with_provider">Zaregistrovať sa u poskytovateľa</string>
-    <string name="single_sign_on_request_token" formatted="true">Umožniť %1$s pristupovať k Vášmu Nextcloud účtu %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Umožniť %1$s pristupovať k Vášmu XeniaCloud účtu %2$s?</string>
     <string name="sort_by">Zoradiť podľa</string>
     <string name="sort_favorites_first">Zoradiť od najobľúbenejších</string>
     <string name="sort_folders_before_files">Zoradiť adresáre pred súbormi</string>

@@ -306,7 +306,7 @@
     <string name="file_migration_cleaning">מתבצע ניקיון…</string>
     <string name="file_migration_dialog_title">תיקיית אחסון הנתונים מתעדכנת</string>
     <string name="file_migration_directory_already_exists">תיקיית הנתונים כבר קיימת. נא לבחור את אחד מהבאים:</string>
-    <string name="file_migration_failed_dir_already_exists">תיקיית ה־Nextcloud כבר קיימת</string>
+    <string name="file_migration_failed_dir_already_exists">תיקיית ה־XeniaCloud כבר קיימת</string>
     <string name="file_migration_failed_not_enough_space">נדרש יותר מקום</string>
     <string name="file_migration_failed_not_readable">לא ניתן לקרוא את קובץ המקור</string>
     <string name="file_migration_failed_not_writable">לא ניתן לכתוב אל קובץ היעד</string>
@@ -589,7 +589,7 @@
     <string name="show_all">להציג הכול</string>
     <string name="show_less">להציג פחות</string>
     <string name="signup_with_provider">נא להירשם עם ספק</string>
-    <string name="single_sign_on_request_token" formatted="true">לאפשר ל־%1$s לגשת לחשבון שלך ב־ Nextcloud %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">לאפשר ל־%1$s לגשת לחשבון שלך ב־ XeniaCloud %2$s?</string>
     <string name="sort_by">מיון לפי</string>
     <string name="ssl_validator_btn_details_hide">הסתרה</string>
     <string name="ssl_validator_btn_details_see">פרטים</string>

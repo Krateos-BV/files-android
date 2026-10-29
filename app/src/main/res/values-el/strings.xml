@@ -160,7 +160,6 @@
     <string name="community_testing_bug_text">Βρήκατε σφάλμα; Κάτι σας φαίνεται παράξενο;</string>
     <string name="community_testing_headline">Βοήθησε δοκιμάζοντας</string>
     <string name="community_testing_report_text">Ανέφερε ένα ζήτημα στο GitHub</string>
-    <string name="compose_activity_label">Βοηθός Nextcloud</string>
     <string name="configure_new_media_folder_detection_notifications">Ρύθμιση</string>
     <string name="confirm_removal">Αφαίρεση τοπικής κρυπτογράφησης</string>
     <string name="confirmation_remove_file_alert">Θέλετε σίγουρα να διαγράψετε το %1$s;</string>
@@ -277,7 +276,6 @@
     <string name="e2e_offline">Δεν είναι δυνατό χωρίς σύνδεση στο διαδίκτυο</string>
     <string name="ecosystem_apps_display_assistant">Βοηθός</string>
     <string name="ecosystem_apps_display_more">Περισσότερα</string>
-    <string name="ecosystem_apps_more">Περισσότερες εφαρμογές Nextcloud</string>
     <string name="encrypted">Ορισμός ως κρυπτογραφημένου</string>
     <string name="end_to_end_encryption_confirm_button">Ρύθμιση κρυπτογράφησης</string>
     <string name="end_to_end_encryption_decrypting">Γίνεται αποκρυπτογράφηση…</string>
@@ -374,7 +372,7 @@
     <string name="file_migration_cleaning">Γίνεται εκκαθάριση…</string>
     <string name="file_migration_dialog_title">Γίνεται ενημέρωση φακέλου Αποθήκευση Δεδομένων</string>
     <string name="file_migration_directory_already_exists">Ο φάκελος δεδομένων υπάρχει ήδη. Επιλέξτε ένα από τα παρακάτω:</string>
-    <string name="file_migration_failed_dir_already_exists">Υπάρχει ήδη ο φάκελος Nextcloud</string>
+    <string name="file_migration_failed_dir_already_exists">Υπάρχει ήδη ο φάκελος XeniaCloud</string>
     <string name="file_migration_failed_not_enough_space">Απαιτείται περισσότερος χώρος</string>
     <string name="file_migration_failed_not_readable">Αδυναμία ανάγνωσης πηγαίου αρχείου</string>
     <string name="file_migration_failed_not_writable">Αδυναμία εγγραφής στο αρχείο προορισμού</string>
@@ -727,7 +725,7 @@
     <string name="show_less">Εμφάνιση λιγότερων</string>
     <string name="show_video">Εμφάνιση βίντεο</string>
     <string name="signup_with_provider">Σύνδεση με πάροχο</string>
-    <string name="single_sign_on_request_token" formatted="true">Να επιτραπεί%1$sη πρόσβαση στον λογαριασμό σας Nextcloud %2$s ?</string>
+    <string name="single_sign_on_request_token" formatted="true">Να επιτραπεί%1$sη πρόσβαση στον λογαριασμό σας XeniaCloud %2$s ?</string>
     <string name="sort_by">Ταξινόμηση κατά</string>
     <string name="sort_favorites_first">Ταξινόμηση των αγαπημένων πρώτα</string>
     <string name="sort_folders_before_files">Ταξινόμηση φακέλων πριν από τα αρχεία</string>

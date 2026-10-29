@@ -185,7 +185,6 @@
     <string name="community_testing_bug_text">هل وجدت خطأ برمجي أو شيء ناقص؟</string>
     <string name="community_testing_headline">ساعدنا بالتجريب</string>
     <string name="community_testing_report_text">إرسل تقرير أخطاء على GitHub</string>
-    <string name="compose_activity_label">مُساعِد نكست كلاود Nextcloud Assistant</string>
     <string name="configure_new_media_folder_detection_notifications">إعداد</string>
     <string name="confirm_removal">إلغاء التشفير المحلي</string>
     <string name="confirmation_remove_file_alert">هل توَدُّ حقاً حذف %1$s؟</string>
@@ -310,7 +309,6 @@
     <string name="e2e_signature_does_not_match">التوقيع غير مُطابق</string>
     <string name="ecosystem_apps_display_assistant">المُساعِد</string>
     <string name="ecosystem_apps_display_more">المزيد</string>
-    <string name="ecosystem_apps_more">المزيد من تطبيقات نكست كلاود</string>
     <string name="email_pick_failed">تعذّر التقاط عنوان الإيميل.</string>
     <string name="encrypted">عيّنه كَمُشفَّر</string>
     <string name="end_to_end_encryption_certificate_unavailable">يتعذّر استرجاع شهادة الخادوم</string>
@@ -421,7 +419,7 @@
     <string name="file_migration_cleaning">تنظيف…</string>
     <string name="file_migration_dialog_title">يجري تحديث ملفات مجلد التخزين</string>
     <string name="file_migration_directory_already_exists">مجلد البيانات موجود مسبقاً. اختر واحداً من التالي:</string>
-    <string name="file_migration_failed_dir_already_exists">مجلد Nextcloud موجود مسبقاً</string>
+    <string name="file_migration_failed_dir_already_exists">مجلد XeniaCloud موجود مسبقاً</string>
     <string name="file_migration_failed_not_enough_space">بحاجة إلى مساحة إضافية</string>
     <string name="file_migration_failed_not_readable">لا يمكن قراءة ملف المصدر</string>
     <string name="file_migration_failed_not_writable">لا يمكن الكتابة إلى ملف الوجهة</string>
@@ -712,7 +710,6 @@
     <string name="prefs_remove_e2e">إلغ التشفير المحلي</string>
     <string name="prefs_setup_e2e">تجهيز التشفير الطرفي</string>
     <string name="prefs_show_ecosystem_apps">إظهار مُبدِّل التطبيقات app switcher</string>
-    <string name="prefs_show_ecosystem_apps_summary">مقترحات بتطبيقات من نكست كلاود في شريط التصفح navigation heading</string>
     <string name="prefs_show_hidden_files">عرض الملفات المخفية</string>
     <string name="prefs_sourcecode">الحصول على الشفرة المصدرية</string>
     <string name="prefs_sycned_folders_summary">إدارة الملفات للتحميل التلقائي</string>
@@ -857,7 +854,7 @@
     <string name="show_video">اعرض الفيديو</string>
     <string name="sign_tos_failed">رجاءً؛ قم بمراجعة شروط الخدمة يدويّاً!</string>
     <string name="signup_with_provider">التسجيل عبر مزوّد خدمة</string>
-    <string name="single_sign_on_request_token" formatted="true">هل تسمح لـ%1$s بالوصول إلى حسابك %2$s في Nextcloud؟</string>
+    <string name="single_sign_on_request_token" formatted="true">هل تسمح لـ%1$s بالوصول إلى حسابك %2$s في XeniaCloud؟</string>
     <string name="sort_by">ترتيب</string>
     <string name="sort_favorites_first">فرز المفضلة أولا</string>
     <string name="sort_folders_before_files">فرز المجلدات قبل الملفات</string>

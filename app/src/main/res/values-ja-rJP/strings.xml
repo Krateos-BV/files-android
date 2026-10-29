@@ -116,7 +116,7 @@
     <string name="authenticator_activity_no_web_browser_found">このリンクを開くブラウザーがありません。</string>
     <string name="authenticator_activity_please_complete_login_process">ブラウザでログインプロセスを完了してください</string>
     <string name="auto_upload_background_activity_action">バックグラウンドアクティビティを許可</string>
-    <string name="auto_upload_battery_optimization_reason">Nextcloudのバックグラウンドアクティビティはバッテリーの最適化によって制限されます。</string>
+    <string name="auto_upload_battery_optimization_reason">XeniaCloudのバックグラウンドアクティビティはバッテリーの最適化によって制限されます。</string>
     <string name="auto_upload_battery_saver_action">省電力設定を開く</string>
     <string name="auto_upload_battery_saver_reason">バッテリセーバーが有効でアップロードが一時停止される場合があります。</string>
     <string name="auto_upload_delete_dialog_title">自動でアップロードされたフォルダを削除しますか？</string>
@@ -208,7 +208,6 @@
     <string name="community_testing_bug_text">バグがありましたか? 問題がありますか?</string>
     <string name="community_testing_headline">テストによるヘルプ</string>
     <string name="community_testing_report_text">Githubでエラーを報告する</string>
-    <string name="compose_activity_label">Nextcloud アシスタント</string>
     <string name="configure_new_media_folder_detection_notifications">構成</string>
     <string name="confirm_removal">ローカル暗号化を解除</string>
     <string name="confirmation_remove_file_alert">本当に %1$s を削除しますか？</string>
@@ -347,7 +346,6 @@
     <string name="e2e_signature_does_not_match">署名が一致しません</string>
     <string name="ecosystem_apps_display_assistant">アシスタント</string>
     <string name="ecosystem_apps_display_more">さらに表示</string>
-    <string name="ecosystem_apps_more">もっと Nextcloud アプリを見る</string>
     <string name="email_pick_failed">メールアドレスの選択に失敗しました。</string>
     <string name="encrypted">暗号化設定</string>
     <string name="end_to_end_encryption_certificate_unavailable">サーバー証明書を取得できません</string>
@@ -465,7 +463,7 @@
     <string name="file_migration_cleaning">クリーニング中…</string>
     <string name="file_migration_dialog_title">データ保存フォルダーを更新</string>
     <string name="file_migration_directory_already_exists">データフォルダは既に存在します。 次のいずれかを選択します。</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloudフォルダは既に存在します</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloudフォルダは既に存在します</string>
     <string name="file_migration_failed_not_enough_space">空き容量が必要です</string>
     <string name="file_migration_failed_not_readable">ソースファイルを読み込めませんでした</string>
     <string name="file_migration_failed_not_writable">移動先ファイルに書き込めませんでした</string>
@@ -770,7 +768,6 @@
     <string name="prefs_remove_e2e">ローカルで暗号化を解除する</string>
     <string name="prefs_setup_e2e">end-to-end 暗号化を設定</string>
     <string name="prefs_show_ecosystem_apps">アップスイッチャーを表示</string>
-    <string name="prefs_show_ecosystem_apps_summary">ナビゲーションの見出しにおけるNextcloudアプリの提案</string>
     <string name="prefs_show_hidden_files">隠しファイルを表示</string>
     <string name="prefs_sourcecode">ソースコードを入手</string>
     <string name="prefs_sycned_folders_summary">自動アップロードするフォルダーを管理する</string>
@@ -921,7 +918,7 @@
     <string name="show_video">動画を表示</string>
     <string name="sign_tos_failed">サービス利用規約を確認してください!</string>
     <string name="signup_with_provider">他のサービスでサインアップ</string>
-    <string name="single_sign_on_request_token" formatted="true">%1$s があなたのNextcloudアカウント %2$s にアクセスできるようにしますか？</string>
+    <string name="single_sign_on_request_token" formatted="true">%1$s があなたのXeniaCloudアカウント %2$s にアクセスできるようにしますか？</string>
     <string name="sort_by">ソート</string>
     <string name="sort_favorites_first">お気に入りを最初に並べる</string>
     <string name="sort_folders_before_files">ファイルよりもフォルダを先に並べ替えます</string>

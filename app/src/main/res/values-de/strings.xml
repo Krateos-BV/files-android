@@ -131,7 +131,7 @@
     <string name="authenticator_activity_no_web_browser_found">Es ist kein Browser verfügbar, um diesen Link zu öffnen.</string>
     <string name="authenticator_activity_please_complete_login_process">Bitte schließen Sie den Anmeldevorgang in Ihrem Browser ab</string>
     <string name="auto_upload_background_activity_action">Hintergrundaktivität zulassen</string>
-    <string name="auto_upload_battery_optimization_reason">Die Hintergrundaktivität von Nextcloud wird durch die Akkuoptimierung eingeschränkt.</string>
+    <string name="auto_upload_battery_optimization_reason">Die Hintergrundaktivität von XeniaCloud wird durch die Akkuoptimierung eingeschränkt.</string>
     <string name="auto_upload_battery_saver_action">Akkuspareinstellungen öffnen</string>
     <string name="auto_upload_battery_saver_reason">Die Akkusparfunktion ist aktiv und kann Uploads unterbrechen.</string>
     <string name="auto_upload_delete_dialog_description">Dadurch werden der Ordner und die Konfiguration für das \"Automatische Hochladen\" entfernt. Alle noch nicht abgeschlossenen Uploads werden abgebrochen.</string>
@@ -240,7 +240,6 @@
     <string name="community_testing_bug_text">Fehler gefunden? Komisches Verhalten?</string>
     <string name="community_testing_headline">Helfen Sie durch Testen</string>
     <string name="community_testing_report_text">Fehlerbericht auf GitHub erstellen</string>
-    <string name="compose_activity_label">Nextcloud Assistant</string>
     <string name="configure_new_media_folder_detection_notifications">Konfigurieren</string>
     <string name="confirm_removal">Lokale Verschlüsselung entfernen</string>
     <string name="confirmation_remove_file_alert">Soll %1$s gelöscht werden?</string>
@@ -389,7 +388,6 @@
     <string name="e2e_signature_is_empty">Metadaten konnten nicht überprüft werden, die Signatur ist leer.</string>
     <string name="ecosystem_apps_display_assistant">Assistent</string>
     <string name="ecosystem_apps_display_more">Mehr</string>
-    <string name="ecosystem_apps_more">Weitere Nextcloud-Apps</string>
     <string name="editor_web_view_cannot_open_file">Dateiauswahl konnte nicht geöffnet werden</string>
     <string name="email_pick_failed">E-Mail-Adresse konnte nicht ausgewählt werden.</string>
     <string name="empty_albums_message">Sie können alle Ihre Fotos in so vielen Alben organisieren, wie Sie möchten. Sie haben noch kein Album erstellt.</string>
@@ -535,7 +533,7 @@
     <string name="file_migration_cleaning">Aufräumen …</string>
     <string name="file_migration_dialog_title">Aktualisiere Speicherordner</string>
     <string name="file_migration_directory_already_exists">Daten-Verzeichnis existiert bereits. Bitte auswählen:</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud-Verzeichnis existiert bereits</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud-Verzeichnis existiert bereits</string>
     <string name="file_migration_failed_not_enough_space">Mehr Speicherplatz benötigt</string>
     <string name="file_migration_failed_not_readable">Quelldatei kann nicht gelesen werden</string>
     <string name="file_migration_failed_not_writable">Für das Ziel existieren keine Schreibrechte</string>
@@ -861,7 +859,6 @@
     <string name="prefs_renew_e2e_certificate">Verschlüsselungszertifikat erneuern</string>
     <string name="prefs_setup_e2e">Ende-zu-Ende-Verschlüsselung einrichten</string>
     <string name="prefs_show_ecosystem_apps">App-Umschalter anzeigen</string>
-    <string name="prefs_show_ecosystem_apps_summary">Nextcloud-App-Vorschläge in der Navigationsüberschrift</string>
     <string name="prefs_show_hidden_files">Versteckte Dateien anzeigen</string>
     <string name="prefs_sourcecode">Zum Quellcode</string>
     <string name="prefs_sycned_folders_summary">Ordner für \"Automatisches Hochladen\" verwalten</string>
@@ -1024,7 +1021,7 @@
     <string name="show_video">Videos anzeigen</string>
     <string name="sign_tos_failed">Bitte überprüfen Sie die Nutzungsbedingungen selbst!</string>
     <string name="signup_with_provider">Mit Provider anmelden</string>
-    <string name="single_sign_on_request_token" formatted="true">Zulassen, dass %1$s auf Ihr Nextcloud Konto %2$s zugreifen darf?</string>
+    <string name="single_sign_on_request_token" formatted="true">Zulassen, dass %1$s auf Ihr XeniaCloud Konto %2$s zugreifen darf?</string>
     <string name="sort_by">Sortieren nach</string>
     <string name="sort_favorites_first">Favoriten zuerst sortieren</string>
     <string name="sort_folders_before_files">Ordner vor Dateien sortieren</string>

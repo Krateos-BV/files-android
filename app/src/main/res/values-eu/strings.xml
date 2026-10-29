@@ -183,7 +183,6 @@
     <string name="community_testing_bug_text">Errore bat topatu duzu? Gauza arraroren bat?</string>
     <string name="community_testing_headline">Lagundu probatzen</string>
     <string name="community_testing_report_text">Jakinarazi arazoa GitHub-en</string>
-    <string name="compose_activity_label">Nextcloud Assistant</string>
     <string name="configure_new_media_folder_detection_notifications">Konfiguratu</string>
     <string name="confirm_removal">Kendu enkriptatze lokala</string>
     <string name="confirmation_remove_file_alert">Ziur zaude %1$s ezabatu nahi duzula?</string>
@@ -307,7 +306,6 @@
     <string name="e2e_signature_does_not_match">Sinadura ez dator bat</string>
     <string name="ecosystem_apps_display_assistant">Morroia</string>
     <string name="ecosystem_apps_display_more">Gehiago</string>
-    <string name="ecosystem_apps_more">Nextcloud aplikazio gehiago</string>
     <string name="email_pick_failed">Ezin izan da helbide elektronikoa hautatu.</string>
     <string name="encrypted">Ezarri zifratu gisa</string>
     <string name="end_to_end_encryption_certificate_unavailable">Ezin da zerbitzariaren ziurtagiria berreskuratu</string>
@@ -419,7 +417,7 @@
     <string name="file_migration_cleaning">Garbitzen…</string>
     <string name="file_migration_dialog_title">Datu-biltegiratze karpeta eguneratzen</string>
     <string name="file_migration_directory_already_exists">Datuen karpeta dagoeneko badago. Aukeratu hauetako bat:</string>
-    <string name="file_migration_failed_dir_already_exists">Nextcloud karpeta badago dagoeneko</string>
+    <string name="file_migration_failed_dir_already_exists">XeniaCloud karpeta badago dagoeneko</string>
     <string name="file_migration_failed_not_enough_space">Leku gehiago behar da</string>
     <string name="file_migration_failed_not_readable">Ezin izan da iturburu-fitxategia irakurri</string>
     <string name="file_migration_failed_not_writable">Ezin izan da helburuko fitxategia idatzi</string>
@@ -708,7 +706,6 @@
     <string name="prefs_remove_e2e">Kendu enkriptatzea lokalean</string>
     <string name="prefs_setup_e2e">Konfiguratu muturretik muturrerako enkriptatzea</string>
     <string name="prefs_show_ecosystem_apps">Erakutsi aplikazioen aldatzailea</string>
-    <string name="prefs_show_ecosystem_apps_summary">Nextcloud aplikazioaren iradokizunak nabigazio goiburuan</string>
     <string name="prefs_show_hidden_files">Erakutsi ezkutuko fitxategiak</string>
     <string name="prefs_sourcecode">Eskuratu iturburu-kodea</string>
     <string name="prefs_sycned_folders_summary">Kudeatu karpeten igotze automatikoa</string>
@@ -852,7 +849,7 @@
     <string name="show_video">Erakutsi bideoak</string>
     <string name="sign_tos_failed">Mesedez, egiaztatu zerbitzuko baldintzak!</string>
     <string name="signup_with_provider">Erregistratu hornitzaile batekin</string>
-    <string name="single_sign_on_request_token" formatted="true">%1$s zure %2$s Nextcloud kontuan sartzea baimendu nahi duzu?</string>
+    <string name="single_sign_on_request_token" formatted="true">%1$s zure %2$s XeniaCloud kontuan sartzea baimendu nahi duzu?</string>
     <string name="sort_by">Ordenatu honen arabera</string>
     <string name="sort_favorites_first">Ordenatu gogokoak lehenengo</string>
     <string name="sort_folders_before_files">Ordenatu karpetak fitxategien aurretik</string>

@@ -211,7 +211,6 @@
     <string name="community_testing_bug_text">Нашли ошибку? Заметили необычное поведение программы?</string>
     <string name="community_testing_headline">Помогите нам в тестировании</string>
     <string name="community_testing_report_text">Сообщить о проблеме на GitHub</string>
-    <string name="compose_activity_label">Помощник Nextcloud</string>
     <string name="configure_new_media_folder_detection_notifications">Настроить</string>
     <string name="confirm_removal">Отключить шифрование на устройстве</string>
     <string name="confirmation_remove_file_alert">Действительно удалить «%1$s»?</string>
@@ -355,7 +354,6 @@
     <string name="e2e_signature_is_empty">Не удалось проверить метаданные: подпись пуста.</string>
     <string name="ecosystem_apps_display_assistant">Помощник</string>
     <string name="ecosystem_apps_display_more">Больше</string>
-    <string name="ecosystem_apps_more">Больше приложений для Nextcloud</string>
     <string name="editor_web_view_cannot_open_file">Не удалось открыть окно выбора файлов</string>
     <string name="email_pick_failed">Невозможно выбрать адрес электронной почты.</string>
     <string name="encrypted">Зашифровать</string>
@@ -482,7 +480,7 @@
     <string name="file_migration_cleaning">Очистка…</string>
     <string name="file_migration_dialog_title">Выполняется обновление папки хранения данных</string>
     <string name="file_migration_directory_already_exists">Каталог с данными уже существует. Выберите одно из действий:</string>
-    <string name="file_migration_failed_dir_already_exists">Папка «Nextcloud» уже существует</string>
+    <string name="file_migration_failed_dir_already_exists">Папка «XeniaCloud» уже существует</string>
     <string name="file_migration_failed_not_enough_space">Недостаточно свободного места</string>
     <string name="file_migration_failed_not_readable">Не удалось прочитать исходный файл</string>
     <string name="file_migration_failed_not_writable">Не удалось выполнить запись в файл назначения</string>
@@ -721,7 +719,7 @@
     <string name="online">На связи</string>
     <string name="online_status">Состояние на связи</string>
     <string name="open_in_app">Открыть в %1$s</string>
-    <string name="outdated_server">Версия сервера Nextcloud  более не поддерживается, требуется её обновление.</string>
+    <string name="outdated_server">Версия сервера XeniaCloud  более не поддерживается, требуется её обновление.</string>
     <string name="overflow_menu">Дополнительное меню</string>
     <string name="pass_code_configure_your_pass_code">Введите код</string>
     <string name="pass_code_enter_pass_code">Введите ваш код</string>
@@ -803,7 +801,6 @@
     <string name="prefs_renew_e2e_certificate">Продлить срок действия сертификата шифрования</string>
     <string name="prefs_setup_e2e">Настройка сквозного шифрования</string>
     <string name="prefs_show_ecosystem_apps">Показать переключатель приложений</string>
-    <string name="prefs_show_ecosystem_apps_summary">Рекомендации по приложению Nextcloud в заголовке навигации</string>
     <string name="prefs_show_hidden_files">Показывать скрытые файлы</string>
     <string name="prefs_sourcecode">Исходный код</string>
     <string name="prefs_sycned_folders_summary">Управление папками для автозагрузки</string>
@@ -965,7 +962,7 @@
     <string name="show_video">Показать видео</string>
     <string name="sign_tos_failed">Пожалуйста, вручную проверьте условия предоставления услуг!</string>
     <string name="signup_with_provider">Подключиться через поставщика услуги</string>
-    <string name="single_sign_on_request_token" formatted="true">Разрешить %1$s доступ к вашей учетной записи Nextcloud %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Разрешить %1$s доступ к вашей учетной записи XeniaCloud %2$s?</string>
     <string name="sort_by">Порядок сортировки</string>
     <string name="sort_favorites_first">Сначала избранное</string>
     <string name="sort_folders_before_files">Начинать список с папок</string>

@@ -98,14 +98,14 @@
     <bool name="show_hidden_files_enabled">true</bool>
     <bool name="davdroid_integration_enabled">true</bool>
     <bool name="help_enabled">true</bool>
-    <string name="url_help">https://help.nextcloud.com/c/clients/android/</string>
+    <string name="url_help">https://xeniacloud.eu/contact/</string>
     <bool name="privacy_enabled">true</bool>
-    <string name="privacy_url">https://nextcloud.com/privacy</string>
+    <string name="privacy_url">https://xeniacloud.eu/privacy-statement-eu/</string>
     <bool name="imprint_enabled">false</bool>
     <bool name="recommend_enabled">false</bool>
     <bool name="logger_enabled">false</bool>
     <bool name="sourcecode_enabled">true</bool>
-    <string name="sourcecode_url" translatable="false">https://github.com/nextcloud/android</string>
+    <string name="sourcecode_url" translatable="false">https://github.com/Krateos-BV/files-android</string>
     <bool name="license_enabled">true</bool>
     <string name="license_url" translatable="false">https://www.gnu.org/licenses/gpl-2.0.html</string>
     <string name="url_imprint"></string>
@@ -123,19 +123,19 @@
     <string name="mail_logger"></string>
 
     <!-- Determine is participate enabled -->
-    <bool name="participate_enabled">true</bool>
+    <bool name="participate_enabled">false</bool>
     <!-- Participate links -->
     <string name="fdroid_beta_link" translatable="false">https://f-droid.org/repository/browse/?fdid=com.nextcloud.android.beta</string>
     <string name="beta_apk_link" translatable="false">https://download.nextcloud.com/android/dev/latest.apk</string>
     <string name="play_store_register_beta" translatable="false"></string>
     <string name="fdroid_link" translatable="false"></string>
-    <string name="help_link" translatable="false">https://help.nextcloud.com/c/clients/android</string>
+    <string name="help_link" translatable="false">https://xeniacloud.eu/contact/</string>
     <string name="translation_link" translatable="false">https://app.transifex.com/nextcloud/nextcloud/android/</string>
     <string name="contributing_link" translatable="false">https://github.com/nextcloud/android/blob/master/CONTRIBUTING.md</string>
     <!-- For semi-automated bug report creation -->
-    <string name="report_issue_link" translatable="false">https://github.com/nextcloud/android/issues/new?template=bug_report.yml</string>
+    <string name="report_issue_link" translatable="false">https://xeniacloud.eu/contact/</string>
     <!-- For manual report from user -->
-    <string name="report_issue_empty_link" translatable="false">https://github.com/nextcloud/android/issues/new/choose</string>
+    <string name="report_issue_empty_link" translatable="false">https://xeniacloud.eu/contact/</string>
 
     <!-- login data links -->
     <string name="login_data_own_scheme" translatable="false">nc</string>

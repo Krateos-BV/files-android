@@ -200,7 +200,6 @@
     <string name="community_testing_bug_text">Je, umepata mdudu? Odds?</string>
     <string name="community_testing_headline">Msaada kwa kupima</string>
     <string name="community_testing_report_text">Ripoti suala kwenye GitHub</string>
-    <string name="compose_activity_label">Msaidizi wa Nextcloud</string>
     <string name="configure_new_media_folder_detection_notifications">Sanidi</string>
     <string name="confirm_removal">Ondoa usimbaji fiche wa ndani</string>
     <string name="confirmation_remove_file_alert">Je, kweli unataka kufuta %1$s?</string>
@@ -339,7 +338,6 @@
     <string name="e2e_signature_is_empty">Haikuweza kuthibitisha metadata, sahihi ni tupu.</string>
     <string name="ecosystem_apps_display_assistant">Msaidizi</string>
     <string name="ecosystem_apps_display_more">Zaidi</string>
-    <string name="ecosystem_apps_more">Programu zaidi za Nextcloud</string>
     <string name="editor_web_view_cannot_open_file">Haiwezi kufungua kichagua faili</string>
     <string name="email_pick_failed">Imeshindwa kuchagua anwani ya barua pepe.</string>
     <string name="encrypted">Weka kama iliyosimbwa</string>
@@ -462,7 +460,7 @@
     <string name="file_migration_cleaning">Inasafisha...</string>
     <string name="file_migration_dialog_title">Inasasisha folda ya hifadhi ya data</string>
     <string name="file_migration_directory_already_exists">Folda ya data tayari ipo. Chagua mojawapo ya yafuatayo:</string>
-    <string name="file_migration_failed_dir_already_exists">Folda ya Nextcloud tayari ipo</string>
+    <string name="file_migration_failed_dir_already_exists">Folda ya XeniaCloud tayari ipo</string>
     <string name="file_migration_failed_not_enough_space">Nafasi zaidi inahitajika</string>
     <string name="file_migration_failed_not_readable">Haikuweza kusoma faili chanzo</string>
     <string name="file_migration_failed_not_writable">Haikuweza kuandika kwa faili lengwa</string>
@@ -772,7 +770,6 @@
     <string name="prefs_remove_e2e">Ondoa usimbaji fiche ndani</string>
     <string name="prefs_setup_e2e">Sanidi usimbaji fiche kutoka mwisho hadi mwisho</string>
     <string name="prefs_show_ecosystem_apps">Onesha kibadilisha programu</string>
-    <string name="prefs_show_ecosystem_apps_summary">Mapendekezo ya programu ya Nextcloud katika kichwa cha urambazaji</string>
     <string name="prefs_show_hidden_files">Onesha mafaili yaliyofichwa</string>
     <string name="prefs_sourcecode">Pata msimbo wa chanzo</string>
     <string name="prefs_sycned_folders_summary">Dhibiti folda za upakiaji otomatiki</string>
@@ -926,7 +923,7 @@
     <string name="show_video">Onesha video</string>
     <string name="sign_tos_failed">Tafadhali angalia sheria na masharti ya huduma!</string>
     <string name="signup_with_provider">Jisajili na mtoa huduma</string>
-    <string name="single_sign_on_request_token" formatted="true">Ruhusu %1$s kufikia akaunti yako ya Nextcloud %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Ruhusu %1$s kufikia akaunti yako ya XeniaCloud %2$s?</string>
     <string name="sort_by">Panga kwa </string>
     <string name="sort_favorites_first">Chagua za upendeleo kwanza</string>
     <string name="sort_folders_before_files">Chagua vikasha kabla ya mafaili</string>

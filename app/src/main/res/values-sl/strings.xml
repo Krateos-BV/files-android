@@ -271,7 +271,6 @@
     <string name="e2e_offline">Opravila ni mogoče izvesti brez vzpostavljene internetne povezave</string>
     <string name="ecosystem_apps_display_assistant">Pomočnik</string>
     <string name="ecosystem_apps_display_more">Več</string>
-    <string name="ecosystem_apps_more">Več programov Nexcloud</string>
     <string name="email_pick_failed">Elektronskega naslova ni mogoče izbrati.</string>
     <string name="encrypted">Nastavi kot šifrirano</string>
     <string name="end_to_end_encryption_confirm_button">Nastavitev šifriranja</string>
@@ -366,7 +365,7 @@
     <string name="file_migration_cleaning">Poteka čiščenje …</string>
     <string name="file_migration_dialog_title">Poteka osodabljanje podatkovne mape</string>
     <string name="file_migration_directory_already_exists">Podatkovna mapa že obstaja. Izberite eno izmed možnosti:</string>
-    <string name="file_migration_failed_dir_already_exists">Mapa Nextcloud že obstaja</string>
+    <string name="file_migration_failed_dir_already_exists">Mapa XeniaCloud že obstaja</string>
     <string name="file_migration_failed_not_enough_space">Zahtevanega je več prostora</string>
     <string name="file_migration_failed_not_readable">Izvorne datoteke ni mogoče prebrati</string>
     <string name="file_migration_failed_not_writable">Ni mogoče pisati v ciljno datoteko</string>
@@ -611,7 +610,6 @@
     <string name="prefs_remove_e2e">Krajevno odstrani šifriranje</string>
     <string name="prefs_setup_e2e">Nastavi celovito šifriranje E2E</string>
     <string name="prefs_show_ecosystem_apps">Pokaži preklopnika programov</string>
-    <string name="prefs_show_ecosystem_apps_summary">Predlogi programov Nextcloud v naslovu</string>
     <string name="prefs_show_hidden_files">Pokaži skrite datoteke</string>
     <string name="prefs_sourcecode">Pridobi izvorno kodo</string>
     <string name="prefs_sycned_folders_summary">Upravljanje map za samodejno pošiljanje</string>
@@ -728,7 +726,7 @@
     <string name="show_less">Pokaži manj</string>
     <string name="show_video">Pokaži posnetke</string>
     <string name="signup_with_provider">Prijava prek ponudnika</string>
-    <string name="single_sign_on_request_token" formatted="true">Ali dovolite uporabniku %1$s dostop do računa Nextcloud %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Ali dovolite uporabniku %1$s dostop do računa XeniaCloud %2$s?</string>
     <string name="sort_by">Razvrsti</string>
     <string name="sort_favorites_first">Razvrsti najprej priljubljene</string>
     <string name="sort_folders_before_files">Razvrsti mape pred datotekami</string>

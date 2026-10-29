@@ -314,7 +314,7 @@
     <string name="file_migration_cleaning">Limpiadura…</string>
     <string name="file_migration_dialog_title">Agiornamentu de sa cartella de archiviatzione de datos</string>
     <string name="file_migration_directory_already_exists">Sa cartella de is datos ddoe est giai. Sèbera·nde una de custas in fatu:</string>
-    <string name="file_migration_failed_dir_already_exists">Sa cartella de Nextcloud ddoe est giai</string>
+    <string name="file_migration_failed_dir_already_exists">Sa cartella de XeniaCloud ddoe est giai</string>
     <string name="file_migration_failed_not_enough_space">Tocat de fàghere prus logu</string>
     <string name="file_migration_failed_not_readable">No at fatu a lèghere su documentu sorgente</string>
     <string name="file_migration_failed_not_writable">No at fatu a iscrìere in su documentu de destinatzione</string>
@@ -529,7 +529,6 @@
     <string name="prefs_manage_accounts">Gesti is contos</string>
     <string name="prefs_recommend">Cussìgia a àtere</string>
     <string name="prefs_show_ecosystem_apps">Mustra su cuncambiadore de aplicatziones</string>
-    <string name="prefs_show_ecosystem_apps_summary">Cussìgios de aplicatziones de Nextcloud in s\'intestatzione de su navigadore</string>
     <string name="prefs_show_hidden_files">Mustra documentos cuados</string>
     <string name="prefs_sourcecode">Otene su còdighe de orìgine</string>
     <string name="prefs_sycned_folders_summary">Gesti cartellas pro carrigamentu automàticu</string>
@@ -637,7 +636,7 @@
     <string name="show_images">Mustra fotografias</string>
     <string name="show_less">Mustra prus pagu</string>
     <string name="signup_with_provider">Registra·ti cun su frunidore</string>
-    <string name="single_sign_on_request_token" formatted="true">Permìtere a %1$s de intrare in su contu tuo de Nextcloud %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Permìtere a %1$s de intrare in su contu tuo de XeniaCloud %2$s?</string>
     <string name="sort_by">Assenta segundu</string>
     <string name="sort_favorites_first">Assenta cun is preferidos in antis</string>
     <string name="sort_folders_before_files">Assenta cun is cartellas in antis de is archìvios</string>

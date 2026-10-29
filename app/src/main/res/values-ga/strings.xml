@@ -131,7 +131,7 @@
     <string name="authenticator_activity_no_web_browser_found">Níl aon bhrabhsálaí ar fáil chun an nasc seo a oscailt.</string>
     <string name="authenticator_activity_please_complete_login_process">Críochnaigh an próiseas logáil isteach i do bhrabhsálaí le do thoil</string>
     <string name="auto_upload_background_activity_action">Ceadaigh gníomhaíocht chúlra</string>
-    <string name="auto_upload_battery_optimization_reason">Tá gníomhaíocht chúlra Nextcloud teoranta ag optamú ceallraí.</string>
+    <string name="auto_upload_battery_optimization_reason">Tá gníomhaíocht chúlra XeniaCloud teoranta ag optamú ceallraí.</string>
     <string name="auto_upload_battery_saver_action">Oscail socruithe coigilte ceallraí</string>
     <string name="auto_upload_battery_saver_reason">Tá an coigilteoir ceallraí gníomhach agus d’fhéadfadh sé go gcuirfí sos ar uaslódálacha.</string>
     <string name="auto_upload_delete_dialog_description">Bainfear an fillteán agus an chumraíocht uath-uaslódála leis seo. Cuirfear ar ceal aon uaslódálacha neamhchríochnaithe.</string>
@@ -240,7 +240,6 @@
     <string name="community_testing_bug_text">Aimsíodh fabht? Oddments?</string>
     <string name="community_testing_headline">Cabhair trí thástáil</string>
     <string name="community_testing_report_text">Tuairiscigh saincheist ar GitHub</string>
-    <string name="compose_activity_label">Cúntóir Nextcloud</string>
     <string name="configure_new_media_folder_detection_notifications">Cumraigh</string>
     <string name="confirm_removal">Bain criptiú áitiúil</string>
     <string name="confirmation_remove_file_alert">An bhfuil tú cinnte gur mhaith leat %1$s a scriosadh?</string>
@@ -389,7 +388,6 @@
     <string name="e2e_signature_is_empty">Níorbh fhéidir meiteashonraí a fhíorú, tá an síniú folamh.</string>
     <string name="ecosystem_apps_display_assistant">Cúntóir</string>
     <string name="ecosystem_apps_display_more">Tuilleadh</string>
-    <string name="ecosystem_apps_more">Tuilleadh aipeanna Nextcloud</string>
     <string name="editor_web_view_cannot_open_file">Ní féidir an roghnóir comhad a oscailt</string>
     <string name="email_pick_failed">Theip ar an seoladh ríomhphoist a phiocadh.</string>
     <string name="empty_albums_message">Is féidir leat do ghrianghraif go léir a eagrú in aon oiread albaim agus is mian leat. Níl albam cruthaithe agat fós.</string>
@@ -536,7 +534,7 @@
     <string name="file_migration_cleaning">Glanadh…</string>
     <string name="file_migration_dialog_title">Fillteán stórála sonraí á nuashonrú</string>
     <string name="file_migration_directory_already_exists">Tá fillteán sonraí ann cheana féin. Roghnaigh ceann amháin díobh seo a leanas:</string>
-    <string name="file_migration_failed_dir_already_exists">Tá fillteán Nextcloud ann cheana féin</string>
+    <string name="file_migration_failed_dir_already_exists">Tá fillteán XeniaCloud ann cheana féin</string>
     <string name="file_migration_failed_not_enough_space">Tuilleadh spáis ag teastáil</string>
     <string name="file_migration_failed_not_readable">Níorbh fhéidir an comhad foinse a léamh</string>
     <string name="file_migration_failed_not_writable">Níorbh fhéidir scríobh chuig an gcomhad sprice</string>
@@ -862,7 +860,6 @@
     <string name="prefs_renew_e2e_certificate">Athnuachan an teastas criptithe</string>
     <string name="prefs_setup_e2e">Socraigh criptiú ceann go ceann</string>
     <string name="prefs_show_ecosystem_apps">Taispeáin athróir aip</string>
-    <string name="prefs_show_ecosystem_apps_summary">Moltaí aip Nextcloud sa cheannteideal nascleanúna</string>
     <string name="prefs_show_hidden_files">Taispeáin comhaid i bhfolach</string>
     <string name="prefs_sourcecode">Faigh cód foinse</string>
     <string name="prefs_sycned_folders_summary">Bainistigh fillteáin le haghaidh uaslódáil uathoibríoch</string>
@@ -1025,7 +1022,7 @@
     <string name="show_video">Taispeáin físeáin</string>
     <string name="sign_tos_failed">Seiceáil téarmaí seirbhíse de láimh le do thoil!</string>
     <string name="signup_with_provider">Cláraigh leis an soláthraí</string>
-    <string name="single_sign_on_request_token" formatted="true">Ceadaigh do %1$s rochtain a fháil ar do chuntas Nextcloud %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Ceadaigh do %1$s rochtain a fháil ar do chuntas XeniaCloud %2$s?</string>
     <string name="sort_by">Sórtáil de réir</string>
     <string name="sort_favorites_first">Sórtáil na cinn is ansa leat ar dtús</string>
     <string name="sort_folders_before_files">Sórtáil fillteáin roimh chomhaid</string>

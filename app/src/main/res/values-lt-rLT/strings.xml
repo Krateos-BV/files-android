@@ -121,7 +121,7 @@
  </string>
     <string name="authenticator_activity_please_complete_login_process">Prašome užbaikite prisijungimo procesą savo naršyklėje</string>
     <string name="auto_upload_background_activity_action">Leisti foninę veiklą</string>
-    <string name="auto_upload_battery_optimization_reason">„Nextcloud“ foninę veiklą riboja baterijos optimizavimas.</string>
+    <string name="auto_upload_battery_optimization_reason">„XeniaCloud“ foninę veiklą riboja baterijos optimizavimas.</string>
     <string name="auto_upload_battery_saver_action">Atidarykite baterijos tausojimo nustatymus</string>
     <string name="auto_upload_battery_saver_reason">Baterijos tausojimo režimas aktyvus ir gali pristabdyti įkėlimus.</string>
     <string name="auto_upload_delete_dialog_description">Tai pašalins aplanką ir automatinio įkėlimo konfigūraciją. Visi nebaigti įkėlimai bus atšaukti.</string>
@@ -214,7 +214,6 @@
     <string name="community_testing_bug_text">Radote klaidą? Netikslumą?</string>
     <string name="community_testing_headline">Pagalba testuojant</string>
     <string name="community_testing_report_text">Pranešti apie problemą per „GitHub“</string>
-    <string name="compose_activity_label">„Nextcloud Asistentas“</string>
     <string name="configure_new_media_folder_detection_notifications">Konfigūruoti</string>
     <string name="confirm_removal">Šalinti vietinį šifravimą</string>
     <string name="confirmation_remove_file_alert">Ar tikrai norite ištrinti %1$s?</string>
@@ -359,7 +358,6 @@
     <string name="e2e_signature_is_empty">Nepavyko patikrinti metaduomenų, parašas tuščias.</string>
     <string name="ecosystem_apps_display_assistant">Asistentas</string>
     <string name="ecosystem_apps_display_more">Daugiau</string>
-    <string name="ecosystem_apps_more">Daugiau „Nextcloud“ programėlių</string>
     <string name="editor_web_view_cannot_open_file">Nepavyksta atidaryti failų parinkiklio</string>
     <string name="email_pick_failed">Nepavyko pasirinkti el. pašto adreso.</string>
     <string name="encrypted">Nustatyti kaip šifruotą</string>
@@ -486,7 +484,7 @@
     <string name="file_migration_cleaning">Išvaloma…</string>
     <string name="file_migration_dialog_title">Atnaujinamas duomenų saugyklos aplankas</string>
     <string name="file_migration_directory_already_exists">Duomenų aplankas jau yra. Pasirinkite vieną iš šių:</string>
-    <string name="file_migration_failed_dir_already_exists">„Nextcloud“ aplankas jau yra</string>
+    <string name="file_migration_failed_dir_already_exists">„XeniaCloud“ aplankas jau yra</string>
     <string name="file_migration_failed_not_enough_space">Reikia daugiau vietos</string>
     <string name="file_migration_failed_not_readable">Nepavyko perskaityti šaltinio failo</string>
     <string name="file_migration_failed_not_writable">Nepavyko rašyti į paskirties failą</string>
@@ -809,7 +807,6 @@
     <string name="prefs_renew_e2e_certificate">Atnaujinti šifravimo sertifikatą</string>
     <string name="prefs_setup_e2e">Nustatyti ištisinį šifravimą</string>
     <string name="prefs_show_ecosystem_apps">Rodyti programėllių perjungiklį</string>
-    <string name="prefs_show_ecosystem_apps_summary">„Nextcloud“ programėlės pasiūlymai naršymo antraštėje</string>
     <string name="prefs_show_hidden_files">Rodyti paslėptus failus</string>
     <string name="prefs_sourcecode">Gauti pirminį kodą</string>
     <string name="prefs_sycned_folders_summary">Tvarkykite automatinio įkėlimo aplankus</string>
@@ -971,7 +968,7 @@
     <string name="show_video">Rodyti vaizdo įrašus</string>
     <string name="sign_tos_failed">Prašome rankiniu būdu patikrinti paslaugų teikimo sąlygas!</string>
     <string name="signup_with_provider">Registruotis su tiekėju</string>
-    <string name="single_sign_on_request_token" formatted="true">Leisti %1$s gauti prieigą prie jūsų „Nextcloud“ paskyros %2$s?</string>
+    <string name="single_sign_on_request_token" formatted="true">Leisti %1$s gauti prieigą prie jūsų „XeniaCloud“ paskyros %2$s?</string>
     <string name="sort_by">Rikiuoti pagal</string>
     <string name="sort_favorites_first">Pirmiausia rūšiuoti mėgstamiausius</string>
     <string name="sort_folders_before_files">Rūšiuoti aplankus prieš failus</string>

@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 XeniaCloud
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: Brand Guard
+
+# XEN-287: the apps must not show "Nextcloud" to users. The weekly upstream sync
+# brings upstream translations back, so this fails until
+# `python3 scripts/xenia/brand_strings.py --apply` has been run on the sync branch.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: brand-guard-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  brand-strings:
+    name: brand-strings
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Check user-visible strings for the upstream brand
+        run: python3 scripts/xenia/brand_strings.py --check

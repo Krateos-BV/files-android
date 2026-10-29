@@ -125,7 +125,7 @@
     <string name="authenticator_activity_no_web_browser_found">Aucun navigateur n\'est disponible pour ouvrir ce lien.</string>
     <string name="authenticator_activity_please_complete_login_process">Veuillez finaliser la connexion dans votre navigateur</string>
     <string name="auto_upload_background_activity_action">Autoriser l’activité en arrière-plan</string>
-    <string name="auto_upload_battery_optimization_reason">L’activité en arrière-plan de Nextcloud est limitée par l’optimisation de la batterie.</string>
+    <string name="auto_upload_battery_optimization_reason">L’activité en arrière-plan de XeniaCloud est limitée par l’optimisation de la batterie.</string>
     <string name="auto_upload_battery_saver_action">Ouvrir les paramètres d’économie de batterie</string>
     <string name="auto_upload_battery_saver_reason">L’économiseur de batterie est activé et peut interrompre les téléversements.</string>
     <string name="auto_upload_delete_dialog_description">Cette action supprimera le dossier et la configuration de téléchargement automatique. Tout téléchargement inachevé sera annulé.</string>
@@ -228,7 +228,6 @@
     <string name="community_testing_bug_text">Vous avez trouvé un bug ? Quelque chose vous semble étrange ?</string>
     <string name="community_testing_headline">Aidez en réalisant des tests</string>
     <string name="community_testing_report_text">Signaler un problème sur Github</string>
-    <string name="compose_activity_label">Assistant Nextcloud</string>
     <string name="configure_new_media_folder_detection_notifications">Configurer</string>
     <string name="confirm_removal">Retirer le chiffrement local</string>
     <string name="confirmation_remove_file_alert">Souhaitez-vous vraiment supprimer %1$s ?</string>
@@ -376,7 +375,6 @@
     <string name="e2e_signature_is_empty">Impossible de vérifier les métadonnées, la signature est vide.</string>
     <string name="ecosystem_apps_display_assistant">Assistant</string>
     <string name="ecosystem_apps_display_more">Plus</string>
-    <string name="ecosystem_apps_more">Plus d\'applis Nextcloud</string>
     <string name="editor_web_view_cannot_open_file">Impossible d\'ouvrir le sélecteur de fichiers</string>
     <string name="email_pick_failed">Le choix de l\'adresse e-mail a échoué.</string>
     <string name="empty_albums_message">Vous pouvez organiser toutes vos photos dans autant d\'albums que vous voulez. Vous n\'avez pas créé d\'album pour le moment.</string>
@@ -520,7 +518,7 @@
     <string name="file_migration_cleaning">Nettoyage…</string>
     <string name="file_migration_dialog_title">Mise à jour du dossier de stockage des données</string>
     <string name="file_migration_directory_already_exists">Le dossier de données existe déjà. Choisissez une des options suivantes :</string>
-    <string name="file_migration_failed_dir_already_exists">Le dossier Nextcloud existe déjà</string>
+    <string name="file_migration_failed_dir_already_exists">Le dossier XeniaCloud existe déjà</string>
     <string name="file_migration_failed_not_enough_space">De l\'espace suplémentaire est nécessaire</string>
     <string name="file_migration_failed_not_readable">Impossible de lire le fichier source</string>
     <string name="file_migration_failed_not_writable">Le fichier de destination n\'est pas modifiable</string>
@@ -843,7 +841,6 @@
     <string name="prefs_renew_e2e_certificate">Renouveler le certificat de chiffrement</string>
     <string name="prefs_setup_e2e">Configurer le chiffrement de bout en bout</string>
     <string name="prefs_show_ecosystem_apps">Afficher le sélecteur d\'applications</string>
-    <string name="prefs_show_ecosystem_apps_summary">Suggestions d\'applications Nextcloud dans l\'en-tête de navigation</string>
     <string name="prefs_show_hidden_files">Afficher les fichiers cachés</string>
     <string name="prefs_sourcecode">Obtenir le code source</string>
     <string name="prefs_sycned_folders_summary">Gérer les dossiers pour le téléversement automatique</string>
@@ -1005,7 +1002,7 @@
     <string name="show_video">Afficher les vidéos</string>
     <string name="sign_tos_failed">Veuillez vérifier manuellement les conditions générales d\'utilisation</string>
     <string name="signup_with_provider">Se connecter avec un fournisseur</string>
-    <string name="single_sign_on_request_token" formatted="true">Autoriser %1$s à accéder à votre compte Nextcloud  %2$s ?</string>
+    <string name="single_sign_on_request_token" formatted="true">Autoriser %1$s à accéder à votre compte XeniaCloud  %2$s ?</string>
     <string name="sort_by">Trier par</string>
     <string name="sort_favorites_first">Trier les favoris en premier</string>
     <string name="sort_folders_before_files">Trier les dossiers avant les fichiers</string>

@@ -117,7 +117,7 @@
     <string name="authenticator_activity_no_web_browser_found">Non hai ningún navegador dispoñíbel para abrir esta ligazón.</string>
     <string name="authenticator_activity_please_complete_login_process">Complete o proceso de acceso no seu navegador</string>
     <string name="auto_upload_background_activity_action">Permitir a actividade en segundo plano</string>
-    <string name="auto_upload_battery_optimization_reason">A actividade en segundo plano de Nextcloud está limitada pola optimización da batería.</string>
+    <string name="auto_upload_battery_optimization_reason">A actividade en segundo plano de XeniaCloud está limitada pola optimización da batería.</string>
     <string name="auto_upload_battery_saver_action">Abrir os axustes do aforro de batería</string>
     <string name="auto_upload_battery_saver_reason">O aforro de batería está activo e pode pausar as subidas.</string>
     <string name="auto_upload_delete_dialog_description">Isto eliminará a carpeta e a configuración de carga automática. Calquera subida non rematada será cancelada.</string>
@@ -209,7 +209,6 @@
     <string name="community_testing_bug_text">Atopou un fallo? hai algo estraño?</string>
     <string name="community_testing_headline">Axúdenos facendo probas</string>
     <string name="community_testing_report_text">Informe dun incidente no GitHub</string>
-    <string name="compose_activity_label">Asistente de Nextcloud</string>
     <string name="configure_new_media_folder_detection_notifications">Configurar</string>
     <string name="confirm_removal">Retirar a cifraxe local</string>
     <string name="confirmation_remove_file_alert">Confirma que quere eliminar %1$s?</string>
@@ -351,7 +350,6 @@
     <string name="e2e_signature_is_empty">Non foi posíbel verificar os metadatos, a sinatura está baleira.</string>
     <string name="ecosystem_apps_display_assistant">Asistente</string>
     <string name="ecosystem_apps_display_more">Máis</string>
-    <string name="ecosystem_apps_more">Máis aplicacións de Nextcloud</string>
     <string name="editor_web_view_cannot_open_file">Non é posíbel abrir o selector de ficheiros</string>
     <string name="email_pick_failed">Produciuse un fallo ao escoller o enderezo de correo.</string>
     <string name="encrypted">Definir como cifrado</string>
@@ -476,7 +474,7 @@
     <string name="file_migration_cleaning">Limpando…</string>
     <string name="file_migration_dialog_title">Actualizando o cartafol de almacenamento de datos</string>
     <string name="file_migration_directory_already_exists">Xa existe o cartafol de datos. Escolla un dos seguintes:</string>
-    <string name="file_migration_failed_dir_already_exists">Xa existe o cartafol de Nextcloud</string>
+    <string name="file_migration_failed_dir_already_exists">Xa existe o cartafol de XeniaCloud</string>
     <string name="file_migration_failed_not_enough_space">Necesitase máis espazo</string>
     <string name="file_migration_failed_not_readable">Non foi posíbel ler o ficheiro de orixe</string>
     <string name="file_migration_failed_not_writable">Non foi posíbel escribir no ficheiro de destino</string>
@@ -794,7 +792,6 @@
     <string name="prefs_remove_e2e_keys_and_files">Eliminar ficheiros e claves cifrados</string>
     <string name="prefs_setup_e2e">Configurar a cifraxe de extremo a extremo</string>
     <string name="prefs_show_ecosystem_apps">Amosar o conmutador de aplicacións</string>
-    <string name="prefs_show_ecosystem_apps_summary">Suxestión de aplicacións de Nextcloud na cabeceira de navegación</string>
     <string name="prefs_show_hidden_files">Amosar ficheiros agochados</string>
     <string name="prefs_sourcecode">Obter o código fonte</string>
     <string name="prefs_sycned_folders_summary">Xestionar os cartafoles para a envío automático</string>
@@ -950,7 +947,7 @@
     <string name="show_video">Amosar os vídeos</string>
     <string name="sign_tos_failed">Comprobe manualmente as condicións de servizo.</string>
     <string name="signup_with_provider">Rexistrarse cun provedor</string>
-    <string name="single_sign_on_request_token" formatted="true">Permitirlle a %1$s acceder a súa conta %2$s en Nextcloud?</string>
+    <string name="single_sign_on_request_token" formatted="true">Permitirlle a %1$s acceder a súa conta %2$s en XeniaCloud?</string>
     <string name="sort_by">Ordenar por</string>
     <string name="sort_favorites_first">Ordenar primeiro os favoritos</string>
     <string name="sort_folders_before_files">Ordenar os cartafoles antes que os ficheiros</string>
