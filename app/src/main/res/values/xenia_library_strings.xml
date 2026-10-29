@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ SPDX-FileCopyrightText: 2026 XeniaCloud
+  ~ SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+<resources>
+    <string name="bad_oc_version">No valid XeniaCloud version was found at the server</string>
+    <string name="instance_not_configured">The XeniaCloud server is not configured!</string>
+    <string name="notification_channel_name">XeniaCloud connection</string>
+</resources>

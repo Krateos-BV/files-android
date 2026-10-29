@@ -6,6 +6,8 @@
 --check  fails when a string, plural or string-array item mentions the brand
          and its name is not in brand-allowlist.txt, or when a translation of a
          key in brand-inherit.txt exists.
+--merged DIR  runs the same check on a Gradle merged-resources directory, which
+         also holds the strings that libraries bring in.
 --apply  rewrites the brand in translatable strings with the replacement map and
          deletes translations of brand-inherit.txt keys, so every locale shows
          the base value. Run it after an upstream sync brings translations back.
@@ -31,7 +33,7 @@ REPLACEMENTS = [
 TRANSLITERATIONS = re.compile(r"некст\s?клауд[а-яђјљњћџ]*|nekst\s?klaud|nexcloud|نكست كلاود|نکست\u200cکلود", re.I)
 OTHER_SPELLINGS = re.compile(r"(?<![./@\w])nextcloud", re.I)
 
-STRING = re.compile(r"(<string\b([^>]*)>)(.*?)(</string>)", re.S)
+STRING = re.compile(r"(<string\b([^>]*)(?<!/)>)(.*?)(</string>)", re.S)
 GROUP = re.compile(r"(<(plurals|string-array)\b([^>]*)>)(.*?)(</\2>)", re.S)
 ITEM = re.compile(r"(<item\b[^>]*>)(.*?)(</item>)", re.S)
 COMMENT = re.compile(r"<!--.*?-->", re.S)
@@ -43,6 +45,17 @@ def resource_files():
     for path in sorted(ROOT.glob("app/src/*/res/values*/*.xml")):
         if path.parts[path.parts.index("src") + 1] not in SKIPPED_SOURCE_SETS:
             yield path
+
+
+def merged_resource_files(merged_dir):
+    files = sorted(pathlib.Path(merged_dir).resolve().glob("values*/values*.xml"))
+    if not files:
+        sys.exit(f"no merged values files in {merged_dir}; did the Gradle build run?")
+    return files
+
+
+def shown(path):
+    return path.relative_to(ROOT) if path.is_relative_to(ROOT) else path
 
 
 def names_in(listing):
@@ -124,6 +137,7 @@ def main():
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--check", action="store_true")
     mode.add_argument("--apply", action="store_true")
+    mode.add_argument("--merged", metavar="DIR")
     args = parser.parse_args()
     allowlist = names_in(ALLOWLIST)
     inherited = names_in(INHERIT)
@@ -133,11 +147,13 @@ def main():
             apply(path, allowlist, inherited)
         return 0
 
-    problems = [(path, name) for path in resource_files() for name in findings(path, allowlist, inherited)]
+    paths = merged_resource_files(args.merged) if args.merged else resource_files()
+    problems = [(path, name) for path in paths for name in findings(path, allowlist, inherited)]
     for path, name in problems:
-        print(f"::error file={path.relative_to(ROOT)}::string '{name}' mentions Nextcloud")
+        print(f"::error file={shown(path)}::string '{name}' mentions Nextcloud")
     if problems:
         print(f"{len(problems)} user-visible Nextcloud mention(s). Run scripts/xenia/brand_strings.py --apply, "
+              "override a library string in res/values*/xenia_library_strings.xml, "
               "or add the key to scripts/xenia/brand-allowlist.txt with a reason.")
         return 1
     print("no user-visible Nextcloud mentions")

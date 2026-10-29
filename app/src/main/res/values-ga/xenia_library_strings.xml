@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ SPDX-FileCopyrightText: 2026 XeniaCloud
+  ~ SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+<resources>
+    <string name="bad_oc_version">Níor aimsíodh leagan bailí XeniaCloud ar an bhfreastalaí</string>
+    <string name="instance_not_configured">Níl an freastalaí XeniaCloud cumraithe!</string>
+    <string name="notification_channel_name">Nasc XeniaCloud</string>
+</resources>

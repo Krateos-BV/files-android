@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ SPDX-FileCopyrightText: 2026 XeniaCloud
+  ~ SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+<resources>
+    <string name="bad_oc_version">ไม่พบเวอร์ชัน XeniaCloud ที่ใช้งานได้บนเซิร์ฟเวอร์</string>
+    <string name="instance_not_configured">เซิร์ฟเวอร์ XeniaCloud ยังไม่ได้ตั้งค่า!</string>
+    <string name="notification_channel_name">เชื่อมต่อ XeniaCloud</string>
+</resources>
