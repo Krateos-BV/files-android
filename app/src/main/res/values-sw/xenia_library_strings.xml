@@ -3,7 +3,7 @@
   ~ SPDX-FileCopyrightText: 2026 XeniaCloud
   ~ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
     <string name="bad_oc_version">Hakuna toleo halali la XeniaCloud lililopatikana kwenye seva</string>
     <string name="instance_not_configured">Seva ya XeniaCloud haijasanidiwa!</string>
     <string name="notification_channel_name">Mtandao wa XeniaCloud</string>

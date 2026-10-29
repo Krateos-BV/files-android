@@ -3,7 +3,7 @@
   ~ SPDX-FileCopyrightText: 2026 XeniaCloud
   ~ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
     <string name="bad_oc_version">Не е открива валидна версия на XeniaCloud на този сървър</string>
     <string name="instance_not_configured">XeniaCloud сървъра не е конфигуриран!</string>
     <string name="notification_channel_name">XeniaCloud връзка</string>

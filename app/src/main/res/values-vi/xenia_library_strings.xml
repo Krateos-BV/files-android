@@ -3,7 +3,7 @@
   ~ SPDX-FileCopyrightText: 2026 XeniaCloud
   ~ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
     <string name="bad_oc_version">Không tìm thấy phiên bản XeniaCloud hợp lệ trên máy chủ</string>
     <string name="instance_not_configured">Máy chủ XeniaCloud chưa được cấu hình!</string>
     <string name="notification_channel_name">Kết nối tới XeniaCloud</string>
