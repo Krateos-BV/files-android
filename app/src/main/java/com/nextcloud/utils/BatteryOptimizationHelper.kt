@@ -52,9 +52,8 @@ object BatteryOptimizationHelper {
         return Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
     }
 
-    private fun canRequestIgnoreBatteryOptimizations(context: Context): Boolean =
-        ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-        ) == PackageManager.PERMISSION_GRANTED
+    private fun canRequestIgnoreBatteryOptimizations(context: Context): Boolean = ContextCompat.checkSelfPermission(
+        context,
+        Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+    ) == PackageManager.PERMISSION_GRANTED
 }
