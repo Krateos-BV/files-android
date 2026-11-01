@@ -10,12 +10,14 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.owncloud.android.R
 import com.owncloud.android.operations.UploadFileOperation
 import com.owncloud.android.operations.UploadFileOperation.MISSING_FILE_PERMISSION_NOTIFICATION_ID
 import com.owncloud.android.ui.notifications.NotificationUtils
+import com.owncloud.android.utils.PermissionUtil
 
 fun UploadFileOperation.showStoragePermissionNotification() {
     val notificationManager = ContextCompat.getSystemService(context, NotificationManager::class.java)
@@ -27,21 +29,24 @@ fun UploadFileOperation.showStoragePermissionNotification() {
         return
     }
 
-    val allowAllFileAccessAction = getAllowAllFileAccessAction(context)
-    val appPermissionsAction = getAppPermissionsAction(context)
-
     val notificationBuilder =
         NotificationCompat.Builder(context, NotificationUtils.NOTIFICATION_CHANNEL_UPLOAD)
             .setSmallIcon(android.R.drawable.stat_sys_warning)
             .setContentTitle(context.getString(R.string.upload_missing_storage_permission_title))
             .setContentText(context.getString(R.string.upload_missing_storage_permission_description))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .addAction(allowAllFileAccessAction)
-            .addAction(appPermissionsAction)
             .setAutoCancel(true)
+
+    if (canOfferAllFilesAccess(context)) {
+        notificationBuilder.addAction(getAllowAllFileAccessAction(context))
+    }
+    notificationBuilder.addAction(getAppPermissionsAction(context))
 
     notificationManager.notify(MISSING_FILE_PERMISSION_NOTIFICATION_ID, notificationBuilder.build())
 }
+
+private fun canOfferAllFilesAccess(context: Context): Boolean =
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && PermissionUtil.manifestHasAllFilesPermission(context)
 
 private fun getActionPendingIntent(context: Context, actionType: UploadFileBroadcastReceiverActions): PendingIntent {
     val intent = Intent(context, UploadFileBroadcastReceiver::class.java).apply {
