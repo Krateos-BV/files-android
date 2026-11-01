@@ -700,7 +700,7 @@ public class SettingsActivity extends PreferenceActivity
     private void setupAllFilesAccessPreference(PreferenceCategory category) {
         Preference allFilesAccess = findPreference("allFilesAccess");
 
-        if (PermissionUtil.checkAllFilesAccess()) {
+        if (PermissionUtil.checkAllFilesAccess() || !PermissionUtil.canRequestAllFilesAccess(this)) {
             category.removePreference(allFilesAccess);
         } else {
             if (allFilesAccess.getParent() == null) {

@@ -22,7 +22,11 @@ fun StoragePermissionWarningBannerBinding.setup(activity: Activity, descriptionI
     description.text = activity.getString(descriptionId)
 
     val isBrandedAndFlavourGplay = (MainApp.isClientBranded() && isFlavourGPlay())
-    allFilesAccess.setVisibleIf(!PermissionUtil.checkAllFilesAccess() && !isBrandedAndFlavourGplay)
+    allFilesAccess.setVisibleIf(
+        !PermissionUtil.checkAllFilesAccess() &&
+            PermissionUtil.canRequestAllFilesAccess(activity) &&
+            !isBrandedAndFlavourGplay
+    )
     allFilesAccess.setOnClickListener { activity.openAllFilesAccessSettings(REQ_ALL_FILES_ACCESS) }
 
     mediaReadOnly.setVisibleIf(!PermissionUtil.checkMediaAccess(activity))
