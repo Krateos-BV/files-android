@@ -89,6 +89,10 @@ object PermissionUtil {
     private fun canRequestAllFilesPermission(context: Context) =
         manifestHasAllFilesPermission(context) && hasManageAllFilesActivity(context)
 
+    @JvmStatic
+    fun canRequestAllFilesAccess(context: Context): Boolean =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && canRequestAllFilesPermission(context)
+
     @RequiresApi(Build.VERSION_CODES.R)
     private fun hasManageAllFilesActivity(context: Context): Boolean {
         val intent = getManageAllFilesIntent(context)

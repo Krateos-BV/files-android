@@ -7,7 +7,6 @@
 
 package com.nextcloud.ui.component
 
-import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -15,9 +14,9 @@ import android.content.IntentFilter
 import android.os.PowerManager
 import android.provider.Settings
 import android.view.View
-import androidx.core.net.toUri
 import com.nextcloud.client.device.PowerManagementService
 import com.nextcloud.client.jobs.BackgroundJobManager
+import com.nextcloud.utils.BatteryOptimizationHelper
 import com.nextcloud.utils.extensions.setVisibleIf
 import com.owncloud.android.databinding.UploadWarningCardBinding
 import com.owncloud.android.datamodel.SyncedFolderProvider
@@ -107,11 +106,8 @@ class UploadWarningCard(
     /**
      * Shows dialog to allow background usage for app.
      */
-    @SuppressLint("BatteryLife")
     private fun showIgnoreBatteryOptimizationDialog() {
-        val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-        intent.data = "package:${context.packageName}".toUri()
-        context.startActivity(intent)
+        context.startActivity(BatteryOptimizationHelper.batteryOptimizationIntent(context))
     }
 
     private fun startAutoUploadIgnoringBatterySaver(view: View) {
