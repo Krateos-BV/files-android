@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ SPDX-FileCopyrightText: 2026 XeniaCloud
+  ~ SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+    <string name="instance_not_configured">سرور XeniaCloud پیکربندی نشده است!</string>
+    <string name="notification_channel_name">اتصال XeniaCloud</string>
+</resources>

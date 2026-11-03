@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ SPDX-FileCopyrightText: 2026 XeniaCloud
+  ~ SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+    <string name="bad_oc_version">伺服器上找不到有效的 XeniaCloud 版本</string>
+    <string name="instance_not_configured">未設定 XeniaCloud 伺服器！</string>
+    <string name="notification_channel_name">XeniaCloud 連線</string>
+</resources>
