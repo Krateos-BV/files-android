@@ -150,6 +150,9 @@ android {
         buildTypes {
             release {
                 buildConfigField("String", "NC_TEST_SERVER_DATA_STRING", "\"\"")
+                isMinifyEnabled = true
+                isShrinkResources = true
+                proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             }
 
             debug {

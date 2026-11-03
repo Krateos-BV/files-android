@@ -38,3 +38,13 @@ jobs:
                     name: app-generic-debug
                     path: app/build/outputs/apk/generic/debug/*.apk
                     retention-days: 90
+            -   name: Build gplay release with R8 (unsigned)
+                run: ./gradlew assembleGplayRelease
+            -   name: Upload unsigned R8 release APK and mapping
+                uses: actions/upload-artifact@v4
+                with:
+                    name: app-gplay-release-r8
+                    path: |
+                        app/build/outputs/apk/gplay/release/*.apk
+                        app/build/outputs/mapping/gplayRelease/mapping.txt
+                    retention-days: 30
