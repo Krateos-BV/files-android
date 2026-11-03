@@ -15,6 +15,24 @@
 
 # commons-httpclient 3.x resolves its own classes by name in static initializers (javac class$ pattern).
 -keep class org.apache.commons.httpclient.** { *; }
+# Jackrabbit DavException loads statuscode.properties relative to its own package.
+-keepnames class org.apache.jackrabbit.webdav.DavException
+
+# Guava TypeToken subclasses read their generic signature at runtime; without it the upload workers fail.
+-keep,allowobfuscation,allowshrinking class com.google.common.reflect.TypeToken
+-keep,allowobfuscation,allowshrinking class * extends com.google.common.reflect.TypeToken
+
+# SSO responses to Xenia Notes and Xenia Talk are Java-serialized, so serializable classes are resolved by name.
+-keepnames class * implements java.io.Serializable
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+
 # WorkManager stores worker class names, and BackgroundJobFactory loads them with Class.forName.
 -keep class * extends androidx.work.ListenableWorker { <init>(...); }
 
