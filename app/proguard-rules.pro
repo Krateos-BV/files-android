@@ -20,3 +20,7 @@
 
 -keepclassmembers class * { @org.greenrobot.eventbus.Subscribe <methods>; }
 -keep enum org.greenrobot.eventbus.ThreadMode { *; }
+
+# Compile-time references that are absent from the desugared runtime library or are optional annotations.
+-dontwarn java.time.zone.ZoneRulesProvider
+-dontwarn org.joda.convert.**
