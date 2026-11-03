@@ -13,6 +13,8 @@
 # so field names must survive an upgrade from a non-minified build.
 -keepclassmembers class com.owncloud.android.**, com.nextcloud.** { <fields>; <init>(...); }
 
+# commons-httpclient 3.x resolves its own classes by name in static initializers (javac class$ pattern).
+-keep class org.apache.commons.httpclient.** { *; }
 # WorkManager stores worker class names, and BackgroundJobFactory loads them with Class.forName.
 -keep class * extends androidx.work.ListenableWorker { <init>(...); }
 
