@@ -31,6 +31,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      checks: read
+      actions: read
 
     steps:
       # GITHUB_TOKEN cannot create or update files under .github/workflows/ - that is a
@@ -207,3 +209,93 @@ jobs:
           msg="DRY RUN: would replace upstream-sync/master in $GITHUB_REPOSITORY with $(git rev-parse --short HEAD) and open a PR against $BASE ($UPSTREAM_COUNT upstream commit(s), clean merge: $MERGE_CLEAN). Nothing was pushed."
           echo "::notice title=Upstream sync dry run::$msg"
           echo "$msg" >> "$GITHUB_STEP_SUMMARY"
+
+      # Every check above only reports. This step turns a sync that is stuck, conflicted
+      # or far behind into a red run, so the Monday schedule mails instead of staying
+      # green while nothing merges (XEN-313). Drift is measured against the latest
+      # upstream release, which is what the fork syncs to.
+      - name: Drift alarm
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE: ${{ github.event.repository.default_branch }}
+          MERGE_CLEAN: ${{ steps.merge.outputs.clean }}
+          UPSTREAM_REPO: nextcloud/android
+          SYNC_BRANCH: upstream-sync/master
+          MAX_BEHIND: '200'
+          MAX_PR_AGE_DAYS: '14'
+          RELEASE_GRACE_DAYS: '21'
+          MAX_SCHEDULE_GAP_DAYS: '8'
+          SCHEDULE_WATCH: Krateos-BV/notes-android Krateos-BV/talk-android Krateos-BV/files-android
+        run: |
+          reasons=()
+          alarm() {
+            reasons+=("$1")
+            echo "::error title=Upstream drift::$1"
+          }
+          now=$(date -u +%s)
+          days_since() {
+            echo $(( (now - $(date -u -d "$1" +%s)) / 86400 ))
+          }
+
+          if [ "$MERGE_CLEAN" = "false" ]; then
+            alarm "The upstream merge in this run has conflicts that need a manual resolution."
+          fi
+
+          pr=$(gh api "repos/$GITHUB_REPOSITORY/pulls?state=open&head=$GITHUB_REPOSITORY_OWNER:$SYNC_BRANCH" \
+            --jq '.[0] // empty | [.number, .created_at, .head.sha] | @tsv')
+          if [ -n "$pr" ]; then
+            read -r number created head_sha <<< "$pr"
+            age=$(days_since "$created")
+            if [ "$age" -gt "$MAX_PR_AGE_DAYS" ]; then
+              alarm "Sync PR #$number has been open for $age days (limit $MAX_PR_AGE_DAYS)."
+            fi
+            if [ "$(gh api "repos/$GITHUB_REPOSITORY/pulls/$number" --jq '.mergeable')" = "false" ]; then
+              alarm "Sync PR #$number has merge conflicts with $BASE."
+            fi
+            red_markers=$(gh api "repos/$GITHUB_REPOSITORY/commits/$head_sha/check-runs?check_name=conflict-markers" \
+              --jq '[.check_runs[] | select(.conclusion == "failure")] | length')
+            if [ "$red_markers" != "0" ]; then
+              alarm "Sync PR #$number still carries unresolved conflict markers (conflict-markers check is red)."
+            fi
+          fi
+
+          read -r tag published <<< "$(gh api "repos/$UPSTREAM_REPO/releases/latest" --jq '[.tag_name, .published_at] | @tsv')"
+          git fetch --no-tags upstream "refs/tags/$tag:refs/tags/$tag"
+          behind=$(git rev-list --count "origin/$BASE..refs/tags/$tag")
+          echo "$BASE is $behind commit(s) behind $UPSTREAM_REPO release $tag (limit $MAX_BEHIND)."
+          if [ "$behind" -gt "$MAX_BEHIND" ]; then
+            alarm "$BASE is $behind commits behind upstream release $tag (limit $MAX_BEHIND)."
+          fi
+          if ! git merge-base --is-ancestor "refs/tags/$tag" "origin/$BASE"; then
+            release_age=$(days_since "$published")
+            if [ "$release_age" -gt "$RELEASE_GRACE_DAYS" ]; then
+              alarm "Upstream release $tag is $release_age days old and not in $BASE (limit $RELEASE_GRACE_DAYS days)."
+            else
+              echo "::notice title=Upstream release pending::$tag is $release_age days old and not in $BASE yet (limit $RELEASE_GRACE_DAYS days)."
+            fi
+          fi
+
+          # Each fork watches all three, so a schedule GitHub silently stopped in one
+          # repo turns another repo's run red.
+          for repo in $SCHEDULE_WATCH; do
+            last=$(gh api "repos/$repo/actions/workflows/xenia-upstream-sync.yml/runs?event=schedule&per_page=1" \
+              --jq '.workflow_runs[0].created_at // empty')
+            if [ -z "$last" ]; then
+              alarm "$repo has no scheduled upstream sync run at all."
+              continue
+            fi
+            gap=$(days_since "$last")
+            if [ "$gap" -gt "$MAX_SCHEDULE_GAP_DAYS" ]; then
+              alarm "$repo has had no scheduled upstream sync run for $gap days (limit $MAX_SCHEDULE_GAP_DAYS)."
+            fi
+          done
+
+          if [ "${#reasons[@]}" -eq 0 ]; then
+            echo "No upstream drift."
+            exit 0
+          fi
+          {
+            echo "## Upstream drift alarm"
+            printf -- '- %s\n' "${reasons[@]}"
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 1

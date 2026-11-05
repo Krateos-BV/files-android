@@ -1,0 +1,123 @@
+# SPDX-FileCopyrightText: 2026 Krateos BV
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: Runner Label Guard
+
+# Fails when a workflow pins a job to a runner label this fork has no runner for.
+# Upstream sync PRs keep bringing back upstream-only labels (ubuntu-latest-max,
+# ubuntu-latest-low, ubuntu-26.04). Such a job does not fail: it queues for 24 h,
+# is cancelled, and reads as "pending" rather than broken (XEN-313).
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: runner-labels-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  runner-labels:
+    name: runner-labels
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check runs-on labels against the allowlist
+        env:
+          # GitHub-hosted labels only. Add a self-hosted label (for example the Mac Mini)
+          # here once its runner is registered for this repository, not before.
+          ALLOWED_LABELS: >-
+            ubuntu-latest ubuntu-24.04 ubuntu-22.04 ubuntu-24.04-arm ubuntu-22.04-arm
+            windows-latest windows-2025 windows-2022 windows-11-arm
+            macos-latest macos-15 macos-14 macos-13
+            macos-latest-large macos-15-large macos-14-large macos-13-large
+            macos-latest-xlarge macos-15-xlarge macos-14-xlarge macos-13-xlarge
+          # Deliberate exceptions as <workflow file>:<label>; the renovate one is XNT-219.
+          ALLOWED_EXCEPTIONS: renovate-approve-merge.yml:ubuntu-latest-low
+        run: |
+          cat > "$RUNNER_TEMP/check_labels.rb" <<'RUBY'
+          require "yaml"
+
+          def matrix_values(job, key)
+            matrix = job.dig("strategy", "matrix")
+            return [] unless matrix.is_a?(Hash)
+            listed = matrix[key].is_a?(Array) ? matrix[key] : []
+            included = Array(matrix["include"]).filter_map { |entry| entry[key] if entry.is_a?(Hash) }
+            (listed + included).flatten
+          end
+
+          def labels_for(job)
+            runs_on = job["runs-on"]
+            labels = runs_on.is_a?(Hash) ? Array(runs_on["labels"]) : Array(runs_on)
+            labels << "group:#{runs_on['group']}" if runs_on.is_a?(Hash) && runs_on["group"]
+            labels.flat_map do |label|
+              matrix_key = label.to_s[/\A\$\{\{\s*matrix\.([\w-]+)\s*\}\}\z/, 1]
+              resolved = matrix_key ? matrix_values(job, matrix_key) : []
+              resolved.empty? ? [label.to_s] : resolved.map(&:to_s)
+            end
+          end
+
+          dir = ARGV.fetch(0)
+          allowed = ENV.fetch("ALLOWED_LABELS").split
+          exceptions = ENV.fetch("ALLOWED_EXCEPTIONS", "").split
+          offenders = []
+          Dir[File.join(dir, "*.{yml,yaml}")].sort.each do |path|
+            file = File.basename(path)
+            begin
+              jobs = (YAML.safe_load_file(path, aliases: true) || {})["jobs"] || {}
+            rescue Psych::SyntaxError => e
+              offenders << [file, "Not valid YAML (#{e.problem}, line #{e.line}), so its runner labels cannot be checked"]
+              next
+            end
+            jobs.each do |id, job|
+              next unless job.is_a?(Hash) && job.key?("runs-on")
+              labels_for(job).each do |label|
+                next if allowed.include?(label) || exceptions.include?("#{file}:#{label}")
+                offenders << [file, "Job '#{id}' runs on '#{label}', which has no runner in this fork"]
+              end
+            end
+          end
+          offenders.each { |file, message| puts "::error file=#{File.join(dir, file)}::#{message}" }
+          exit(offenders.empty? ? 0 : 1)
+          RUBY
+
+          # Assembled at runtime: a literal expression here would be evaluated by Actions.
+          matrix_os='$''{{ matrix.os }}'
+          canary=$(mktemp -d)
+          cat > "$canary/canary.yml" <<YAML
+          jobs:
+            dead:
+              runs-on: ubuntu-latest-max
+            matrix:
+              strategy:
+                matrix:
+                  os: [ubuntu-latest, ubuntu-26.04]
+              runs-on: ${matrix_os}
+            fine:
+              runs-on: ubuntu-latest
+          YAML
+          found=$(ruby "$RUNNER_TEMP/check_labels.rb" "$canary" | grep -c '^::error' || true)
+          rm -rf "$canary"
+          if [ "$found" != "2" ]; then
+            echo "::error::Runner label guard self-test flagged $found of 2 dead labels. The guard is broken; fix it rather than trusting a green run."
+            exit 1
+          fi
+          echo "Self-test OK (2/2 dead labels flagged)."
+
+          ruby "$RUNNER_TEMP/check_labels.rb" .github/workflows
+          echo "Every runs-on label in .github/workflows has a runner."
