@@ -10,8 +10,6 @@ name: Runner Label Guard
 
 on:
   pull_request:
-    paths:
-      - '.github/workflows/**'
   push:
     branches: [main]
     paths:
