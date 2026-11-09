@@ -8,19 +8,25 @@
 package com.nextcloud.utils.extensions
 
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.exifinterface.media.ExifInterface
+import com.nextcloud.utils.HumanReadableFormatter
+import com.owncloud.android.datamodel.FileDataStorageManager
 import com.owncloud.android.datamodel.OCFile
 import com.owncloud.android.datamodel.ThumbnailsCacheManager
 import com.owncloud.android.lib.common.utils.Log_OC
 import com.owncloud.android.lib.resources.files.model.ServerFileInterface
-import com.owncloud.android.utils.DisplayUtils
 import java.io.File
+import java.io.IOException
+import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.attribute.BasicFileAttributes
+import com.nextcloud.utils.AppConstants.MILLIS_PER_SECOND
 
 private const val TAG = "FileExtensions"
 
 fun OCFile?.logFileSize(tag: String) {
-    val size = DisplayUtils.bytesToHumanReadable(this?.fileLength ?: -1)
+    val size = HumanReadableFormatter.formatBytes(this?.fileLength ?: -1)
     val rawByte = this?.fileLength ?: -1
     Log_OC.d(tag, "onSaveInstanceState: $size, raw byte $rawByte")
 }
@@ -48,7 +54,7 @@ fun File?.getSmallThumbnail(): Bitmap? = ThumbnailsCacheManager.getBitmapFromDis
 fun File?.getSmallThumbnailKey(): String = ThumbnailsCacheManager.PREFIX_THUMBNAIL + hashCode()
 
 fun File?.logFileSize(tag: String) {
-    val size = DisplayUtils.bytesToHumanReadable(this?.length() ?: -1)
+    val size = HumanReadableFormatter.formatBytes(this?.length() ?: -1)
     val rawByte = this?.length() ?: -1
     Log_OC.d(tag, "onSaveInstanceState: $size, raw byte $rawByte")
 }
@@ -61,7 +67,6 @@ fun Path.toLocalPath(): String = toAbsolutePath().toString()
  * @receiver String path to a file.
  * @return [File] instance if the file exists, or `null` if the path is null, empty, or non-existent.
  */
-@Suppress("ReturnCount")
 fun String?.toFile(): File? {
     if (isNullOrEmpty()) {
         Log_OC.w(TAG, "given path is null or empty: $this")
@@ -110,4 +115,23 @@ fun String.getBitmapSize(): Pair<Int, Int>? = try {
     if (w > 0 && h > 0) w to h else null
 } catch (_: Exception) {
     null
+}
+
+fun OCFile?.isTheSameAs(localFile: File?): Boolean = try {
+    this ?: return false
+    localFile ?: return false
+
+    val attr = Files.readAttributes(localFile.toPath(), BasicFileAttributes::class.java)
+    val localName = localFile.getName()
+    val remoteName = this.fileName
+    val localSize = localFile.length()
+    val remoteSize = this.fileLength
+    val localModified = attr.lastModifiedTime().toMillis() / MILLIS_PER_SECOND // Unix time in milliseconds
+    val remoteModified = this.modificationTimestamp / MILLIS_PER_SECOND // Unix time in milliseconds
+    remoteName == localName &&
+        remoteSize == localSize &&
+        remoteModified == localModified
+} catch (e: IOException) {
+    Log.e(FileDataStorageManager.TAG, "fileIsTheSame: unable to obtain local file attributes for comparing: $e")
+    false
 }

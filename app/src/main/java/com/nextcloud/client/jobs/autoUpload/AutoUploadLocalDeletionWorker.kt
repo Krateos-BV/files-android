@@ -13,6 +13,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.nextcloud.client.account.UserAccountManager
 import com.nextcloud.client.jobs.notification.WorkerNotificationManager
+import com.nextcloud.utils.HumanReadableFormatter
 import com.owncloud.android.R
 import com.owncloud.android.datamodel.FileDataStorageManager
 import com.owncloud.android.datamodel.SyncedFolderProvider
@@ -20,10 +21,10 @@ import com.owncloud.android.lib.common.operations.RemoteOperationResult
 import com.owncloud.android.lib.common.utils.Log_OC
 import com.owncloud.android.operations.upload.DeleteUploadedFileOperation
 import com.owncloud.android.ui.notifications.NotificationUtils
-import com.owncloud.android.utils.DisplayUtils
 import com.owncloud.android.utils.FileUtil
 import com.owncloud.android.utils.theme.ViewThemeUtils
 import java.io.File
+import kotlin.time.Duration.Companion.milliseconds
 
 class AutoUploadLocalDeletionWorker(
     private val context: Context,
@@ -36,7 +37,6 @@ class AutoUploadLocalDeletionWorker(
     companion object {
         const val SYNCED_FOLDER_IDS = "synced_folder_IDs"
         const val NOTIFICATION_ID = 267
-        const val MS_IN_SECOND = 1000
 
         private const val TAG = "AutoUploadLocalDeletionWorker"
     }
@@ -107,7 +107,7 @@ class AutoUploadLocalDeletionWorker(
         Log_OC.d(
             TAG,
             "Success: users=$users, foldersAnalyzed=$foldersAnalyzed, filesPreserved=$filesPreserved, " +
-                "filesRemoved=$filesRemoved, spaceFreed=$spaceFreed bytes, runTime=${runTimeMs / MS_IN_SECOND} seconds"
+                "filesRemoved=$filesRemoved, spaceFreed=$spaceFreed bytes, runTime=${runTimeMs.milliseconds}"
         )
         return Result.success()
     }
@@ -122,7 +122,7 @@ class AutoUploadLocalDeletionWorker(
     ): Notification {
         val notificationContent = context.getString(
             R.string.autoupload_delete_uploaded_notif_ended_content,
-            DisplayUtils.bytesToHumanReadable(spaceFreed),
+            HumanReadableFormatter.formatBytes(spaceFreed),
             context.resources.getQuantityString(
                 R.plurals.autoupload_delete_uploaded_notif_ended_content_files,
                 filesRemoved.toInt(),

@@ -41,13 +41,13 @@ import com.owncloud.android.datamodel.MediaProvider
 import com.owncloud.android.datamodel.SyncedFolderProvider
 import com.owncloud.android.lib.common.utils.Log_OC
 import com.owncloud.android.ui.activity.ManageAccountsActivity
-import com.owncloud.android.ui.activity.SyncedFoldersActivity
+import com.owncloud.android.ui.navigation.NavigatorActivity
+import com.owncloud.android.ui.navigation.NavigatorScreen
 import com.owncloud.android.ui.notifications.NotificationUtils
 import com.owncloud.android.utils.SyncedFolderUtils
 import com.owncloud.android.utils.theme.ViewThemeUtils
 import java.util.Random
 
-@Suppress("LongParameterList") // dependencies injection
 class MediaFoldersDetectionWork(
     private val context: Context,
     params: WorkerParameters,
@@ -72,7 +72,7 @@ class MediaFoldersDetectionWork(
 
     private val randomIdGenerator = Random(clock.currentTime)
 
-    @Suppress("LongMethod", "ComplexMethod", "NestedBlockDepth", "ReturnCount") // legacy code
+    @Suppress("LongMethod", "CyclomaticComplexMethod", "NestedBlockDepth") // legacy code
     override fun doWork(): Result {
         val arbitraryDataProvider: ArbitraryDataProvider = ArbitraryDataProviderImpl(context)
         val gson = Gson()
@@ -195,7 +195,7 @@ class MediaFoldersDetectionWork(
     private fun sendNotification(contentTitle: String, subtitle: String, user: User, path: String, type: Int) {
         val notificationId = randomIdGenerator.nextInt()
 
-        val intent = Intent(context, SyncedFoldersActivity::class.java).apply {
+        val intent = NavigatorActivity.intent(context, NavigatorScreen.AutoUpload).apply {
             putExtra(NOTIFICATION_ID, notificationId)
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             putExtra(NotificationWork.KEY_NOTIFICATION_ACCOUNT, user.accountName)

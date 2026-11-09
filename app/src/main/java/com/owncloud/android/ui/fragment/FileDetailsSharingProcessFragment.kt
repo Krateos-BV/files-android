@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.nextcloud.client.di.Injectable
+import com.nextcloud.utils.SnackbarUtil
 import com.nextcloud.utils.extensions.getParcelableArgument
 import com.nextcloud.utils.extensions.getSerializableArgument
 import com.nextcloud.utils.extensions.isPublicOrMail
@@ -39,7 +40,6 @@ import com.owncloud.android.ui.dialog.ExpirationDatePickerDialogFragment
 import com.owncloud.android.ui.fragment.util.SharePermissionManager
 import com.owncloud.android.ui.helpers.FileOperationsHelper
 import com.owncloud.android.utils.ClipboardUtil
-import com.owncloud.android.utils.DisplayUtils
 import com.owncloud.android.utils.theme.CapabilityUtils
 import com.owncloud.android.utils.theme.ViewThemeUtils
 import java.text.SimpleDateFormat
@@ -55,7 +55,7 @@ import javax.inject.Inject
  * configuration at one time.
  * 2. This will handle both Advanced Permissions and Send New Email functionality for existing shares to modify them.
  */
-@Suppress("TooManyFunctions", "LargeClass")
+@Suppress("LargeClass")
 class FileDetailsSharingProcessFragment :
     Fragment(),
     Injectable,
@@ -753,10 +753,9 @@ class FileDetailsSharingProcessFragment :
     /**
      * method to validate the step 1 screen information
      */
-    @Suppress("ReturnCount")
     private fun validateShareProcessFirst() {
         if (permission == OCShare.NO_PERMISSION) {
-            DisplayUtils.showSnackMessage(this, R.string.no_share_permission_selected)
+            SnackbarUtil.show(this, R.string.no_share_permission_selected)
             return
         }
 
@@ -766,7 +765,7 @@ class FileDetailsSharingProcessFragment :
             val needsPasswordEntry = (!hasExistingPassword || passwordModified)
 
             if (needsPasswordEntry && enteredPassword.isBlank()) {
-                DisplayUtils.showSnackMessage(this, R.string.share_link_empty_password)
+                SnackbarUtil.show(this, R.string.share_link_empty_password)
                 return
             }
         }
@@ -781,7 +780,7 @@ class FileDetailsSharingProcessFragment :
         if (binding.shareProcessChangeNameSwitch.isChecked &&
             binding.shareProcessChangeName.text?.isBlank() == true
         ) {
-            DisplayUtils.showSnackMessage(this, R.string.label_empty)
+            SnackbarUtil.show(this, R.string.label_empty)
             return
         }
 
@@ -795,16 +794,15 @@ class FileDetailsSharingProcessFragment :
         }
     }
 
-    @Suppress("ReturnCount")
     private fun createShareOrUpdateNoteShare() {
         if (!isAnySharePermissionChecked()) {
-            DisplayUtils.showSnackMessage(this, R.string.share_option_required)
+            SnackbarUtil.show(this, R.string.share_option_required)
             return
         }
 
         val noteText = binding.noteText.text.toString().trim()
         if (file == null && (share != null && share?.note == noteText)) {
-            DisplayUtils.showSnackMessage(this, R.string.share_cannot_update_empty_note)
+            SnackbarUtil.show(this, R.string.share_cannot_update_empty_note)
             return
         }
 
@@ -815,7 +813,7 @@ class FileDetailsSharingProcessFragment :
             }
 
             file == null -> {
-                DisplayUtils.showSnackMessage(this, R.string.file_not_found_cannot_share)
+                SnackbarUtil.show(this, R.string.file_not_found_cannot_share)
                 return
             }
 

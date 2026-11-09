@@ -34,7 +34,6 @@
     <string name="add_new_public_share">Cuir nasc comhroinnte poiblí nua leis</string>
     <string name="add_new_secure_file_drop">Cuir titim comhad slán nua leis</string>
     <string name="add_to_album">Cuir leis an albam</string>
-    <string name="add_to_cloud">Cuir le %1$s</string>
     <string name="album_already_exists">Tá an t-albam ann cheana féin</string>
     <string name="album_copy_file_conflict">Ann cheana féin.</string>
     <string name="album_create_new_link">Cruthaigh nasc nua</string>
@@ -295,8 +294,6 @@
     <string name="create_link">Cruthaigh nasc</string>
     <string name="create_new">Nua</string>
     <string name="create_new_document">Doiciméad nua</string>
-    <string name="create_new_encrypted_folder">Fillteán criptithe nua</string>
-    <string name="create_new_folder">Fillteán nua</string>
     <string name="create_new_presentation">Cur i láthair nua</string>
     <string name="create_new_spreadsheet">Scarbhileog nua</string>
     <string name="create_presentation">Cur i láthair</string>
@@ -345,6 +342,7 @@
     <string name="download_download_invalid_local_file_name">Ainm comhaid neamhbhailí don chomhad áitiúil</string>
     <string name="download_latest_dev_version">Íoslódáil an leagan is déanaí de dev</string>
     <string name="download_limit">Teorainn a íoslódáil</string>
+    <string name="downloader_download_canceled">Cealaíodh an íoslódáil</string>
     <string name="downloader_download_failed_content">Níorbh fhéidir %1$s a íoslódáil</string>
     <string name="downloader_download_failed_credentials_error">Theip ar an íoslódáil, logáil isteach arís</string>
     <string name="downloader_download_failed_ticker">Theip ar an íoslódáil</string>
@@ -353,7 +351,6 @@
     <string name="downloader_download_in_progress_ticker">Ag íosluchtú…</string>
     <string name="downloader_download_succeeded_content">%1$s íoslódáilte</string>
     <string name="downloader_download_succeeded_ticker">Íosluchtaithe</string>
-    <string name="downloader_file_download_cancelled">Cealaíodh comhaid áirithe le linn an íoslódála ag an úsáideoir</string>
     <string name="downloader_file_download_failed">Tharla earráid agus comhaid á n-íoslódáil</string>
     <string name="downloader_not_downloaded_yet">Gan íoslódáil fós</string>
     <string name="downloader_unexpected_error">Tharla earráid gan choinne agus comhaid á n-íoslódáil</string>
@@ -438,14 +435,17 @@
     <string name="error_choosing_date">Earráid agus dáta á roghnú</string>
     <string name="error_comment_file">Earráid agus comhad á rá</string>
     <string name="error_crash_title">Thuar %1$s</string>
+    <string name="error_creating_file">Earráid agus an comhad á chruthú</string>
     <string name="error_creating_file_from_template">Earráid agus comhad á chruthú as an teimpléad</string>
     <string name="error_fetching_sharees">Ní féidir scaireanna a fháil.</string>
     <string name="error_file_actions">Earráid agus gníomhartha comhaid á dtaispeáint</string>
     <string name="error_file_lock">Earráid agus stádas glasála comhaid á athrú</string>
+    <string name="error_reading_file">Earráid agus an comhad á léamh</string>
     <string name="error_report_issue_action">Tuairisc</string>
     <string name="error_report_issue_text">An bhfuil fonn ort an cheist a thuairisciú don rianaitheoir? (tá cuntas GitHub ag teastáil)</string>
     <string name="error_retrieving_file">Earráid agus an comhad á aisghabháil</string>
     <string name="error_retrieving_templates">Earráid agus teimpléid á n-aisghabháil</string>
+    <string name="error_saving_local_file">Earráid agus comhad áitiúil á shábháil</string>
     <string name="error_setting_status_message">Earráid ag socrú teachtaireachta stádais!</string>
     <string name="error_showing_encryption_dialog">Earráid agus dialóg socraithe criptithe á taispeáint!</string>
     <string name="error_starting_direct_camera_upload">Earráid agus ceamara á thosú</string>
@@ -577,6 +577,7 @@
     <string name="filename_forbidden_characters">Carachtair toirmiscthe: / \\ &lt; &gt; :\" | ?*</string>
     <string name="filename_forbidden_charaters_from_server">Tá carachtar neamhbhailí amháin ar a laghad san ainm comhaid</string>
     <string name="filename_hint">Ainm comhaid</string>
+    <string name="filename_too_long">Ní féidir leis an ainm comhaid a bheith níos faide ná 250 carachtar</string>
     <string name="first_run_1_text">Coinnigh do shonraí slán agus faoi do smacht</string>
     <string name="first_run_2_text">Comhoibriú slán agus malartú comhad</string>
     <string name="first_run_3_text">Ríomhphost ríomhphoist, féilire agus teagmhálaithe atá éasca le húsáid</string>
@@ -608,6 +609,7 @@
     <string name="foreign_files_remote_text">Cianda: %1$s</string>
     <string name="forward">Ar aghaidh</string>
     <string name="fourHours">4 uair an chloig</string>
+    <string name="gallery_unsupported_file">Cineál comhaid nach dtacaítear leis</string>
     <string name="governance_file_retention_label">Coinneáil comhad</string>
     <string name="governance_legal_hold_label">Sealbh dlíthiúil</string>
     <string name="governance_no_label">aon cheann</string>
@@ -686,23 +688,7 @@
     <string name="manage_space_description">Scriosfar socruithe, bunachar sonraí agus teastais an fhreastalaí ó shonraí %1$s go buan. \n\nCoimeádfar comhaid íosluchtaithe gan teagmháil.\n\nTógfaidh an próiseas seo tamall.</string>
     <string name="manage_space_title">Bainistigh spás</string>
     <string name="manage_tags">Bainistigh clibeanna</string>
-    <string name="media_err_invalid_progressive_playback">Ní féidir an comhad meán a shruthú</string>
-    <string name="media_err_io">Níorbh fhéidir an comhad meán a léamh</string>
-    <string name="media_err_malformed">Tá ionchódú mícheart ar an gcomhad meán</string>
-    <string name="media_err_timeout">Tá an t-am istigh leis an iarracht an comhad a sheinm</string>
-    <string name="media_err_unknown">Níl an seinnteoir meáin ionsuite in ann an comhad meán a imirt</string>
-    <string name="media_err_unsupported">Codec meáin gan tacaíocht</string>
-    <string name="media_forward_description">Cnaipe tapa ar aghaidh</string>
-    <string name="media_notif_ticker">Seinnteoir ceoil %1$s</string>
     <string name="media_picker_toolbar_title">Roghnaigh comhaid meán</string>
-    <string name="media_play_pause_description">Seinn nó cnaipe sos</string>
-    <string name="media_player_pause">Sos</string>
-    <string name="media_player_play">Imir</string>
-    <string name="media_player_playing">Ag seinm meán</string>
-    <string name="media_player_seek_backward">Cuardaigh siar</string>
-    <string name="media_player_seek_forward">Lorg ar aghaidh</string>
-    <string name="media_rewind_description">Cnaipe athchasadh</string>
-    <string name="media_state_playing">%1$s (ag imirt)</string>
     <string name="menu_item_sort_by_date_newest_first">Is nua ar dtús</string>
     <string name="menu_item_sort_by_date_oldest_first">Is sine ar dtús</string>
     <string name="menu_item_sort_by_name_a_z">A - Z</string>
@@ -797,8 +783,15 @@
     <string name="picture_set_as_no_app">Níor aimsíodh aon aip chun pictiúr a shocrú leis</string>
     <string name="pin_home">Pinn chuig an scáileán baile</string>
     <string name="pin_shortcut_label">Oscail %1$s</string>
-    <string name="player_stop">stad</string>
-    <string name="player_toggle">scoránaigh</string>
+    <string name="player_audio_title_with_artist">%1$s • %2$s</string>
+    <string name="player_control_view_next_button_content_description">Cnaipe ‘Ar Aghaidh’</string>
+    <string name="player_control_view_play_pause_button_content_description">Cnaipe Seinn/Sos</string>
+    <string name="player_control_view_previous_button_content_description">Cnaipe roimhe seo</string>
+    <string name="player_control_view_random_button_content_description">Cnaipe randamach</string>
+    <string name="player_control_view_repeat_button_content_description">Cnaipe athchleachta</string>
+    <string name="player_error_source_not_found">Níor aimsíodh an fhoinse</string>
+    <string name="player_last_modified">Athraithe: %s</string>
+    <string name="player_media_controls_close_action_title">Dún</string>
     <string name="please_select_a_server">Roghnaigh freastalaí le do thoil…</string>
     <string name="power_save_check_dialog_message">D\'fhéadfadh sé go n-uaslódálfar comhaid nuair a bhíonn an cadhnra íseal má dhíchumasaítear seiceáil coigilte cumhachta!</string>
     <string name="pref_behaviour_entries_delete_file">scriosta</string>
@@ -928,6 +921,7 @@
     <string name="retrieving_file">Comhad á aisghabháil…</string>
     <string name="retry">Bain triail eile as</string>
     <string name="richdocuments_failed_to_load_document">Theip ar an doiciméad a lódáil!</string>
+    <string name="run_two_way_sync">Rith an sioncronú anois</string>
     <string name="scanQR_description">Logáil isteach trí chód QR</string>
     <string name="scan_page">Scan leathanach</string>
     <string name="screenshot_01_gridView_heading">Ag cosaint do shonraí</string>
@@ -953,6 +947,7 @@
     <string name="send">Seol</string>
     <string name="send_copy_to">Seol cóip chuig</string>
     <string name="send_share">Seol sciar</string>
+    <string name="server_not_allowed">Ní cheadaítear an freastalaí</string>
     <string name="server_not_reachable">Níorbh fhéidir an t-ábhar a lódáil</string>
     <string name="server_not_reachable_content">Is dócha nach bhfuil an gléas ceangailte leis an idirlíon</string>
     <string name="set_as">Socraigh Mar</string>
@@ -986,6 +981,7 @@
     <string name="share_link_file_no_exist">Ní féidir a roinnt. Seiceáil an bhfuil an comhad ann le do thoil.</string>
     <string name="share_link_forbidden_permissions">chun an comhad seo a roinnt</string>
     <string name="share_link_optional_password_title">Cuir isteach pasfhocal roghnach</string>
+    <string name="share_link_password_rejected">Ní chomhlíonann an focal faire na riachtanais. Bain triail as focal faire atá níos faide nó níos casta.</string>
     <string name="share_link_password_title">Cuir isteach pasfhocal</string>
     <string name="share_link_with_label">Comhroinn nasc (%1$s)</string>
     <string name="share_no_expiration_date_label">Socraigh dáta éaga</string>
@@ -1073,7 +1069,6 @@
     <string name="store_short_dev_desc">An t-ardán táirgiúlachta féin-óstach a choinníonn smacht ort (leagan réamhamhairc dev)</string>
     <string name="stream">Sruth le…</string>
     <string name="stream_not_possible_headline">Ní féidir sruthú inmheánach</string>
-    <string name="stream_not_possible_message">Íoslódáil na meáin ina ionad sin nó bain úsáid as aip sheachtrach le do thoil.</string>
     <string name="sub_folder_rule_day">Bliain/Mí/Lá</string>
     <string name="sub_folder_rule_month">Bliain/Mí</string>
     <string name="sub_folder_rule_year">Bliain</string>
@@ -1176,6 +1171,7 @@
     <string name="upload_cannot_create_file">Ní féidir comhad áitiúil a chruthú</string>
     <string name="upload_chooser_title">Uaslódáil ó…</string>
     <string name="upload_content_from_other_apps">Uaslódáil ábhar ó apps eile</string>
+    <string name="upload_direct_camera_not_found">Níor aimsíodh aon cheamara</string>
     <string name="upload_direct_camera_photo">Grianghraf</string>
     <string name="upload_direct_camera_promt">Ar mhaith leat grianghraf nó físeán a ghlacadh?</string>
     <string name="upload_direct_camera_upload">Íosluchtaigh ó ceamara</string>
@@ -1209,6 +1205,7 @@
     <string name="upload_old_android">Ní féidir criptiúchán ach amháin le 1&gt;= Android 5.0</string>
     <string name="upload_query_move_foreign_files">Ní bheidh dóthain spáis ann na comhaid roghnaithe a chóipeáil isteach san fhillteán %1$s. Ar mhaith leat iad a bhogadh ansin ina n-ionad?</string>
     <string name="upload_quota_exceeded">Sáraíodh an cuóta stórála</string>
+    <string name="upload_quota_exceeded_notification_description">Tá do chuóta stórála lán, mar sin cuireadh stop le h-uaslódálacha. Saor spás nó iarr tuilleadh cuóta ar do riarthóir, agus ansin déan iarracht arís ar na huaslódálacha nár éirigh leo ón rannán Uaslódálacha.</string>
     <string name="upload_scan_doc_upload">Doiciméad a scanadh ó ceamara</string>
     <string name="upload_sync_conflict_check">B’fhéidir go bhfuil coimhlint ann idir é agus an uaslódáil dheireanach a rinne tú. Tapáil le seiceáil.</string>
     <string name="upload_sync_conflict_check_error">Níorbh fhéidir seiceáil le haghaidh coinbhleachtaí uaslódála. Déan iarracht arís.</string>
@@ -1503,5 +1500,12 @@
         <item quantity="few">%1$d íoslódálacha fágtha</item>
         <item quantity="many">%1$d íoslódálacha fágtha</item>
         <item quantity="other">%1$d íoslódálacha fágtha</item>
+    </plurals>
+    <plurals name="export_start">
+        <item quantity="one">Cuireadh tús le heaspórtálacha (%d comhad)</item>
+        <item quantity="two">Cuireadh tús le heaspórtálacha (%d comhad)</item>
+        <item quantity="few">Cuireadh tús le heaspórtálacha (%d comhad)</item>
+        <item quantity="many">Cuireadh tús le heaspórtálacha (%d comhad)</item>
+        <item quantity="other">Cuireadh tús le heaspórtálacha (%d comhad)</item>
     </plurals>
 </resources>

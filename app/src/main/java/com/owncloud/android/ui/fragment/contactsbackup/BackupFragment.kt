@@ -30,9 +30,11 @@ import androidx.lifecycle.lifecycleScope
 import com.nextcloud.client.account.User
 import com.nextcloud.client.di.Injectable
 import com.nextcloud.client.jobs.BackgroundJobManager
+import com.nextcloud.utils.SnackbarUtil
 import com.nextcloud.utils.extensions.getSerializableArgument
 import com.nextcloud.utils.extensions.getTypedActivity
 import com.nextcloud.utils.extensions.setVisibleIf
+import com.nextcloud.utils.text.DisplayTextFormatter
 import com.owncloud.android.R
 import com.owncloud.android.databinding.BackupFragmentBinding
 import com.owncloud.android.datamodel.ArbitraryDataProvider
@@ -43,7 +45,6 @@ import com.owncloud.android.operations.RefreshFolderOperation
 import com.owncloud.android.ui.activity.ContactsPreferenceActivity
 import com.owncloud.android.ui.activity.SettingsActivity
 import com.owncloud.android.ui.fragment.FileFragment
-import com.owncloud.android.utils.DisplayUtils
 import com.owncloud.android.utils.MimeTypeUtil
 import com.owncloud.android.utils.PermissionUtil.checkSelfPermission
 import com.owncloud.android.utils.theme.ThemeUtils
@@ -56,7 +57,6 @@ import java.util.Calendar
 import java.util.GregorianCalendar
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 class BackupFragment :
     FileFragment(),
     OnDateSetListener,
@@ -213,7 +213,7 @@ class BackupFragment :
         }
         binding.lastBackupWithDate.text = getString(
             R.string.last_backup,
-            DisplayUtils.getRelativeTimestamp(contactsPreferenceActivity, lastBackupTimestamp)
+            DisplayTextFormatter.formatRelativeTimestamp(contactsPreferenceActivity, lastBackupTimestamp)
         )
     }
 
@@ -290,7 +290,7 @@ class BackupFragment :
         ) {
             backgroundJobManager.startImmediateCalendarBackup(user)
         }
-        DisplayUtils.showSnackMessage(this, R.string.contacts_preferences_backup_scheduled)
+        SnackbarUtil.show(this, R.string.contacts_preferences_backup_scheduled)
     }
 
     private fun setAutomaticBackup(enabled: Boolean) {
@@ -335,7 +335,6 @@ class BackupFragment :
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchBackupFiles(folder: OCFile, storageManager: FileDataStorageManager): List<OCFile> =
         withContext(Dispatchers.IO) {
             try {
@@ -376,12 +375,12 @@ class BackupFragment :
 
     private fun openDate(savedDate: Calendar?) {
         val contactsPreferenceActivity = activity as? ContactsPreferenceActivity ?: run {
-            activity?.let { DisplayUtils.showSnackMessage(it, R.string.error_choosing_date) }
+            activity?.let { SnackbarUtil.show(it, R.string.error_choosing_date) }
             return
         }
         val backupFiles = getBackupFiles().sortedBy { it.modificationTimestamp }
         if (backupFiles.isEmpty()) {
-            DisplayUtils.showSnackMessage(
+            SnackbarUtil.show(
                 this,
                 R.string.contacts_preferences_something_strange_happened
             )
@@ -408,10 +407,10 @@ class BackupFragment :
         }
     }
 
-    @Suppress("ComplexMethod", "MagicNumber", "ReturnCount")
+    @Suppress("CyclomaticComplexMethod", "MagicNumber")
     override fun onDateSet(view: DatePicker, year: Int, month: Int, dayOfMonth: Int) {
         val contactsPreferenceActivity = activity as? ContactsPreferenceActivity ?: run {
-            activity?.let { DisplayUtils.showSnackMessage(it, R.string.error_choosing_date) }
+            activity?.let { SnackbarUtil.show(it, R.string.error_choosing_date) }
             return
         }
         selectedDate = GregorianCalendar(year, month, dayOfMonth)
@@ -420,7 +419,7 @@ class BackupFragment :
         val backupToRestore = collectFilesForRestore(backupFiles, start, end)
 
         if (backupToRestore.isEmpty()) {
-            DisplayUtils.showSnackMessage(
+            SnackbarUtil.show(
                 this,
                 R.string.contacts_preferences_no_file_found
             )

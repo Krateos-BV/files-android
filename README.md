@@ -5,7 +5,11 @@
 -->
 # Xenia Files :iphone:
 
+<<<<<<< HEAD
 [![REUSE status](https://api.reuse.software/badge/github.com/Krateos-BV/files-android)](https://api.reuse.software/info/github.com/Krateos-BV/files-android)
+=======
+[![REUSE status](https://api.reuse.software/badge/github.com/nextcloud/android)](https://api.reuse.software/info/github.com/nextcloud/android) [![Build Status](https://drone.nextcloud.com/api/badges/nextcloud/android/status.svg)](https://drone.nextcloud.com/nextcloud/android) [![Releases](https://img.shields.io/github/release/nextcloud/android.svg)](https://github.com/nextcloud/android/releases/latest)
+>>>>>>> upstream/master
 
 > Independently maintained Android client for Xenia Files, based on the [Nextcloud Android app](https://github.com/nextcloud/android) (AGPLv3). Not affiliated with or endorsed by Nextcloud GmbH.
 

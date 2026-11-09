@@ -21,6 +21,8 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
@@ -31,10 +33,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.nextcloud.android.common.ui.theme.utils.ColorRole
 import com.nextcloud.utils.extensions.getGalleryItemsPageSuspended
 import com.nextcloud.utils.extensions.getParcelableArgument
 import com.nextcloud.utils.extensions.getTypedActivity
 import com.nextcloud.utils.extensions.isLandscape
+import com.nextcloud.utils.extensions.setVisibleIf
 import com.nextcloud.utils.extensions.toGalleryItems
 import com.owncloud.android.BuildConfig
 import com.owncloud.android.R
@@ -47,31 +51,44 @@ import com.owncloud.android.ui.activity.AlbumsPickerActivity
 import com.owncloud.android.ui.activity.FileDisplayActivity
 import com.owncloud.android.ui.activity.FolderPickerActivity
 import com.owncloud.android.ui.activity.ToolbarActivity
-import com.owncloud.android.ui.adapter.CommonOCFileListAdapterInterface
+import com.owncloud.android.ui.adapter.filelist.CommonOCFileListAdapterInterface
 import com.owncloud.android.ui.adapter.GalleryAdapter
 import com.owncloud.android.ui.asynctasks.GallerySearchTask
-import com.owncloud.android.ui.events.ChangeMenuEvent
 import com.owncloud.android.ui.fragment.GalleryFragmentBottomSheetDialog.MediaState
 import com.owncloud.android.ui.fragment.helper.ColumnCount
+import com.owncloud.android.ui.fragment.helper.GalleryPinchListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.nextcloud.utils.AppConstants.MILLIS_PER_SECOND
 
-@Suppress("ForbiddenComment", "ReturnCount", "MagicNumber", "MaxLineLength")
+@Suppress("ForbiddenComment", "MagicNumber", "MaxLineLength")
 class GalleryFragment :
     OCFileListFragment(),
     GalleryFragmentBottomSheetActions {
-    var isPhotoSearchQueryRunning: Boolean = false
     private var photoSearchTask: Job? = null
     private var showGalleryJob: Job? = null
     private var endDate: Long = 0
     private val limit = 150
     private var loadedItemCount = INITIAL_GALLERY_WINDOW
     private var restoreScrollPending = false
-    private var adapter: GalleryAdapter? = null
+    private var scrollAnchorFile: OCFile? = null
+    private var galleryAdapter: GalleryAdapter? = null
 
     private var bottomSheet: GalleryFragmentBottomSheetDialog? = null
+
+    private val showPaginationLoader = Runnable { binding?.paginationLoader.setVisibleIf(true) }
+
+    private var isLoadingNextPage = false
+        set(value) {
+            if (field == value) {
+                return
+            }
+
+            field = value
+            updatePaginationLoader()
+        }
 
     override var columnsCount: Int = 0
         private set
@@ -80,17 +97,17 @@ class GalleryFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        searchFragment = true
+        isSearchFragment = true
         arguments?.let {
             isFromAlbum = it.getBoolean(AlbumsPickerActivity.EXTRA_FROM_ALBUM, false)
         }
         bottomSheet = GalleryFragmentBottomSheetDialog()
-        columnsCount = ColumnCount.Wide.get(resources.isLandscape())
-        registerRefreshSearchEventReceiver()
+        columnsCount = defaultColumnsCount(resources.isLandscape())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        registerRefreshSearchEventReceiver()
         if (!isFromAlbum) {
             addMenuProvider()
         }
@@ -131,7 +148,7 @@ class GalleryFragment :
 
     private val refreshSearchEventReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            getTypedActivity(FileDisplayActivity::class.java)?.startPhotoSearch(R.id.nav_gallery)
+            showAllGalleryItems()
         }
     }
 
@@ -144,7 +161,9 @@ class GalleryFragment :
 
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(refreshSearchEventReceiver)
 
-        adapter = null
+        binding?.paginationLoader?.removeCallbacks(showPaginationLoader)
+
+        galleryAdapter = null
 
         super.onDestroyView()
     }
@@ -152,6 +171,7 @@ class GalleryFragment :
     override fun onPause() {
         super.onPause()
         photoSearchTask?.cancel()
+        isLoadingNextPage = false
         savedScrollState = recyclerView?.layoutManager?.onSaveInstanceState()
         savedLoadedItemCount = loadedItemCount
         savedMediaState = bottomSheet?.currMediaState
@@ -165,6 +185,8 @@ class GalleryFragment :
                 loadMoreWhenEndReached(recyclerView, dy)
             }
         })
+
+        setupPinchToChangeColumns()
 
         Log_OC.i(this, "onCreateView() in GalleryFragment end")
         return v
@@ -191,42 +213,49 @@ class GalleryFragment :
     }
 
     override fun setAdapter(args: Bundle?) {
-        adapter = GalleryAdapter(
+        (recyclerView as? EmptyRecyclerView)?.setHasFooter(false)
+
+        galleryAdapter = GalleryAdapter(
             requireContext(),
             accountManager.user,
             this,
-            mContainerActivity,
+            requireContainerActivity(),
             viewThemeUtils,
             this.columnsCount,
             ThumbnailsCacheManager.getThumbnailDimension(),
             thumbnailGenerator
         )
-        adapter?.setHasStableIds(true)
-        setRecyclerViewAdapter(adapter)
+        galleryAdapter?.setHasStableIds(true)
+        setRecyclerViewAdapter(galleryAdapter)
 
-        // update the footer as there is no footer shown in media view
-        if (recyclerView is EmptyRecyclerView) {
-            (recyclerView as EmptyRecyclerView).setHasFooter(false)
+        binding?.paginationProgress?.let {
+            viewThemeUtils.platform.colorCircularProgressBar(it, ColorRole.PRIMARY)
         }
 
         val layoutManager = GridLayoutManager(context, 1)
-        adapter?.setLayoutManager(layoutManager)
-        recyclerView?.setLayoutManager(layoutManager)
+        galleryAdapter?.setLayoutManager(layoutManager)
+        recyclerView?.run {
+            setLayoutManager(layoutManager)
+            setItemViewCacheSize(ITEM_VIEW_CACHE_SIZE)
+            itemAnimator = null
+        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        columnsCount = ColumnCount.Wide.get(newConfig.isLandscape())
-        adapter?.changeColumn(columnsCount)
+        columnsCount = defaultColumnsCount(newConfig.isLandscape())
+        galleryAdapter?.changeColumn(columnsCount)
         showAllGalleryItems()
     }
 
     override fun onRefresh() {
         super.onRefresh()
+        isLoadingNextPage = false
         handleSearchEvent()
     }
 
-    override fun getCommonAdapter(): CommonOCFileListAdapterInterface? = adapter
+    override val commonAdapter: CommonOCFileListAdapterInterface?
+        get() = galleryAdapter
 
     val currentMediaState: MediaState?
         get() = bottomSheet?.currMediaState
@@ -235,40 +264,51 @@ class GalleryFragment :
         super.onResume()
 
         val fda = getTypedActivity(FileDisplayActivity::class.java)
-        fda?.updateActionBarTitleAndHomeButtonByString(getString(R.string.drawer_item_gallery))
+        fda?.setActionBarTitle(getString(R.string.drawer_item_gallery))
         fda?.setMainFabVisible(false)
     }
 
-    override fun onMessageEvent(changeMenuEvent: ChangeMenuEvent) {
-        super.onMessageEvent(changeMenuEvent)
-    }
-
     private fun handleSearchEvent() {
-        prepareCurrentSearch(searchEvent)
-        setEmptyListMessage(EmptyListState.LOADING)
+        applySearchEvent(searchEvent)
+
+        if (galleryAdapter?.isEmpty() != false) {
+            setEmptyListMessage(EmptyListState.LOADING)
+        }
 
         // always show first stored items
         showAllGalleryItems()
 
-        setFabVisible(false)
+        setFabState(FabState.HIDDEN)
 
         searchAndDisplay()
     }
 
     private fun searchAndDisplay() {
-        if (!isPhotoSearchQueryRunning && endDate <= 0) {
+        if (isLoadingNextPage || endDate > 0) {
             // fix an issue when the method is called after loading the gallery and pressing play on a movie
             // to avoid reloading, check if endDate has already a value which is not -1 or 0
-            endDate = System.currentTimeMillis() / 1000
-            isPhotoSearchQueryRunning = true
-            runGallerySearchTask()
+            return
+        }
+
+        endDate = System.currentTimeMillis() / MILLIS_PER_SECOND
+        runGallerySearchTask()
+    }
+
+    private fun updatePaginationLoader() {
+        val loader = binding?.paginationLoader ?: return
+        loader.removeCallbacks(showPaginationLoader)
+
+        if (isLoadingNextPage && galleryAdapter?.isEmpty() == false) {
+            loader.postDelayed(showPaginationLoader, PAGINATION_LOADER_DELAY_IN_MS)
+        } else {
+            loader.setVisibleIf(false)
         }
     }
 
     fun searchCompleted(result: GallerySearchTask.Result) {
         if (!isAdded) return
 
-        this.isPhotoSearchQueryRunning = false
+        isLoadingNextPage = false
 
         if (result.resultCode == RemoteOperationResult.ResultCode.OUT_OF_MEMORY) {
             setEmptyListMessage(EmptyListState.OUT_OF_MEMORY)
@@ -279,7 +319,7 @@ class GalleryFragment :
             endDate = result.lastTimestamp
         }
 
-        if (adapter?.isEmpty() == true) {
+        if (galleryAdapter?.isEmpty() == true) {
             setEmptyListMessage(SearchType.GALLERY_SEARCH)
         }
 
@@ -313,32 +353,35 @@ class GalleryFragment :
 
     private fun searchAndDisplayAfterChangingFolder() {
         // TODO: Fix folder change, it seems it doesn't work at all
+        isLoadingNextPage = false
         loadedItemCount = INITIAL_GALLERY_WINDOW
         restoreScrollPending = false
         clearSavedViewState()
-        endDate = System.currentTimeMillis() / 1000
-        isPhotoSearchQueryRunning = true
+        endDate = System.currentTimeMillis() / MILLIS_PER_SECOND
         runGallerySearchTask()
     }
 
     private fun runGallerySearchTask() {
-        if (mContainerActivity == null) {
+        val containerActivity = containerActivity
+        if (containerActivity == null) {
             Log_OC.w(TAG, "container activity is null, can't run search task")
             return
         }
 
+        isLoadingNextPage = true
+
         photoSearchTask = GallerySearchTask(
             this,
             accountManager.user,
-            mContainerActivity.getStorageManager(),
+            containerActivity.storageManager,
             endDate,
             limit
         ).execute()
     }
 
     private fun loadMoreWhenEndReached(recyclerView: RecyclerView, dy: Int) {
-        if (dy <= 0 || isPhotoSearchQueryRunning) {
-// scrolling up or search query already active, do not search gallery
+        if (dy <= 0 || isLoadingNextPage) {
+            // scrolling up or search query already active, do not search gallery
             return
         }
 
@@ -352,12 +395,12 @@ class GalleryFragment :
         val lastVisibleItem: Int = gridLayoutManager.findLastCompletelyVisibleItemPosition()
         val visibleItemCount: Int = gridLayoutManager.childCount
 
-        if (lastVisibleItem == RecyclerView.NO_POSITION) {
+        if (lastVisibleItem <= 0) {
             return
         }
 
-        val lastFile = adapter?.getItem(lastVisibleItem - 1) ?: return
-        val lastItemTimestamp = lastFile.modificationTimestamp / 1000
+        val lastFile = galleryAdapter?.getItem(lastVisibleItem - 1) ?: return
+        val lastItemTimestamp = lastFile.modificationTimestamp / MILLIS_PER_SECOND
 
         // if we have already older media in the gallery then retrieve file in chronological order to fill the gap
         if (lastItemTimestamp < this.endDate) {
@@ -365,7 +408,6 @@ class GalleryFragment :
                 Log_OC.d(this, "Gallery swipe: retrieve items to check the chronology")
             }
 
-            this.isPhotoSearchQueryRunning = true
             runGallerySearchTask()
             // no more files in the gallery, retrieve the next ones
         } else if ((totalItemCount - visibleItemCount) <= (lastVisibleItem + MAX_ITEMS_PER_ROW) &&
@@ -379,12 +421,12 @@ class GalleryFragment :
             endDate = lastItemTimestamp
             loadedItemCount += GALLERY_WINDOW_INCREMENT
             showAllGalleryItems()
-            isPhotoSearchQueryRunning = true
             runGallerySearchTask()
         }
     }
 
     override fun updateMediaContent(mediaState: MediaState) {
+        isLoadingNextPage = false
         loadedItemCount = INITIAL_GALLERY_WINDOW
         restoreScrollPending = false
         clearSavedViewState()
@@ -393,6 +435,7 @@ class GalleryFragment :
 
     fun showAllGalleryItems() {
         val mediaState = bottomSheet?.currMediaState ?: return
+        val rowLayout = galleryAdapter?.rowLayout() ?: return
 
         val mimeFilter = when (mediaState) {
             MediaState.MEDIA_STATE_PHOTOS_ONLY -> IMAGE_MIME_FILTER
@@ -403,20 +446,21 @@ class GalleryFragment :
         showGalleryJob?.cancel()
         showGalleryJob = lifecycleScope.launch(Dispatchers.Default) {
             val remotePath = preferences.getLastSelectedMediaFolder()
-            val items = mContainerActivity.storageManager.getGalleryItemsPageSuspended(
+            val items = requireContainerActivity().storageManager.getGalleryItemsPageSuspended(
                 remotePath,
                 mimeFilter,
                 loadedItemCount
             )
 
-            val galleryItems = items.toGalleryItems(columnsCount, ThumbnailsCacheManager.getThumbnailDimension())
+            val galleryItems = items.toGalleryItems(rowLayout)
 
             withContext(Dispatchers.Main) {
                 if (galleryItems.isEmpty()) {
                     setEmptyListMessage(SearchType.GALLERY_SEARCH)
                 }
-                adapter?.updateList(galleryItems)
+                galleryAdapter?.updateList(galleryItems)
                 updateSubtitle(mediaState)
+                scrollToAnchorFile()
 
                 if (restoreScrollPending && galleryItems.isNotEmpty()) {
                     restoreScrollPending = false
@@ -470,13 +514,74 @@ class GalleryFragment :
 
     override fun setGridViewColumns(scaleFactor: Float) = Unit
 
+    private fun setupPinchToChangeColumns() {
+        val detector = ScaleGestureDetector(requireContext(), GalleryPinchListener(::changeColumnsBy))
+        recyclerView?.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
+            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                detector.onTouchEvent(e)
+                if (e.actionMasked != MotionEvent.ACTION_POINTER_DOWN) {
+                    return false
+                }
+
+                rv.parent?.requestDisallowInterceptTouchEvent(true)
+                return true
+            }
+
+            override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
+                detector.onTouchEvent(e)
+            }
+        })
+    }
+
+    private fun defaultColumnsCount(isLandscape: Boolean): Int =
+        if (isLandscape) ColumnCount.Wide.landscape else ColumnCount.Normal.portrait
+
+    private fun changeColumnsBy(delta: Int) {
+        val maxColumns = ColumnCount.Wide.get(resources.isLandscape())
+        val updated = (columnsCount + delta).coerceIn(MIN_COLUMNS, maxColumns)
+        if (updated == columnsCount) {
+            return
+        }
+
+        columnsCount = updated
+        galleryAdapter?.changeColumn(columnsCount)
+        scrollAnchorFile = scrollAnchorFile ?: firstVisibleFile()
+        showAllGalleryItems()
+    }
+
+    private fun firstVisibleFile(): OCFile? {
+        val layoutManager = recyclerView?.layoutManager as? GridLayoutManager ?: return null
+        val first = layoutManager.findFirstVisibleItemPosition()
+        val last = layoutManager.findLastVisibleItemPosition()
+        if (first == RecyclerView.NO_POSITION) {
+            return null
+        }
+
+        return (first..last).firstNotNullOfOrNull { galleryAdapter?.getItem(it) }
+    }
+
+    private fun scrollToAnchorFile() {
+        val file = scrollAnchorFile ?: return
+        scrollAnchorFile = null
+
+        val position = galleryAdapter?.getItemPosition(file) ?: return
+        if (position < 0) {
+            return
+        }
+
+        (recyclerView?.layoutManager as? GridLayoutManager)?.scrollToPositionWithOffset(position, 0)
+    }
+
     fun markAsFavorite(remotePath: String, favorite: Boolean) {
-        adapter?.markAsFavorite(remotePath, favorite)
+        galleryAdapter?.markAsFavorite(remotePath, favorite)
     }
 
     companion object {
         private const val MAX_ITEMS_PER_ROW = 10
+        private const val MIN_COLUMNS = 1
         private const val FRAGMENT_TAG_BOTTOM_SHEET = "data"
+        private const val ITEM_VIEW_CACHE_SIZE = 8
+        private const val PAGINATION_LOADER_DELAY_IN_MS = 500L
 
         private const val INITIAL_GALLERY_WINDOW = 500
         private const val GALLERY_WINDOW_INCREMENT = 500

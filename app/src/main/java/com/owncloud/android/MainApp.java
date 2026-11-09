@@ -58,6 +58,7 @@ import com.nextcloud.client.onboarding.OnboardingService;
 import com.nextcloud.client.preferences.AppPreferences;
 import com.nextcloud.client.preferences.AppPreferencesImpl;
 import com.nextcloud.client.preferences.DarkMode;
+import com.nextcloud.client.systembars.SystemBarBackgroundCallbacks;
 import com.nextcloud.ui.composeActivity.ComposeProcessTextAlias;
 import com.nextcloud.utils.extensions.ContextExtensionsKt;
 import com.nextcloud.utils.mdm.MDMConfig;
@@ -80,9 +81,10 @@ import com.owncloud.android.lib.common.utils.Log_OC;
 import com.owncloud.android.lib.resources.status.NextcloudVersion;
 import com.owncloud.android.lib.resources.status.OCCapability;
 import com.owncloud.android.lib.resources.status.OwnCloudVersion;
-import com.owncloud.android.ui.activity.SyncedFoldersActivity;
+import com.owncloud.android.providers.documentstorage.DocumentsStorageProvider;
+import com.owncloud.android.ui.navigation.NavigatorActivity;
+import com.owncloud.android.ui.navigation.NavigatorScreen;
 import com.owncloud.android.ui.notifications.NotificationUtils;
-import com.owncloud.android.utils.DisplayUtils;
 import com.owncloud.android.utils.FilesSyncHelper;
 import com.owncloud.android.utils.PermissionUtil;
 import com.owncloud.android.utils.ReceiversHelper;
@@ -130,7 +132,7 @@ import static com.owncloud.android.ui.activity.ContactsPreferenceActivity.PREFER
  */
 public class MainApp extends Application implements HasAndroidInjector, NetworkChangeListener {
     public static final OwnCloudVersion OUTDATED_SERVER_VERSION = NextcloudVersion.nextcloud_30;
-    public static final OwnCloudVersion MINIMUM_SUPPORTED_SERVER_VERSION = OwnCloudVersion.nextcloud_20;
+    public static final OwnCloudVersion MINIMUM_SUPPORTED_SERVER_VERSION = NextcloudVersion.nextcloud_23;
 
     private static final String TAG = MainApp.class.getSimpleName();
     public static final String DOT = ".";
@@ -292,6 +294,7 @@ public class MainApp extends Application implements HasAndroidInjector, NetworkC
         insertConscrypt();
 
         registerActivityLifecycleCallbacks(new ActivityInjector());
+        registerActivityLifecycleCallbacks(new SystemBarBackgroundCallbacks(viewThemeUtilsProvider));
 
         //update the app restart count when app is launched by the user
         inAppReviewHelper.resetAndIncrementAppRestartCounter();
@@ -300,7 +303,6 @@ public class MainApp extends Application implements HasAndroidInjector, NetworkC
         logger.i(TAG, String.format(Locale.US, "Started %d migrations", startedMigrationsCount));
 
         new SecurityUtils();
-        DisplayUtils.useCompatVectorIfNeeded();
 
         fixStoragePath();
 
@@ -353,6 +355,7 @@ public class MainApp extends Application implements HasAndroidInjector, NetworkC
         if (backgroundJobManager != null) {
             backgroundJobManager.scheduleMediaFoldersDetectionJob();
             backgroundJobManager.startMediaFoldersDetectionJob();
+            backgroundJobManager.schedulePeriodicAutoUpload();
             backgroundJobManager.schedulePeriodicHealthStatus();
 
             if (preferences.isTwoWaySyncEnabled()) {
@@ -371,7 +374,7 @@ public class MainApp extends Application implements HasAndroidInjector, NetworkC
 
     public void disableDocumentsStorageProvider() {
         String packageName = getPackageName();
-        String providerClassName = "com.owncloud.android.providers.DocumentsStorageProvider";
+        String providerClassName = DocumentsStorageProvider.class.getName();
         ComponentName componentName = new ComponentName(packageName, providerClassName);
         PackageManager packageManager = getPackageManager();
         packageManager.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
@@ -863,7 +866,7 @@ public class MainApp extends Application implements HasAndroidInjector, NetworkC
             .setTitle(R.string.drawer_synced_folders)
             .setMessage(R.string.synced_folders_new_info)
             .setPositiveButton(R.string.drawer_open, (dialog, which) -> {
-                Intent folderSyncIntent = new Intent(context, SyncedFoldersActivity.class);
+                Intent folderSyncIntent = NavigatorActivity.Companion.intent(context, NavigatorScreen.AutoUpload.INSTANCE);
                 dialog.dismiss();
                 context.startActivity(folderSyncIntent);
             })

@@ -53,6 +53,7 @@ import com.owncloud.android.ui.adapter.UserListItem
 import com.owncloud.android.ui.dialog.AccountRemovalDialog.Companion.newInstance
 import com.owncloud.android.ui.events.AccountRemovedEvent
 import com.owncloud.android.ui.helpers.FileOperationsHelper
+import com.owncloud.android.ui.navigation.model.ActionBarStyle
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import javax.inject.Inject
@@ -85,7 +86,7 @@ class ManageAccountsActivity :
 
         setContentView(R.layout.accounts_layout)
 
-        setupToolbar()
+        showActionBar(ActionBarStyle.Plain)
         setupActionBar()
         setupUsers()
 
@@ -123,7 +124,8 @@ class ManageAccountsActivity :
             multipleAccountsSupported,
             true,
             true,
-            viewThemeUtils
+            viewThemeUtils,
+            avatarGenerator
         )
 
         recyclerView = findViewById(R.id.account_list)
@@ -131,7 +133,6 @@ class ManageAccountsActivity :
         recyclerView?.setLayoutManager(LinearLayoutManager(this))
     }
 
-    @Suppress("ReturnCount")
     @Deprecated("Use ActivityResultLauncher")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -247,7 +248,6 @@ class ManageAccountsActivity :
         startActivity(intent)
     }
 
-    @Suppress("TooGenericExceptionCaught")
     @SuppressLint("NotifyDataSetChanged")
     override fun startAccountCreation() {
         stopMediaPlayerAndHidePip()
@@ -272,7 +272,8 @@ class ManageAccountsActivity :
                             multipleAccountsSupported,
                             false,
                             true,
-                            viewThemeUtils
+                            viewThemeUtils,
+                            avatarGenerator
                         )
                         recyclerView?.adapter = userListAdapter
                         runOnUiThread { userListAdapter?.notifyDataSetChanged() }
@@ -331,7 +332,8 @@ class ManageAccountsActivity :
                 multipleAccountsSupported,
                 false,
                 true,
-                viewThemeUtils
+                viewThemeUtils,
+                avatarGenerator
             )
             recyclerView?.adapter = userListAdapter
         } else {

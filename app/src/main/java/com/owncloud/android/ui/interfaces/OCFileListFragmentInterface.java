@@ -10,7 +10,7 @@ package com.owncloud.android.ui.interfaces;
 import android.view.View;
 
 import com.owncloud.android.datamodel.OCFile;
-import com.owncloud.android.ui.adapter.OCFileListAdapter;
+import com.owncloud.android.ui.adapter.filelist.OCFileListAdapter;
 
 /**
  * Interface for communication between {@link com.owncloud.android.ui.fragment.OCFileListFragment}
@@ -18,8 +18,6 @@ import com.owncloud.android.ui.adapter.OCFileListAdapter;
  */
 
 public interface OCFileListFragmentInterface {
-    int getColumnsCount();
-
     void onShareIconClick(OCFile file);
 
     void showShareDetailView(OCFile file);
@@ -29,6 +27,10 @@ public interface OCFileListFragmentInterface {
     void onOverflowIconClicked(OCFile file, View view);
 
     void onItemClicked(OCFile file);
+
+    default void onItemClicked(OCFile file, View sourceView) {
+        onItemClicked(file);
+    }
 
     boolean onLongItemClicked(OCFile file);
 

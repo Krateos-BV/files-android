@@ -47,19 +47,15 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import com.nextcloud.utils.AppConstants.ONE_SECOND
 
 @Singleton
 @OptIn(markerClass = [UnstableApi::class])
-@Suppress("TooManyFunctions")
 class PlaybackModel @Inject constructor(
     private val context: Context,
     private val mediaSessionFactory: MediaSessionFactory,
     private val playbackSettings: PlaybackSettings
 ) {
-
-    companion object {
-        private const val CHECK_PROGRESS_INTERVAL = 1000L
-    }
 
     interface Listener {
         fun onPlaybackUpdate(state: PlaybackState)
@@ -68,7 +64,7 @@ class PlaybackModel @Inject constructor(
 
     private val listeners = mutableListOf<Listener>()
 
-    private val checkProgressPeriodicAction = PeriodicAction(CHECK_PROGRESS_INTERVAL) {
+    private val checkProgressPeriodicAction = PeriodicAction(ONE_SECOND.inWholeMilliseconds) {
         notifyPlaybackUpdate()
     }
 
@@ -98,8 +94,6 @@ class PlaybackModel @Inject constructor(
     private var filesFlowJob: Job? = null
 
     private var mediaSession: MediaSession? = null
-
-    var onPictureInPictureClose: (() -> Unit)? = null
 
     private var videoSurfaceView: SurfaceView? = null
 
@@ -168,7 +162,6 @@ class PlaybackModel @Inject constructor(
         controllerScope = null
     }
 
-    @Suppress("TooGenericExceptionCaught")
     private suspend fun <T> ListenableFuture<T>.await(): T = suspendCancellableCoroutine { cont ->
         addListener(
             {

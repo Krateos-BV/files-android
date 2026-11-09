@@ -23,10 +23,13 @@ import com.nextcloud.client.jobs.download.FileDownloadWorker
 import com.nextcloud.utils.extensions.hourPlural
 import com.nextcloud.utils.extensions.minPlural
 import com.nextcloud.utils.extensions.setVisibleIf
+import com.owncloud.android.BuildConfig
 import com.owncloud.android.R
 import com.owncloud.android.databinding.InternalTwoWaySyncLayoutBinding
 import com.owncloud.android.lib.common.utils.Log_OC
+import com.owncloud.android.ui.activity.drawer.DrawerActivity
 import com.owncloud.android.ui.adapter.InternalTwoWaySyncAdapter
+import com.owncloud.android.ui.navigation.model.ActionBarStyle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -57,7 +60,7 @@ class InternalTwoWaySyncActivity :
         binding = InternalTwoWaySyncLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupToolbar()
+        showActionBar(ActionBarStyle.Plain)
         setupActionBar()
         setupTwoWaySyncAdapter()
         setupEmptyList()
@@ -67,7 +70,7 @@ class InternalTwoWaySyncActivity :
     }
 
     private fun setupActionBar() {
-        updateActionBarTitleAndHomeButtonByString(getString(R.string.two_way_sync_activity_title))
+        setActionBarTitle(getString(R.string.two_way_sync_activity_title))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
@@ -110,7 +113,6 @@ class InternalTwoWaySyncActivity :
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
     private fun disableTwoWaySyncAndWorkers() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -202,6 +204,8 @@ class InternalTwoWaySyncActivity :
         menuInflater.inflate(R.menu.activity_internal_two_way_sync, menu)
         disableForAllFoldersMenuButton = menu?.findItem(R.id.action_dismiss_two_way_sync)
         checkDisableForAllFoldersMenuButtonVisibility()
+        menu?.findItem(R.id.action_run_two_way_sync)?.isVisible = BuildConfig.DEBUG
+
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -213,6 +217,10 @@ class InternalTwoWaySyncActivity :
 
             R.id.action_dismiss_two_way_sync -> {
                 disableTwoWaySyncAndWorkers()
+            }
+
+            R.id.action_run_two_way_sync -> {
+                backgroundJobManager.runNowInternal2WaySync()
             }
         }
 

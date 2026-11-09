@@ -15,7 +15,9 @@ import com.nextcloud.client.account.User
 import com.nextcloud.client.di.Injectable
 import com.nextcloud.client.logger.Logger
 import com.nextcloud.common.SessionTimeOut
+import com.nextcloud.utils.SnackbarUtil
 import com.owncloud.android.R
+import com.nextcloud.utils.share.UnifiedShareSharees
 import com.owncloud.android.datamodel.OCFile
 import com.owncloud.android.lib.common.operations.RemoteOperation
 import com.owncloud.android.lib.resources.files.ReadFileRemoteOperation
@@ -24,7 +26,6 @@ import com.owncloud.android.lib.resources.files.model.RemoteFile
 import com.owncloud.android.lib.resources.shares.GetSharesRemoteOperation
 import com.owncloud.android.ui.activity.FileDisplayActivity
 import com.owncloud.android.ui.events.SearchEvent
-import com.owncloud.android.utils.DisplayUtils
 import com.owncloud.android.utils.FileStorageUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,7 +35,6 @@ import javax.inject.Inject
 /**
  * A Fragment that lists folders shared by the user
  */
-@Suppress("TooManyFunctions")
 class SharedListFragment :
     OCFileListFragment(),
     Injectable {
@@ -44,12 +44,12 @@ class SharedListFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        searchFragment = true
+        isSearchFragment = true
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        adapter.setShowMetadata(false)
+        adapter?.setShowMetadata(false)
         currentSearchType = SearchType.SHARED_FILTER
         searchEvent = SearchEvent("", SearchRemoteOperation.SearchType.SHARED_FILTER)
         menuItemAddRemoveValue = MenuItemAddRemove.REMOVE_GRID_AND_SORT
@@ -66,7 +66,7 @@ class SharedListFragment :
         }
     }
 
-    override fun getSearchRemoteOperation(currentUser: User?, event: SearchEvent?): RemoteOperation<*> =
+    override fun getSearchRemoteOperation(currentUser: User, event: SearchEvent): RemoteOperation<*> =
         GetSharesRemoteOperation(false, SessionTimeOut(TASK_TIMEOUT, TASK_TIMEOUT))
 
     @Suppress("DEPRECATION")
@@ -75,7 +75,7 @@ class SharedListFragment :
         val fetchResult = ReadFileRemoteOperation(partialFile.remotePath).execute(user, context)
         if (fetchResult.isSuccess) {
             val remoteFile = (fetchResult.data[0] as RemoteFile).apply {
-                val existingFile = mContainerActivity.storageManager.getFileByDecryptedRemotePath(remotePath)
+                val existingFile = requireContainerActivity().storageManager.getFileByDecryptedRemotePath(remotePath)
 
                 // Use previous eTag if exists to prevent break checkForChanges logic in RefreshFolderOperation.
                 // Otherwise RefreshFolderOperation will show empty list
@@ -88,7 +88,8 @@ class SharedListFragment :
                 parentId = partialFile.parentId
             }
             FileStorageUtils.searchForLocalFileInDefaultPath(file, user.accountName)
-            val savedFile = mContainerActivity.storageManager.saveFileWithParent(file, context)
+            UnifiedShareSharees.fill(user, listOf(file))
+            val savedFile = requireContainerActivity().storageManager.saveFileWithParent(file, context)
             savedFile
         } else {
             logger.e(SHARED_TAG, "Error fetching file")
@@ -106,24 +107,22 @@ class SharedListFragment :
                 if (file != null) {
                     block(file)
                 } else {
-                    DisplayUtils.showSnackMessage(requireActivity(), R.string.error_retrieving_file)
+                    SnackbarUtil.show(requireActivity(), R.string.error_retrieving_file)
                 }
             }
         }
     }
 
-    private fun fetchAllAndRun(partialFiles: MutableSet<OCFile>?, callback: (MutableSet<OCFile>?) -> Unit) {
+    private fun fetchAllAndRun(partialFiles: Set<OCFile>, callback: (Set<OCFile>) -> Unit) {
         lifecycleScope.launch {
-            if (partialFiles != null) {
-                val files = partialFiles.toMutableSet().mapNotNull { partialFile ->
-                    fetchFileData(partialFile).also { fetched ->
-                        if (fetched == null) {
-                            DisplayUtils.showSnackMessage(requireActivity(), R.string.error_retrieving_file)
-                        }
+            val files = partialFiles.toMutableSet().mapNotNull { partialFile ->
+                fetchFileData(partialFile).also { fetched ->
+                    if (fetched == null) {
+                        SnackbarUtil.show(requireActivity(), R.string.error_retrieving_file)
                     }
                 }
-                callback(files.toHashSet())
             }
+            callback(files.toHashSet())
         }
     }
 
@@ -153,7 +152,7 @@ class SharedListFragment :
 
     override fun onItemClicked(file: OCFile) {
         // if in multi select keep mock file
-        if (adapter.isMultiSelect()) {
+        if (adapter?.isMultiSelect() == true) {
             super.onItemClicked(file)
         } else {
             fetchFileAndRun(file) { fetched ->
@@ -162,7 +161,7 @@ class SharedListFragment :
         }
     }
 
-    override fun onFileActionChosen(itemId: Int, checkedFiles: MutableSet<OCFile>?): Boolean {
+    override fun onFileActionChosen(itemId: Int, checkedFiles: Set<OCFile>): Boolean {
         // fetch all files and run selected action
         if (itemId != R.id.action_select_all_action_menu && itemId != R.id.action_deselect_all_action_menu) {
             fetchAllAndRun(checkedFiles) { files ->

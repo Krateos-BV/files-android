@@ -14,18 +14,23 @@ import com.nextcloud.client.account.User
 import com.nextcloud.utils.extensions.getNonEncryptedSubfolders
 import com.owncloud.android.datamodel.FileDataStorageManager
 import com.owncloud.android.datamodel.OCFile
+import com.owncloud.android.lib.common.operations.RemoteOperationResult
 import com.owncloud.android.lib.common.utils.Log_OC
 import com.owncloud.android.operations.RefreshFolderOperation
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 
-@Suppress("DEPRECATION", "ReturnCount", "TooGenericExceptionCaught")
+@Suppress("DEPRECATION")
 class MetadataWorker(private val context: Context, params: WorkerParameters, private val user: User) :
     CoroutineWorker(context, params) {
 
     companion object {
         private const val TAG = "MetadataWorker"
         const val FILE_PATH = "file_path"
+        const val FOLDER_ALREADY_SYNCED = "folder_already_synced"
     }
 
     override suspend fun doWork(): Result {
@@ -49,7 +54,8 @@ class MetadataWorker(private val context: Context, params: WorkerParameters, pri
 
         Log_OC.d(TAG, "Starting metadata sync for folder: $filePath, id: ${currentDir.fileId}")
 
-        if (!refreshFolder(currentDir, storageManager)) return Result.failure()
+        val folderAlreadySynced = inputData.getBoolean(FOLDER_ALREADY_SYNCED, false)
+        if (!folderAlreadySynced && !refreshFolder(currentDir, storageManager)) return Result.failure()
 
         val refreshedDir = storageManager.getFileByPath(filePath) ?: run {
             Log_OC.e(TAG, "File not found after refresh: $filePath")
@@ -105,7 +111,7 @@ class MetadataWorker(private val context: Context, params: WorkerParameters, pri
 
             val operation = RefreshFolderOperation(folder, storageManager, user, context)
             return@withContext try {
-                val result = operation.execute(user, context)
+                val result = operation.executeCancellable()
                 if (result.isSuccess) {
                     Log_OC.d(TAG, "Successfully fetched metadata for: ${folder.remotePath}")
                     true
@@ -113,9 +119,21 @@ class MetadataWorker(private val context: Context, params: WorkerParameters, pri
                     Log_OC.e(TAG, "Failed to fetch metadata for: ${folder.remotePath}")
                     false
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Log_OC.e(TAG, "Exception refreshing folder ${folder.remotePath}: ${e.message}", e)
                 false
             }
         }
+
+    private suspend fun RefreshFolderOperation.executeCancellable(): RemoteOperationResult<*> = coroutineScope {
+        val execution = async { execute(user, context) }
+        try {
+            execution.await()
+        } catch (e: CancellationException) {
+            cancel()
+            throw e
+        }
+    }
 }

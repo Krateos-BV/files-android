@@ -8,6 +8,7 @@
 package com.nextcloud.client.notifications
 
 import android.Manifest
+import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -18,7 +19,8 @@ import androidx.core.app.NotificationManagerCompat
 import com.nextcloud.client.notifications.action.SyncConflictNotificationBroadcastReceiver
 import com.owncloud.android.R
 import com.owncloud.android.lib.common.utils.Log_OC
-import com.owncloud.android.ui.activity.UploadListActivity
+import com.owncloud.android.ui.navigation.NavigatorActivity
+import com.owncloud.android.ui.navigation.NavigatorScreen
 import com.owncloud.android.ui.notifications.NotificationUtils
 
 /**
@@ -32,19 +34,20 @@ object AppWideNotificationManager {
 
     private const val TAG = "AppWideNotificationManager"
 
-    private const val SYNC_CONFLICT_NOTIFICATION_INTENT_REQ_CODE = 16
+    private const val UPLOAD_LIST_REQUEST_CODE = 16
     private const val SYNC_CONFLICT_NOTIFICATION_INTENT_ACTION_REQ_CODE = 17
 
     private const val SYNC_CONFLICT_NOTIFICATION_ID = 112
+    private const val QUOTA_EXCEEDED_NOTIFICATION_ID = 113
 
     fun getUploadListPendingIntent(context: Context): PendingIntent {
-        val intent = Intent(context, UploadListActivity::class.java).apply {
+        val intent = NavigatorActivity.intent(context, NavigatorScreen.UploadList).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
 
         return PendingIntent.getActivity(
             context,
-            SYNC_CONFLICT_NOTIFICATION_INTENT_REQ_CODE,
+            UPLOAD_LIST_REQUEST_CODE,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -83,16 +86,36 @@ object AppWideNotificationManager {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
 
+        notify(context, SYNC_CONFLICT_NOTIFICATION_ID, notification)
+    }
+
+    fun showQuotaExceededNotification(context: Context) {
+        val description = context.getString(R.string.upload_quota_exceeded_notification_description)
+
+        val notification = NotificationCompat.Builder(context, NotificationUtils.NOTIFICATION_CHANNEL_UPLOAD)
+            .setSmallIcon(R.drawable.uploads)
+            .setContentTitle(context.getString(R.string.upload_quota_exceeded))
+            .setContentText(description)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(description))
+            .setContentIntent(getUploadListPendingIntent(context))
+            .setAutoCancel(true)
+            .setOnlyAlertOnce(true)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .build()
+
+        notify(context, QUOTA_EXCEEDED_NOTIFICATION_ID, notification)
+    }
+
+    private fun notify(context: Context, id: Int, notification: Notification) {
         if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.POST_NOTIFICATIONS
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            Log_OC.w(TAG, "cannot show sync conflict notification, post notification permission is not granted")
+            Log_OC.w(TAG, "cannot show notification $id, post notification permission is not granted")
             return
         }
 
-        NotificationManagerCompat.from(context)
-            .notify(SYNC_CONFLICT_NOTIFICATION_ID, notification)
+        NotificationManagerCompat.from(context).notify(id, notification)
     }
 }

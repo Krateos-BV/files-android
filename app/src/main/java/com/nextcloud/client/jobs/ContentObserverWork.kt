@@ -24,7 +24,6 @@ import kotlinx.coroutines.withContext
  * It fires media detection worker and auto upload worker and finishes immediately.
  *
  */
-@Suppress("TooGenericExceptionCaught", "LongParameterList")
 class ContentObserverWork(
     context: Context,
     private val params: WorkerParameters,
@@ -72,7 +71,7 @@ class ContentObserverWork(
     }
 
     private suspend fun checkAndTriggerAutoUpload() = withContext(Dispatchers.IO) {
-        if (powerManagementService.isPowerSavingEnabled) {
+        if (powerManagementService.blocksAutoUpload) {
             Log_OC.w(TAG, "⚡ Power saving mode active — skipping file sync.")
             return@withContext
         }

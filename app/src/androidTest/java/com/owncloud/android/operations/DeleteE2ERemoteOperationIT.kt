@@ -12,8 +12,9 @@ import com.owncloud.android.lib.resources.e2ee.DeleteEncryptedFilesRemoteOperati
 import com.owncloud.android.lib.resources.users.DeletePrivateKeyRemoteOperation
 import com.owncloud.android.lib.resources.users.DeletePublicKeyRemoteOperation
 import com.owncloud.android.lib.resources.users.GetPrivateKeyRemoteOperation
-import com.owncloud.android.lib.resources.users.GetPublicKeyRemoteOperation
+import com.owncloud.android.lib.resources.users.GetCertificateRemoteOperation
 import com.owncloud.android.lib.resources.users.StorePrivateKeyRemoteOperation
+import com.owncloud.android.ui.dialog.setupEncryption.EncryptionKeyGenerator
 import com.owncloud.android.utils.EncryptionUtils
 import com.owncloud.android.utils.crypto.CryptoHelper
 import org.junit.Assert.assertFalse
@@ -31,7 +32,7 @@ class DeleteE2ERemoteOperationIT : AbstractOnServerIT() {
 
     @Test
     fun testDeletePrivateKey() {
-        val keyPair = EncryptionUtils.generateKeyPair()
+        val keyPair = EncryptionKeyGenerator.generateKeyPair()
         val privateKey = keyPair.private
         val keyPhrase = "moreovertelevisionfactorytendencyindependenceinternationalintellectualimpress" +
             "interestvolunteer"
@@ -57,7 +58,7 @@ class DeleteE2ERemoteOperationIT : AbstractOnServerIT() {
         val result = sut.execute(nextcloudClient)
         assertTrue(result.isSuccess)
 
-        val getResult = GetPublicKeyRemoteOperation().execute(nextcloudClient)
+        val getResult = GetCertificateRemoteOperation().execute(nextcloudClient)
         assertFalse(getResult.isSuccess)
     }
 }

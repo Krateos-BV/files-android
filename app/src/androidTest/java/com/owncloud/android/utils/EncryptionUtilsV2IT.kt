@@ -33,7 +33,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
 import org.junit.Test
 
-@Suppress("TooManyFunctions", "LargeClass")
+@Suppress("LargeClass")
 class EncryptionUtilsV2IT : EncryptionIT() {
     private val encryptionTestUtils = EncryptionTestUtils()
     private val encryptionUtilsV2 = EncryptionUtilsV2()
@@ -966,7 +966,7 @@ class EncryptionUtilsV2IT : EncryptionIT() {
             getUserId(user),
             EncryptionTestIT.privateKey,
             folder,
-            fileDataStorageManager,
+            storageManager,
             client,
             decryptedFolderMetadata1.metadata.counter,
             signature,
