@@ -46,7 +46,6 @@ object UploadErrorNotificationManager {
      *
      * @param onSameFileConflict Triggered only if result code is CONFLICT or SYNC_CONFLICT and files are identical.
      */
-    @Suppress("ReturnCount")
     suspend fun handleResult(
         context: Context,
         notificationManager: WorkerNotificationManager,
@@ -74,6 +73,11 @@ object UploadErrorNotificationManager {
 
         if (result.code in silentCodes) {
             Log_OC.d(TAG, "silent error code, notification skipped")
+            return
+        }
+
+        if (result.code == ResultCode.QUOTA_EXCEEDED) {
+            AppWideNotificationManager.showQuotaExceededNotification(context)
             return
         }
 

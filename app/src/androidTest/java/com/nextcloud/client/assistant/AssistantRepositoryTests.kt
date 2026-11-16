@@ -8,6 +8,7 @@
 package com.nextcloud.client.assistant
 
 import com.nextcloud.client.assistant.repository.remote.AssistantRemoteRepositoryImpl
+import com.nextcloud.test.SinceServer
 import com.owncloud.android.AbstractOnServerIT
 import com.owncloud.android.lib.resources.assistant.v2.model.TaskTypeData
 import com.owncloud.android.lib.resources.status.NextcloudVersion
@@ -17,20 +18,21 @@ import org.junit.Before
 import org.junit.Test
 
 @Suppress("MagicNumber")
+@SinceServer(majorVersion = 28)
 class AssistantRepositoryTests : AbstractOnServerIT() {
 
     private var sut: AssistantRemoteRepositoryImpl? = null
 
     @Before
     fun setup() {
-        sut = AssistantRemoteRepositoryImpl(nextcloudClient, capability)
+        sut = AssistantRemoteRepositoryImpl(nextcloudClient, getCapability())
     }
 
     @Test
     fun testGetTaskTypes() {
         testOnlyOnServer(NextcloudVersion.nextcloud_28)
 
-        if (capability.assistant.isFalse) {
+        if (getCapability().assistant.isFalse) {
             return
         }
 
@@ -44,7 +46,7 @@ class AssistantRepositoryTests : AbstractOnServerIT() {
     fun testGetTaskList() {
         testOnlyOnServer(NextcloudVersion.nextcloud_28)
 
-        if (capability.assistant.isFalse) {
+        if (getCapability().assistant.isFalse) {
             return
         }
 
@@ -58,7 +60,7 @@ class AssistantRepositoryTests : AbstractOnServerIT() {
     fun testCreateTask() {
         testOnlyOnServer(NextcloudVersion.nextcloud_28)
 
-        if (capability.assistant.isFalse) {
+        if (getCapability().assistant.isFalse) {
             return
         }
 
@@ -81,7 +83,7 @@ class AssistantRepositoryTests : AbstractOnServerIT() {
     fun testDeleteTask() {
         testOnlyOnServer(NextcloudVersion.nextcloud_28)
 
-        if (capability.assistant.isFalse) {
+        if (getCapability().assistant.isFalse) {
             return
         }
 

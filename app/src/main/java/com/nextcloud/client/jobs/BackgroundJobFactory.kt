@@ -25,6 +25,7 @@ import com.nextcloud.client.documentscan.GeneratePdfFromImagesWork
 import com.nextcloud.client.integrations.deck.DeckApi
 import com.nextcloud.client.jobs.autoUpload.AutoUploadHelper
 import com.nextcloud.client.jobs.autoUpload.AutoUploadLocalDeletionWorker
+import com.nextcloud.client.jobs.autoUpload.AutoUploadRescanWorker
 import com.nextcloud.client.jobs.autoUpload.AutoUploadWorker
 import com.nextcloud.client.jobs.autoUpload.FileSystemRepository
 import com.nextcloud.client.jobs.download.FileDownloadWorker
@@ -36,6 +37,7 @@ import com.nextcloud.client.jobs.upload.FileUploadWorker
 import com.nextcloud.client.logger.Logger
 import com.nextcloud.client.network.ConnectivityService
 import com.nextcloud.client.preferences.AppPreferences
+import com.nextcloud.repository.ClientRepository
 import com.owncloud.android.datamodel.ArbitraryDataProvider
 import com.owncloud.android.datamodel.SyncedFolderProvider
 import com.owncloud.android.datamodel.UploadsStorageManager
@@ -50,7 +52,6 @@ import javax.inject.Provider
  *
  * This class is doing too many things and should be split up into smaller factories.
  */
-@Suppress("LongParameterList", "TooManyFunctions") // satisfied by DI
 class BackgroundJobFactory @Inject constructor(
     private val logger: Logger,
     private val preferences: AppPreferences,
@@ -71,11 +72,12 @@ class BackgroundJobFactory @Inject constructor(
     private val generatePdfUseCase: GeneratePDFUseCase,
     private val syncedFolderProvider: SyncedFolderProvider,
     private val database: NextcloudDatabase,
-    private val uploadFileOperationFactory: UploadFileOperationFactory
+    private val uploadFileOperationFactory: UploadFileOperationFactory,
+    private val clientRepository: ClientRepository
 ) : WorkerFactory() {
 
     @SuppressLint("NewApi")
-    @Suppress("ComplexMethod") // it's just a trivial dispatch
+    @Suppress("CyclomaticComplexMethod") // it's just a trivial dispatch
     override fun createWorker(
         context: Context,
         workerClassName: String,
@@ -94,6 +96,7 @@ class BackgroundJobFactory @Inject constructor(
                 ContactsBackupWork::class -> createContactsBackupWork(context, workerParameters)
                 ContactsImportWork::class -> createContactsImportWork(context, workerParameters)
                 AutoUploadWorker::class -> createAutoUploadWorker(context, workerParameters)
+                AutoUploadRescanWorker::class -> createAutoUploadRescanWorker(context, workerParameters)
                 OfflineSyncWork::class -> createOfflineSyncWork(context, workerParameters)
                 MediaFoldersDetectionWork::class -> createMediaFoldersDetectionWork(context, workerParameters)
                 NotificationWork::class -> createNotificationWork(context, workerParameters)
@@ -122,6 +125,7 @@ class BackgroundJobFactory @Inject constructor(
             accountManager.user,
             context,
             connectivityService,
+            clientRepository,
             viewThemeUtils.get(),
             params
         )
@@ -194,8 +198,17 @@ class BackgroundJobFactory @Inject constructor(
         localBroadcastManager = localBroadcastManager.get(),
         autoUploadHelper = AutoUploadHelper(
             FileSystemRepository(dao = database.fileSystemDao(), uploadsStorageManager, context)
-        )
+        ),
+        preferences = preferences
     )
+
+    private fun createAutoUploadRescanWorker(context: Context, params: WorkerParameters): AutoUploadRescanWorker =
+        AutoUploadRescanWorker(
+            context = context,
+            params = params,
+            syncedFolderProvider = syncedFolderProvider,
+            backgroundJobManager = backgroundJobManager.get()
+        )
 
     private fun createOfflineSyncWork(context: Context, params: WorkerParameters): OfflineSyncWork = OfflineSyncWork(
         context = context,
@@ -327,7 +340,6 @@ class BackgroundJobFactory @Inject constructor(
             accountManager,
             context,
             viewThemeUtils.get(),
-            localBroadcastManager.get(),
             params
         )
 

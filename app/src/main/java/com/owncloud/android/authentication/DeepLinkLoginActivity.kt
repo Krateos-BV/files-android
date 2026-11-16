@@ -9,9 +9,10 @@ package com.owncloud.android.authentication
 
 import android.os.Bundle
 import com.nextcloud.client.di.Injectable
+import com.nextcloud.utils.SnackbarUtil
 import com.nextcloud.utils.mdm.MDMConfig
 import com.owncloud.android.R
-import com.owncloud.android.utils.DisplayUtils
+import com.owncloud.android.authentication.loginurl.LoginDataUrlParser
 
 class DeepLinkLoginActivity :
     AuthenticatorActivity(),
@@ -20,7 +21,7 @@ class DeepLinkLoginActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!MDMConfig.multiAccountSupport(this) && accountManager.accounts.size == 1) {
-            DisplayUtils.showSnackMessage(this, R.string.no_mutliple_accounts_allowed)
+            SnackbarUtil.show(this, R.string.no_mutliple_accounts_allowed)
             return
         }
 
@@ -29,13 +30,13 @@ class DeepLinkLoginActivity :
         intent.data?.let {
             try {
                 val prefix = getString(R.string.login_data_own_scheme) + PROTOCOL_SUFFIX + "login/"
-                val loginUrlInfo = parseLoginDataUrl(prefix, it.toString())
+                val loginUrlInfo = LoginDataUrlParser.parse(prefix, it.toString())
 
                 intent.data = null
 
-                loginDialog?.showDeepLinkDialog(loginUrlInfo)
+                loginDialog.showDeepLinkDialog(loginUrlInfo)
             } catch (_: IllegalArgumentException) {
-                DisplayUtils.showSnackMessage(this, R.string.direct_login_failed)
+                SnackbarUtil.show(this, R.string.direct_login_failed)
             }
         }
     }

@@ -23,6 +23,7 @@ import android.util.Base64
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.net.toUri
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.gson.Gson
@@ -60,7 +61,6 @@ import javax.crypto.BadPaddingException
 import javax.crypto.Cipher
 import javax.inject.Inject
 
-@Suppress("LongParameterList")
 class NotificationWork constructor(
     private val context: Context,
     params: WorkerParameters,
@@ -81,7 +81,7 @@ class NotificationWork constructor(
         private const val NUMERIC_NOTIFICATION_ID = "NUMERIC_NOTIFICATION_ID"
     }
 
-    @Suppress("TooGenericExceptionCaught", "NestedBlockDepth", "ComplexMethod", "LongMethod") // legacy code
+    @Suppress("NestedBlockDepth", "CyclomaticComplexMethod", "LongMethod") // legacy code
     override fun doWork(): Result {
         val subject = inputData.getString(KEY_NOTIFICATION_SUBJECT) ?: ""
         val signature = inputData.getString(KEY_NOTIFICATION_SIGNATURE) ?: ""
@@ -251,7 +251,6 @@ class NotificationWork constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught") // legacy code
     private fun fetchCompleteNotification(account: User, decryptedPushMessage: DecryptedPushMessage) {
         val optionalUser = accountManager.getUser(account.accountName)
         if (!optionalUser.isPresent) {
@@ -285,7 +284,7 @@ class NotificationWork constructor(
             this.accountManager = accountManager
         }
 
-        @Suppress("ComplexMethod") // legacy code
+        @Suppress("CyclomaticComplexMethod") // legacy code
         override fun onReceive(context: Context, intent: Intent) {
             AndroidInjection.inject(this, context)
             val numericNotificationId = intent.getIntExtra(NUMERIC_NOTIFICATION_ID, 0)
@@ -314,7 +313,7 @@ class NotificationWork constructor(
                                 val actionType = intent.getStringExtra(KEY_NOTIFICATION_ACTION_TYPE)
                                 val actionLink = intent.getStringExtra(KEY_NOTIFICATION_ACTION_LINK)
                                 val success: Boolean = if (!actionType.isNullOrEmpty() && !actionLink.isNullOrEmpty()) {
-                                    val resultCode = executeAction(actionType, actionLink, client)
+                                    val resultCode = executeAction(actionType, actionLink, client, context)
                                     resultCode == HttpStatus.SC_OK || resultCode == HttpStatus.SC_ACCEPTED
                                 } else {
                                     DeleteNotificationRemoteOperation(numericNotificationId)
@@ -340,10 +339,21 @@ class NotificationWork constructor(
             }
         }
 
-        @Suppress("ReturnCount") // legacy code
-        private fun executeAction(actionType: String, actionLink: String, client: OwnCloudClient): Int {
-            val method: HttpMethod
-            method = when (actionType) {
+        private fun executeAction(
+            actionType: String,
+            actionLink: String,
+            client: OwnCloudClient,
+            context: Context
+        ): Int {
+            if (actionType == "WEB") {
+                val browserIntent = Intent(Intent.ACTION_VIEW, actionLink.toUri()).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(browserIntent)
+                return HttpStatus.SC_OK
+            }
+
+            val method: HttpMethod = when (actionType) {
                 "GET" -> GetMethod(actionLink)
                 "POST" -> Utf8PostMethod(actionLink)
                 "DELETE" -> DeleteMethod(actionLink)

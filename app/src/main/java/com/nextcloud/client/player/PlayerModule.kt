@@ -13,21 +13,20 @@ import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
 import androidx.media3.datasource.cache.SimpleCache
 import com.nextcloud.client.player.media3.PlaybackService
-import com.nextcloud.client.player.ui.PlayerActivity
 import com.nextcloud.client.player.ui.PlayerProgressIndicator
 import com.nextcloud.client.player.ui.audio.AudioFileFragment
+import com.nextcloud.client.player.ui.audio.AudioPlayerActivity
 import com.nextcloud.client.player.ui.audio.AudioPlayerView
 import com.nextcloud.client.player.ui.control.PlayerControlView
-import com.nextcloud.client.player.ui.video.VideoFileFragment
-import com.nextcloud.client.player.ui.video.VideoPlayerView
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import java.io.File
 import javax.inject.Singleton
+import com.nextcloud.utils.AppConstants.BYTES_PER_MB
 
 private const val PLAYER_CACHE_DIR_NAME = "player"
-private const val PLAYER_CACHE_SIZE = 300 * 1024 * 1024L
+private const val PLAYER_CACHE_SIZE = 300L * BYTES_PER_MB
 
 @Module(includes = [PlayerModule.AndroidInjector::class])
 class PlayerModule {
@@ -48,13 +47,10 @@ class PlayerModule {
         abstract fun playbackService(): PlaybackService
 
         @ContributesAndroidInjector
-        abstract fun playerActivity(): PlayerActivity
+        abstract fun audioPlayerActivity(): AudioPlayerActivity
 
         @ContributesAndroidInjector
         abstract fun audioPlayerView(): AudioPlayerView
-
-        @ContributesAndroidInjector
-        abstract fun videoPlayerView(): VideoPlayerView
 
         @ContributesAndroidInjector
         abstract fun playerControlView(): PlayerControlView
@@ -64,8 +60,5 @@ class PlayerModule {
 
         @ContributesAndroidInjector
         abstract fun audioFileFragment(): AudioFileFragment
-
-        @ContributesAndroidInjector
-        abstract fun videoFileFragment(): VideoFileFragment
     }
 }

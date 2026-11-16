@@ -14,6 +14,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.FragmentActivity
 import com.nextcloud.client.di.Injectable
+import com.nextcloud.utils.SnackbarUtil
 import com.owncloud.android.R
 import com.owncloud.android.databinding.FilesFolderPickerBinding
 import com.owncloud.android.datamodel.OCFile
@@ -28,7 +29,7 @@ import com.owncloud.android.ui.fragment.FileFragment
 import com.owncloud.android.ui.fragment.GalleryFragment
 import com.owncloud.android.ui.fragment.OCFileListFragment
 import com.owncloud.android.ui.fragment.albums.AlbumsFragment
-import com.owncloud.android.utils.DisplayUtils
+import com.owncloud.android.ui.navigation.model.ActionBarStyle
 import com.owncloud.android.utils.ErrorMessageAdapter
 
 class AlbumsPickerActivity :
@@ -57,7 +58,7 @@ class AlbumsPickerActivity :
         super.onCreate(savedInstanceState)
 
         initBinding()
-        setupToolbar()
+        showActionBar(ActionBarStyle.Plain)
         setupAction()
         setupActionBar()
         initExtras()
@@ -66,7 +67,7 @@ class AlbumsPickerActivity :
             createFragments()
         }
 
-        updateActionBarTitleAndHomeButtonByString(captionText)
+        setActionBarTitle(captionText)
     }
 
     private fun setupActionBar() {
@@ -179,7 +180,7 @@ class AlbumsPickerActivity :
             fileListFragment?.refreshAlbums()
         } else {
             try {
-                DisplayUtils.showSnackMessage(
+                SnackbarUtil.show(
                     this,
                     ErrorMessageAdapter.getErrorCauseMessage(result, operation, resources)
                 )

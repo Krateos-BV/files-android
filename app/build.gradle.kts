@@ -13,12 +13,19 @@ import com.github.spotbugs.snom.SpotBugsTask
 import com.karumi.shot.ShotExtension
 import org.gradle.internal.jvm.Jvm
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.io.FileInputStream
-import java.util.Properties
 
 val shotTest = System.getenv("SHOT_TEST") == "true"
 val ciBuild = System.getenv("CI") == "true"
 val perfAnalysis = project.hasProperty("perfAnalysis")
+val instrumentedTestBuild = project.hasProperty("coverage") || shotTest ||
+    gradle.startParameter.taskNames.any { it.contains("AndroidTest", ignoreCase = true) }
+val enableR8 = !instrumentedTestBuild
+
+val allAbis = listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+val localDebugAbis = when (System.getProperty("os.arch")) {
+    "aarch64", "arm64" -> listOf("arm64-v8a")
+    else -> listOf("arm64-v8a", "x86_64")
+}
 
 plugins {
     alias(libs.plugins.android.application)
@@ -75,14 +82,9 @@ val ndkEnv = buildMap {
     }
 }
 
-val configProps = Properties().apply {
-    val file = rootProject.file("gradle.properties")
-    if (file.exists()) load(FileInputStream(file))
-}
-
-val ncTestServerUsername = configProps["NC_TEST_SERVER_USERNAME"]
-val ncTestServerPassword = configProps["NC_TEST_SERVER_PASSWORD"]
-val ncTestServerBaseUrl = configProps["NC_TEST_SERVER_BASEURL"]
+val ncTestServerUsername = providers.gradleProperty("NC_TEST_SERVER_USERNAME").get()
+val ncTestServerPassword = providers.gradleProperty("NC_TEST_SERVER_PASSWORD").get()
+val ncTestServerBaseUrl = providers.gradleProperty("NC_TEST_SERVER_BASEURL").get()
 
 android {
     // install this NDK version and CMake to produce smaller APKs. Build will still work if not installed
@@ -108,12 +110,12 @@ android {
         )
         applicationId = "eu.xeniacloud.files"
         minSdk = 28
-        targetSdk = 36
         compileSdk = 37
-
-        ndk {
-            abiFilters += listOf("arm64-v8a", "x86_64")
-        }
+        targetSdk = 36
+        // mayor.minor.hotfix.increment (for increment: 01-50=Alpha / 51-89=RC / 90-99=stable)
+        // xx   .xxx  .xx    .xx
+        versionCode = 350020000
+        versionName = "35.2.0 Alpha 51"
 
         buildConfigField("boolean", "CI", ciBuild.toString())
         buildConfigField("boolean", "RUNTIME_PERF_ANALYSIS", perfAnalysis.toString())
@@ -122,10 +124,13 @@ android {
         testInstrumentationRunner = if (shotTest) "com.karumi.shot.ShotTestRunner"
         else "com.nextcloud.client.TestRunner"
 
+<<<<<<< HEAD
         // CalVer YY.M.D.ID; versionCode is the date-encoded integer YYMMDDID (ID zero-padded to 3 digits)
         versionCode = 260919000
         versionName = "26.9.19.0"
 
+=======
+>>>>>>> upstream/master
         // adapt structure from Eclipse to Gradle/Android Studio expectations;
         // see http://tools.android.com/tech-docs/new-build-system/user-guide#TOC-Configuring-the-Structure
 
@@ -150,15 +155,26 @@ android {
         buildTypes {
             release {
                 buildConfigField("String", "NC_TEST_SERVER_DATA_STRING", "\"\"")
+<<<<<<< HEAD
                 isMinifyEnabled = true
                 isShrinkResources = true
                 proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+=======
+                ndk {
+                    abiFilters += allAbis
+                }
+>>>>>>> upstream/master
             }
-
             debug {
                 enableUnitTestCoverage = project.hasProperty("coverage")
                 enableAndroidTestCoverage = project.hasProperty("coverage")
                 resConfigs("xxxhdpi")
+                optimization {
+                    enable = enableR8
+                }
+                ndk {
+                    abiFilters += if (ciBuild) allAbis else localDebugAbis
+                }
             }
         }
 
@@ -190,6 +206,9 @@ android {
                 dimension = "default"
                 versionCode = 20220322
                 versionName = "20220322"
+                optimization {
+                    enable = enableR8
+                }
             }
 
             register("qa") {
@@ -215,7 +234,6 @@ android {
 
     buildFeatures {
         buildConfig = true
-        dataBinding = true
         viewBinding = true
         aidl = true
         compose = true
@@ -340,10 +358,7 @@ tasks.withType<SpotBugsTask>().configureEach {
     }
 }
 
-// Run the compiler as a separate process
 tasks.withType<JavaCompile>().configureEach {
-    options.isFork = true
-
     // Enable Incremental Compilation
     options.isIncremental = true
 }
@@ -425,6 +440,7 @@ dependencies {
 
     // region Lifecycle
     implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.lifecycle.process)
     implementation(libs.lifecycle.service)
     implementation(libs.lifecycle.runtime.ktx)
     // endregion
@@ -442,7 +458,6 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
 
     // region other libraries
-    compileOnly(libs.org.jbundle.util.osgi.wrapped.org.apache.http.client)
     implementation(libs.commons.httpclient.commons.httpclient) // remove after entire switch to lib v2
     implementation(libs.jackrabbit.webdav) // remove after entire switch to lib v2
     implementation(libs.constraintlayout)
@@ -454,14 +469,12 @@ dependencies {
     implementation(libs.commons.io)
     implementation(libs.eventbus)
     implementation(libs.ez.vcard)
-    implementation(libs.nnio)
     implementation(libs.bcpkix.jdk18on)
     implementation(libs.gson)
     implementation(libs.sectioned.recyclerview)
     implementation(libs.photoview)
     implementation(libs.android.gif.drawable)
     implementation(libs.qrcodescanner) // "com.github.blikoon:QRCodeScanner:0.1.2"
-    implementation(libs.flexbox)
     implementation(libs.androidsvg)
     implementation(libs.annotation)
     implementation(libs.emoji.google)
@@ -543,10 +556,6 @@ dependencies {
     // region Kotlin
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlinx.coroutines.core)
-    // endregion
-
-    // region Stateless
-    implementation(libs.stateless4j)
     // endregion
 
     // region Google Play dependencies, upon each update first test: new registration, receive push

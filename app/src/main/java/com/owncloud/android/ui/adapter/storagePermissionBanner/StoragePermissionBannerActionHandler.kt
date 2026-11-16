@@ -14,19 +14,24 @@ import com.nextcloud.utils.extensions.openMediaPermissions
 import com.nextcloud.utils.extensions.setVisibleIf
 import com.owncloud.android.MainApp
 import com.owncloud.android.databinding.StoragePermissionWarningBannerBinding
-import com.owncloud.android.ui.activity.DrawerActivity.REQ_ALL_FILES_ACCESS
-import com.owncloud.android.ui.activity.DrawerActivity.REQ_MEDIA_ACCESS
+import com.owncloud.android.ui.activity.drawer.DrawerActivity.Companion.REQ_ALL_FILES_ACCESS
+import com.owncloud.android.ui.activity.drawer.DrawerActivity.Companion.REQ_MEDIA_ACCESS
 import com.owncloud.android.utils.PermissionUtil
 
 fun StoragePermissionWarningBannerBinding.setup(activity: Activity, descriptionId: Int) {
     description.text = activity.getString(descriptionId)
 
+<<<<<<< HEAD
     val isBrandedAndFlavourGplay = (MainApp.isClientBranded() && isFlavourGPlay())
     allFilesAccess.setVisibleIf(
         !PermissionUtil.checkAllFilesAccess() &&
             PermissionUtil.canRequestAllFilesAccess(activity) &&
             !isBrandedAndFlavourGplay
     )
+=======
+    val isBrandedAndFlavourGplay = (MainApp.isClientBranded && isFlavourGPlay())
+    allFilesAccess.setVisibleIf(!PermissionUtil.checkAllFilesAccess() && !isBrandedAndFlavourGplay)
+>>>>>>> upstream/master
     allFilesAccess.setOnClickListener { activity.openAllFilesAccessSettings(REQ_ALL_FILES_ACCESS) }
 
     mediaReadOnly.setVisibleIf(!PermissionUtil.checkMediaAccess(activity))

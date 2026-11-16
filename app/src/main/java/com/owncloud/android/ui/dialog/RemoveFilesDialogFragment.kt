@@ -13,6 +13,8 @@
 package com.owncloud.android.ui.dialog
 
 import android.app.Dialog
+import android.app.NotificationManager
+import android.content.Context
 import android.os.Bundle
 import android.view.ActionMode
 import androidx.lifecycle.lifecycleScope
@@ -84,12 +86,12 @@ class RemoveFilesDialogFragment :
             ?.partition { it.isOfflineOperation }
             ?: (emptyList<OCFile>() to emptyList())
 
-        offlineFiles.forEach(fileDataStorageManager::deleteOfflineOperation)
-
         val listener = getTypedActivity(OnFilesRemovedListener::class.java)
         val fileActivity = getTypedActivity(FileActivity::class.java)
 
         fileActivity?.lifecycleScope?.launch(Dispatchers.IO) {
+            offlineFiles.forEach { deleteOfflineOperation(it, fileActivity) }
+
             val (autoUploadEntities, filesToRemove) =
                 FileUploadHelper.instance().splitFilesByAutoUpload(files, userAccountManager.user.accountName)
             withContext(Dispatchers.Main) {
@@ -107,6 +109,12 @@ class RemoveFilesDialogFragment :
         } ?: run {
             finishActionMode()
         }
+    }
+
+    private fun deleteOfflineOperation(file: OCFile, context: Context) {
+        val operationId = fileDataStorageManager.getOfflineEntityFromOCFile(file)?.id
+        fileDataStorageManager.deleteOfflineOperation(file)
+        operationId?.let { context.getSystemService(NotificationManager::class.java)?.cancel(it) }
     }
 
     override fun onNeutral(callerTag: String?) = Unit
