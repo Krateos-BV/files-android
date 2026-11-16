@@ -31,7 +31,6 @@ import javax.inject.Provider
 import org.junit.Before
 import org.junit.Test
 
-@Suppress("TooManyFunctions")
 class UnifiedSearchListAdapterIT : AbstractIT() {
 
     private val testClassName = "com.owncloud.android.ui.adapter.UnifiedSearchListAdapterIT"
@@ -142,7 +141,7 @@ class UnifiedSearchListAdapterIT : AbstractIT() {
             fileThumbnailGenerator = FileThumbnailGenerator(
                 storageManager = Provider { sut.storageManager },
                 preferences = preferences,
-                viewThemeUtils = sut.viewThemeUtils,
+                viewThemeUtils = Provider { sut.viewThemeUtils },
                 context = targetContext,
                 accountManager = accountManager
             ),

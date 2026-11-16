@@ -144,8 +144,9 @@ class SendShareDialog :
     private fun shareByLink() {
         val fileOperationsHelper = (requireActivity() as FileActivity).fileOperationsHelper
 
-        if (file?.isSharedViaLink == true) {
-            fileOperationsHelper.getFileWithLink(file!!, viewThemeUtils)
+        val sharedFile = file
+        if (sharedFile?.isSharedViaLink == true) {
+            fileOperationsHelper.getFileWithLink(sharedFile)
         } else if (sharingPublicPasswordEnforced || sharingPublicAskForPassword) {
             // password enforced by server, request to the user before trying to create
             requestPasswordForShareViaLink()
@@ -216,7 +217,6 @@ class SendShareDialog :
         this.fileOperationsHelper = fileOperationsHelper
     }
 
-    @Suppress("ReturnCount")
     override fun onSendButtonClick(sendButtonData: SendButtonData) {
         val packageName = sendButtonData.packageName
         val activityName = sendButtonData.activityName

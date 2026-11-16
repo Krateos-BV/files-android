@@ -28,10 +28,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.nextcloud.android.lib.resources.profile.Action
 import com.nextcloud.android.lib.resources.profile.HoverCard
+import com.nextcloud.android.common.core.utils.AccountNameUtils
 import com.nextcloud.client.account.User
+import com.nextcloud.client.utils.IntentUtil
+import com.nextcloud.utils.avatar.AvatarGenerationListener
+import com.nextcloud.utils.avatar.AvatarGenerator
 import com.owncloud.android.R
 import com.owncloud.android.databinding.ProfileBottomSheetFragmentBinding
-import com.owncloud.android.utils.DisplayUtils
 import com.owncloud.android.utils.theme.ViewThemeUtils
 
 private const val TEXT_SIZE = 16f
@@ -43,9 +46,10 @@ class ProfileBottomSheetDialog(
     private val fileActivity: FragmentActivity,
     private val user: User,
     private val hoverCard: HoverCard,
-    private val viewThemeUtils: ViewThemeUtils
+    private val viewThemeUtils: ViewThemeUtils,
+    private val avatarGenerator: AvatarGenerator
 ) : BottomSheetDialog(fileActivity),
-    DisplayUtils.AvatarGenerationListener {
+    AvatarGenerationListener {
     private var _binding: ProfileBottomSheetFragmentBinding? = null
 
     // This property is only valid between onCreateView and onDestroyView.
@@ -62,15 +66,13 @@ class ProfileBottomSheetDialog(
         viewThemeUtils.platform.themeDialog(binding.root)
 
         binding.icon.tag = hoverCard.userId
-        DisplayUtils.setAvatar(
-            user,
+        avatarGenerator.setUserAvatar(
             hoverCard.userId,
-            hoverCard.displayName,
             this,
             context.resources.getDimension(R.dimen.list_item_avatar_icon_radius),
-            context.resources,
             binding.icon,
-            context
+            displayName = hoverCard.displayName,
+            user = user
         )
 
         binding.displayName.text = hoverCard.displayName
@@ -140,13 +142,13 @@ class ProfileBottomSheetDialog(
     private fun send(userId: String, action: Action) {
         when (action.appId) {
             "profile" -> openWebsite(action.hyperlink)
-            "core" -> sendEmail(action.hyperlink)
+            "core", "email" -> sendEmail(action.hyperlink)
             "spreed" -> openTalk(userId, action.hyperlink)
         }
     }
 
     private fun openWebsite(url: String) {
-        DisplayUtils.startLinkIntent(fileActivity, url)
+        IntentUtil.startLinkIntent(fileActivity, url)
     }
 
     private fun sendEmail(email: String) {
@@ -155,7 +157,7 @@ class ProfileBottomSheetDialog(
             putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
         }
 
-        DisplayUtils.startIntentIfAppAvailable(intent, fileActivity, R.string.no_email_app_available)
+        IntentUtil.startIntentIfAppAvailable(intent, fileActivity, R.string.no_email_app_available)
     }
 
     private fun openTalk(userId: String, hyperlink: String) {
@@ -187,7 +189,7 @@ class ProfileBottomSheetDialog(
     override fun shouldCallGeneratedCallback(tag: String?, callContext: Any?): Boolean {
         if (callContext is ImageView) {
             // needs to be changed once federated users have avatars
-            return callContext.tag.toString() == tag!!.split("@").toTypedArray()[0]
+            return callContext.tag.toString() == tag?.let(AccountNameUtils::getUserPart)
         }
         return false
     }

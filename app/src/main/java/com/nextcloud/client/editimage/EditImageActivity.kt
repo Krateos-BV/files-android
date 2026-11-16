@@ -23,6 +23,7 @@ import com.nextcloud.client.di.Injectable
 import com.nextcloud.client.jobs.upload.FileUploadHelper
 import com.nextcloud.client.jobs.upload.FileUploadWorker
 import com.nextcloud.model.OCUploadLocalPathData
+import com.nextcloud.utils.SnackbarUtil
 import com.nextcloud.utils.extensions.getParcelableArgument
 import com.owncloud.android.R
 import com.owncloud.android.databinding.ActivityEditImageBinding
@@ -31,7 +32,6 @@ import com.owncloud.android.files.services.NameCollisionPolicy
 import com.owncloud.android.lib.common.operations.OnRemoteOperationListener
 import com.owncloud.android.operations.UploadFileOperation
 import com.owncloud.android.ui.activity.FileActivity
-import com.owncloud.android.utils.DisplayUtils
 import com.owncloud.android.utils.MimeType
 import java.io.File
 
@@ -43,7 +43,7 @@ class EditImageActivity :
     Injectable {
 
     private lateinit var binding: ActivityEditImageBinding
-    private lateinit var file: OCFile
+    private lateinit var imageFile: OCFile
     private lateinit var format: Bitmap.CompressFormat
 
     companion object {
@@ -68,12 +68,12 @@ class EditImageActivity :
         binding = ActivityEditImageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        file = intent.extras?.getParcelableArgument(EXTRA_FILE, OCFile::class.java)
+        imageFile = intent.extras?.getParcelableArgument(EXTRA_FILE, OCFile::class.java)
             ?: throw IllegalArgumentException("Missing file argument")
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = file.fileName
+            title = imageFile.fileName
             setDisplayHomeAsUpEnabled(true)
         }
 
@@ -87,11 +87,11 @@ class EditImageActivity :
 
     override fun onCropImageComplete(view: CropImageView, result: CropImageView.CropResult) {
         if (!result.isSuccessful) {
-            DisplayUtils.showSnackMessage(this, getString(R.string.image_editor_unable_to_edit_image))
+            SnackbarUtil.show(this, getString(R.string.image_editor_unable_to_edit_image))
             return
         }
         val resultUri = result.getUriFilePath(this, false)
-        val newFileName = file.fileName.substring(0, file.fileName.lastIndexOf('.')) +
+        val newFileName = imageFile.fileName.substring(0, imageFile.fileName.lastIndexOf('.')) +
             " " + getString(R.string.image_editor_file_edited_suffix) +
             resultUri?.substring(resultUri.lastIndexOf('.'))
 
@@ -99,7 +99,7 @@ class EditImageActivity :
             val data = OCUploadLocalPathData(
                 user = storageManager.user,
                 localPaths = arrayOf(it),
-                remotePaths = arrayOf(file.parentRemotePath + File.separator + newFileName),
+                remotePaths = arrayOf(imageFile.parentRemotePath + File.separator + newFileName),
                 createRemoteFolder = false,
                 creationType = UploadFileOperation.CREATED_BY_USER,
                 requiresWifi = false,
@@ -113,7 +113,7 @@ class EditImageActivity :
 
     override fun onSetImageUriComplete(view: CropImageView, uri: Uri, error: Exception?) {
         if (error != null) {
-            DisplayUtils.showSnackMessage(this, getString(R.string.image_editor_unable_to_edit_image))
+            SnackbarUtil.show(this, getString(R.string.image_editor_unable_to_edit_image))
             return
         }
         view.visibility = View.VISIBLE
@@ -171,10 +171,10 @@ class EditImageActivity :
 
         cropper.setOnSetImageUriCompleteListener(this)
         cropper.setOnCropImageCompleteListener(this)
-        cropper.setImageUriAsync(file.storageUri)
+        cropper.setImageUriAsync(imageFile.storageUri)
 
         // determine output file format
-        format = when (file.mimeType) {
+        format = when (imageFile.mimeType) {
             MimeType.PNG -> Bitmap.CompressFormat.PNG
 
             MimeType.WEBP -> {

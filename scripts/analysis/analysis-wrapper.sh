@@ -29,6 +29,7 @@ fi
 
 spotbugsResult="<h1>SpotBugs</h1>$(scripts/analysis/spotbugsComparison.py "$baselineXml" app/build/reports/spotbugs/gplayDebug.xml)"
 
+<<<<<<< HEAD
 if [ $spotbugsValue -eq 1 ]; then
     spotbugsMessage="<h1>SpotBugs increased!</h1>"
 fi
@@ -51,13 +52,63 @@ echo "$bodyContent" >> "$GITHUB_STEP_SUMMARY"
 if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
     # replace the previous results comment
     oldComments=$(curl_gh -X GET "https://api.github.com/repos/$GITHUB_REPOSITORY/issues/${PR_NUMBER}/comments" | jq '.[] | select((.user.login | contains("github-actions")) and (.body | test("^<h1>SpotBugs"))) | .id')
+=======
+    # delete all old comments, starting with SpotBugs
+    oldComments=$(curl_gh -X GET "https://api.github.com/repos/nextcloud/$repository/issues/${PR_NUMBER}/comments" | jq '.[] | select((.user.login | contains("github-actions")) and  (.body | test("<h1>SpotBugs.*"))) | .id')
+>>>>>>> upstream/master
 
     echo "$oldComments" | while read -r comment ; do
         [ -n "$comment" ] && curl_gh -X DELETE "https://api.github.com/repos/$GITHUB_REPOSITORY/issues/comments/$comment"
     done
 
+<<<<<<< HEAD
     payload=$(jq -n --arg body "$bodyContent" '{body: $body}')
     curl_gh -X POST "https://api.github.com/repos/$GITHUB_REPOSITORY/issues/${PR_NUMBER}/comments" -d "$payload"
+=======
+    # spotbugs file must exist
+    if [ ! -s app/build/reports/spotbugs/spotbugs.html ] ; then
+        echo "spotbugs.html file is missing!"
+        exit 1
+    fi
+
+    # add comment with results
+    spotbugsResult="<h1>SpotBugs</h1>$(scripts/analysis/spotbugsComparison.py "/tmp/$stableBranch.xml" app/build/reports/spotbugs/gplayDebug.xml --link-new "https://www.kaminsky.me/nc-dev/$repository-findbugs/${BUILD_NUMBER}.html" --link-base "https://www.kaminsky.me/nc-dev/$repository-findbugs/$stableBranch.html")"
+
+    if ( [ $spotbugsValue -eq 1 ] ) ; then
+        spotbugsMessage="<h1>SpotBugs increased!</h1>"
+    fi
+
+    # check gplay limitation: all changelog files must only have 500 chars
+    gplayLimitation=$(scripts/checkGplayLimitation.sh)
+
+    if [ ! -z "$gplayLimitation" ]; then
+        gplayLimitation="<h1>Following files are beyond 500 char limit:</h1><br><br>"$gplayLimitation
+    fi
+
+    # check for NotNull
+    if [[ $(grep org.jetbrains.annotations app/src/main/* -irl | wc -l) -gt 0 ]] ; then
+        notNull="org.jetbrains.annotations.* is used. Please use androidx.annotation.* instead.<br><br>"
+    fi
+
+    bodyContent="$spotbugsResult $spotbugsMessage $gplayLimitation $notNull"
+    echo "$bodyContent" >> "$GITHUB_STEP_SUMMARY"
+    payload="{ \"body\" : \"$bodyContent\" }"
+    curl_gh -X POST "https://api.github.com/repos/nextcloud/$repository/issues/${PR_NUMBER}/comments" -d "$payload"
+
+    if [ ! -z "$gplayLimitation" ]; then
+        exit 1
+    fi
+
+    if [ -n "$notNull" ]; then
+        exit 1
+    fi
+
+    if [ $spotbugsValue -eq 2 ]; then
+        exit 0
+    else
+        exit $spotbugsValue
+    fi
+>>>>>>> upstream/master
 fi
 
 if [ -n "$gplayLimitation" ]; then

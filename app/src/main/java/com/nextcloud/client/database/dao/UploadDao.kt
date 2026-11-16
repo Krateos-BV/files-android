@@ -92,12 +92,30 @@ interface UploadDao {
 
     @Query(
         """
+    UPDATE ${ProviderTableMeta.UPLOADS_TABLE_NAME}
+    SET ${ProviderTableMeta.UPLOADS_STATUS} = :newStatus,
+        ${ProviderTableMeta.UPLOADS_LAST_RESULT} = :lastResult
+    WHERE ${ProviderTableMeta.UPLOADS_ACCOUNT_NAME} = :accountName
+      AND ${ProviderTableMeta.UPLOADS_STATUS} = :currentStatus
+"""
+    )
+    suspend fun updateStatusAndResultByAccount(
+        accountName: String,
+        currentStatus: Int,
+        newStatus: Int,
+        lastResult: Int
+    ): Int
+
+    @Query(
+        """
     SELECT * FROM ${ProviderTableMeta.UPLOADS_TABLE_NAME}
     WHERE ${ProviderTableMeta.UPLOADS_STATUS} = :status
       AND (:nameCollisionPolicy IS NULL OR ${ProviderTableMeta.UPLOADS_NAME_COLLISION_POLICY} = :nameCollisionPolicy)
+    ORDER BY ${ProviderTableMeta._ID} DESC
+    LIMIT :limit
 """
     )
-    suspend fun getUploadsByStatus(status: Int, nameCollisionPolicy: Int? = null): List<UploadEntity>
+    suspend fun getUploadsByStatus(status: Int, nameCollisionPolicy: Int? = null, limit: Int): List<UploadEntity>
 
     @Query(
         """
@@ -105,11 +123,14 @@ interface UploadDao {
     WHERE ${ProviderTableMeta.UPLOADS_ACCOUNT_NAME} = :accountName
       AND ${ProviderTableMeta.UPLOADS_STATUS} = :status
       AND (:nameCollisionPolicy IS NULL OR ${ProviderTableMeta.UPLOADS_NAME_COLLISION_POLICY} = :nameCollisionPolicy)
+    ORDER BY ${ProviderTableMeta._ID} DESC
+    LIMIT :limit
 """
     )
     suspend fun getUploadsByAccountNameAndStatus(
         accountName: String,
         status: Int,
-        nameCollisionPolicy: Int? = null
+        nameCollisionPolicy: Int? = null,
+        limit: Int
     ): List<UploadEntity>
 }

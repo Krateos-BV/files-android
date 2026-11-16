@@ -18,6 +18,7 @@ import com.nextcloud.client.network.ClientFactory;
 import com.nextcloud.client.network.ClientFactoryImpl;
 import com.nextcloud.common.NextcloudClient;
 import com.nextcloud.utils.extensions.DecryptedUserExtensionsKt;
+import com.nextcloud.utils.extensions.OCFileExtensionsKt;
 import com.owncloud.android.R;
 import com.owncloud.android.datamodel.ArbitraryDataProvider;
 import com.owncloud.android.datamodel.FileDataStorageManager;
@@ -31,7 +32,7 @@ import com.owncloud.android.lib.resources.files.FileUtils;
 import com.owncloud.android.lib.resources.shares.CreateShareRemoteOperation;
 import com.owncloud.android.lib.resources.shares.OCShare;
 import com.owncloud.android.lib.resources.shares.ShareType;
-import com.owncloud.android.lib.resources.users.GetPublicKeyRemoteOperation;
+import com.owncloud.android.lib.resources.users.GetCertificateRemoteOperation;
 import com.owncloud.android.operations.common.SyncOperation;
 import com.owncloud.android.utils.EncryptionUtils;
 import com.owncloud.android.utils.EncryptionUtilsV2;
@@ -130,7 +131,7 @@ public class CreateShareWithShareeOperation extends SyncOperation {
 
                 if (publicKey.isEmpty()) {
                     NextcloudClient nextcloudClient = new ClientFactoryImpl(context).createNextcloudClient(user);
-                    RemoteOperationResult<String> result = new GetPublicKeyRemoteOperation(shareeName).execute(nextcloudClient);
+                    RemoteOperationResult<String> result = new GetCertificateRemoteOperation(shareeName).execute(nextcloudClient);
                     if (result.isSuccess()) {
                         // store it
                         EncryptionUtils.savePublicKey(
@@ -263,6 +264,7 @@ public class CreateShareWithShareeOperation extends SyncOperation {
         OCFile file = getStorageManager().getFileByPath(path);
         if (file != null) {
             file.setSharedWithSharee(true);    // TODO - this should be done by the FileContentProvider, as part of getStorageManager().saveShare(share)
+            OCFileExtensionsKt.addShare(file, share);
             getStorageManager().saveFile(file);
         }
     }

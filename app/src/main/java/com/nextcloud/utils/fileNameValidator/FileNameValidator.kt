@@ -22,6 +22,8 @@ import com.owncloud.android.datamodel.OCFile
 import com.owncloud.android.lib.resources.status.OCCapability
 
 object FileNameValidator {
+    // As defined, server-side, in FilenameValidator::validateFilename
+    private const val MAX_FILENAME_SIZE = 250
 
     /**
      * Checks the validity of a file name.
@@ -33,7 +35,7 @@ object FileNameValidator {
      * @param existingFileNames Set of existing file names to avoid duplicates.
      * @return An error message if the filename is invalid, null otherwise.
      */
-    @Suppress("ReturnCount", "NestedBlockDepth")
+    @Suppress("NestedBlockDepth", "CyclomaticComplexMethod")
     @JvmOverloads
     fun checkFileName(
         filename: String,
@@ -43,6 +45,10 @@ object FileNameValidator {
     ): String? {
         if (filename.isBlank()) {
             return context.getString(R.string.filename_empty)
+        }
+
+        if (filename.length > MAX_FILENAME_SIZE) {
+            return context.getString(R.string.filename_too_long)
         }
 
         if (isFileNameAlreadyExist(filename, existingFileNames)) {
@@ -132,7 +138,6 @@ object FileNameValidator {
         folderPath.split("[/\\\\]".toRegex())
             .none { it.isNotEmpty() && checkFileName(it, capability, context) != null }
 
-    @Suppress("ReturnCount")
     private fun checkInvalidCharacters(name: String, capability: OCCapability, context: Context): String? {
         capability.forbiddenFilenameCharactersJson?.let {
             val forbiddenFilenameCharacters = capability.forbiddenFilenameCharacters()

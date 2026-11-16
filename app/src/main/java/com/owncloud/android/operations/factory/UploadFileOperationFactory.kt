@@ -8,6 +8,7 @@
 package com.owncloud.android.operations.factory
 
 import android.content.Context
+import com.nextcloud.client.account.User
 import com.nextcloud.client.account.UserAccountManager
 import com.nextcloud.client.device.PowerManagementService
 import com.nextcloud.client.network.ConnectivityService
@@ -19,7 +20,6 @@ import com.owncloud.android.lib.common.network.OnDatatransferProgressListener
 import com.owncloud.android.operations.UploadFileOperation
 import javax.inject.Inject
 
-@Suppress("LongParameterList")
 class UploadFileOperationFactory @Inject constructor(
     private val uploadsStorageManager: UploadsStorageManager,
     private val connectivityService: ConnectivityService,
@@ -30,12 +30,14 @@ class UploadFileOperationFactory @Inject constructor(
         context: Context,
         upload: OCUpload,
         progressListener: OnDatatransferProgressListener? = null,
-        disableRetries: Boolean = true
+        disableRetries: Boolean = true,
+        user: User = accountManager.user,
+        storageManager: FileDataStorageManager = FileDataStorageManager(user, context.contentResolver)
     ): UploadFileOperation = UploadFileOperation(
         uploadsStorageManager,
         connectivityService,
         powerManagementService,
-        accountManager.user,
+        user,
         null,
         upload,
         upload.nameCollisionPolicy ?: NameCollisionPolicy.ASK_USER,
@@ -44,7 +46,7 @@ class UploadFileOperationFactory @Inject constructor(
         upload.isUseWifiOnly,
         upload.isWhileChargingOnly,
         disableRetries,
-        FileDataStorageManager(accountManager.user, context.contentResolver)
+        storageManager
     ).apply {
         progressListener?.let { addDataTransferProgressListener(it) }
     }

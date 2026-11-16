@@ -15,7 +15,6 @@
     </issue>
     <issue id="InvalidPackage">
         <ignore path="**/freemarker-2.*.*.jar" />
-        <ignore path="**/nnio-0.2.jar"/>
         <ignore path="**/bcpkix-jdk15on-1.69.jar" />
     </issue>
 
@@ -89,6 +88,11 @@
         <ignore path="**/jetified-annotation-experimental-1.**/**/lint.jar" />
         <ignore path="**/jetified-firebase-installations**/**/lint.jar" />
         <ignore path="**/appcompat-1.**/**/lint.jar" />
+    </issue>
+
+    <!-- Lint reads abiFilters as source text and cannot resolve allAbis; local debug builds skip x86 on purpose. -->
+    <issue id="ChromeOsAbiSupport">
+        <ignore path="build.gradle.kts" />
     </issue>
 
 	<issue id="Aligned16KB">

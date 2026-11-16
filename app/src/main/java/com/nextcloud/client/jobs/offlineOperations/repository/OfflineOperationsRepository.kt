@@ -71,34 +71,48 @@ class OfflineOperationsRepository(private val fileDataStorageManager: FileDataSt
             .mapNotNull { nextOperation ->
                 nextOperation.parentOCFileId?.let { parentId ->
                     fileDataStorageManager.getFileById(parentId)?.let { ocFile ->
-                        ocFile.decryptedRemotePath?.let { updatedPath ->
-                            val newPath = updatedPath + nextOperation.filename + pathSeparator
-
-                            if (newPath != nextOperation.path) {
-                                nextOperation.apply {
-                                    type = when (type) {
-                                        is OfflineOperationType.CreateFile ->
-                                            (type as OfflineOperationType.CreateFile).copy(
-                                                remotePath = newPath
-                                            )
-
-                                        is OfflineOperationType.CreateFolder ->
-                                            (type as OfflineOperationType.CreateFolder).copy(
-                                                path = newPath
-                                            )
-
-                                        else -> type
-                                    }
-                                    path = newPath
-                                }
-                            } else {
-                                null
-                            }
-                        }
+                        ocFile.decryptedRemotePath
+                            ?.let { parentPath -> nextOperation.getPathInside(parentPath) }
+                            ?.let { newPath -> updateOperationPath(newPath, nextOperation) }
                     }
                 }
             }
             .forEach { dao.update(it) }
+    }
+
+    private fun OfflineOperationEntity.getPathInside(parentPath: String): String? {
+        val currentPath = path ?: return null
+        val isFolder = currentPath.endsWith(pathSeparator)
+        val name = currentPath.removeSuffix(pathSeparator.toString()).substringAfterLast(pathSeparator)
+        val suffix = if (isFolder) pathSeparator.toString() else ""
+        return parentPath + name + suffix
+    }
+
+    private fun updateOperationPath(newPath: String, nextOperation: OfflineOperationEntity): OfflineOperationEntity? {
+        if (newPath == nextOperation.path) return null
+
+        val updatedType = when (val currentType = nextOperation.type) {
+            is OfflineOperationType.CreateFile -> currentType.copy(remotePath = newPath)
+            is OfflineOperationType.CreateFolder -> currentType.copy(path = newPath)
+            is OfflineOperationType.RemoveFile -> currentType.copy(path = newPath)
+            else -> currentType
+        }
+
+        return nextOperation.apply {
+            type = updatedType
+            path = newPath
+        }
+    }
+
+    override fun deleteOperationsInsideFolder(folderPath: String): List<Int> {
+        val operations = dao.getAllInsideFolder(folderPath)
+        operations.forEach { dao.delete(it) }
+        return operations.mapNotNull { it.id }
+    }
+
+    override fun updateOperationForKeepBoth(operation: OfflineOperationEntity, newPath: String) {
+        updateOperationPath(newPath, operation)
+        dao.update(operation)
     }
 
     override fun convertToOCFiles(fileId: Long): List<OCFile> =

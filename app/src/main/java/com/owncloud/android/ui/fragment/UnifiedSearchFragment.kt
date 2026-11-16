@@ -37,6 +37,7 @@ import com.nextcloud.client.di.ViewModelFactory
 import com.nextcloud.client.network.ClientFactory
 import com.nextcloud.client.preferences.AppPreferences
 import com.nextcloud.common.NextcloudClient
+import com.nextcloud.utils.SnackbarUtil
 import com.nextcloud.utils.extensions.getTypedActivity
 import com.nextcloud.utils.extensions.searchFilesByName
 import com.nextcloud.utils.extensions.setVisibleIf
@@ -56,12 +57,12 @@ import com.owncloud.android.ui.adapter.UnifiedSearchListAdapter
 import com.owncloud.android.ui.fragment.util.PairMediatorLiveData
 import com.owncloud.android.ui.interfaces.UnifiedSearchCurrentDirItemAction
 import com.owncloud.android.ui.interfaces.UnifiedSearchListInterface
+import com.owncloud.android.ui.navigation.model.ActionBarStyle
 import com.owncloud.android.ui.unifiedsearch.IUnifiedSearchViewModel
 import com.owncloud.android.ui.unifiedsearch.ProviderID
 import com.owncloud.android.ui.unifiedsearch.UnifiedSearchSection
 import com.owncloud.android.ui.unifiedsearch.UnifiedSearchViewModel
 import com.owncloud.android.ui.unifiedsearch.filterOutHiddenFiles
-import com.owncloud.android.utils.DisplayUtils
 import com.owncloud.android.utils.PermissionUtil
 import com.owncloud.android.utils.theme.ViewThemeUtils
 import kotlinx.coroutines.Dispatchers
@@ -76,7 +77,6 @@ import kotlin.time.Duration.Companion.milliseconds
  * Starts query to all capable unified search providers and displays them Opens result in our app, redirect to other
  * apps, if installed, or opens browser
  */
-@Suppress("TooManyFunctions")
 class UnifiedSearchFragment :
     Fragment(),
     Injectable,
@@ -183,9 +183,9 @@ class UnifiedSearchFragment :
     override fun onResume() {
         super.onResume()
         typedActivity<FileDisplayActivity>()?.run {
-            setupToolbar()
+            showActionBar(ActionBarStyle.Plain)
             setMainFabVisible(false)
-            updateActionBarTitleAndHomeButtonByString(null)
+            setActionBarTitle(null)
             setDrawerIndicatorEnabled(false)
         }
     }
@@ -212,7 +212,7 @@ class UnifiedSearchFragment :
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             val granted = permissions.entries.all { it.value }
             if (!granted) {
-                DisplayUtils.showSnackMessage(binding.root, R.string.unified_search_fragment_permission_needed)
+                SnackbarUtil.show(binding.root, R.string.unified_search_fragment_permission_needed)
             }
         }
 
@@ -351,7 +351,7 @@ class UnifiedSearchFragment :
 
         vm.error.observe(viewLifecycleOwner) { error ->
             if (!error.isNullOrEmpty()) {
-                DisplayUtils.showSnackMessage(binding.root, error)
+                SnackbarUtil.show(binding.root, error)
             }
         }
         vm.browserUri.observe(viewLifecycleOwner) { uri ->
@@ -369,7 +369,7 @@ class UnifiedSearchFragment :
             delay(SEARCH_TIMEOUT_MS.milliseconds)
             val currentBinding = _binding ?: return@launch
             currentBinding.swipeContainingList.isRefreshing = false
-            DisplayUtils.showSnackMessage(
+            SnackbarUtil.show(
                 currentBinding.root,
                 R.string.unified_search_fragment_search_takes_long
             )

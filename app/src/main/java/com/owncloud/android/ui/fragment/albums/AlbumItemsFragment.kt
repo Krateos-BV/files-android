@@ -39,16 +39,19 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.nextcloud.android.lib.resources.clientintegration.Endpoint
 import com.nextcloud.client.account.User
 import com.nextcloud.client.account.UserAccountManager
 import com.nextcloud.client.di.Injectable
 import com.nextcloud.client.jobs.upload.FileUploadWorker
-import com.nextcloud.client.network.ClientFactory
-import com.nextcloud.client.network.ClientFactory.CreationException
 import com.nextcloud.client.utils.IntentUtil
-import com.nextcloud.client.utils.Throttler
+import com.nextcloud.client.utils.Throttle
+import com.nextcloud.repository.ClientRepository
 import com.nextcloud.ui.albumItemActions.AlbumItemActionsBottomSheet
+import com.nextcloud.ui.fileactions.FileActionHandler
+import com.nextcloud.ui.fileactions.FileActionHost
 import com.nextcloud.ui.fileactions.FileActionsBottomSheet
+import com.nextcloud.utils.SnackbarUtil
 import com.nextcloud.utils.extensions.getTypedActivity
 import com.nextcloud.utils.extensions.isDialogFragmentReady
 import com.nextcloud.utils.extensions.isLandscape
@@ -87,9 +90,9 @@ import com.owncloud.android.ui.fragment.albums.util.AlbumCollageLayout
 import com.owncloud.android.ui.fragment.helper.ColumnCount
 import com.owncloud.android.ui.helpers.UriUploader
 import com.owncloud.android.ui.interfaces.OCFileListFragmentInterface
-import com.owncloud.android.ui.preview.PreviewImageFragment
+import com.owncloud.android.ui.navigation.model.ActionBarStyle
+import com.owncloud.android.ui.preview.media.PreviewMediaFragment
 import com.owncloud.android.utils.ClipboardUtil
-import com.owncloud.android.utils.DisplayUtils
 import com.owncloud.android.utils.ErrorMessageAdapter
 import com.owncloud.android.utils.MimeTypeUtil
 import com.owncloud.android.utils.theme.ViewThemeUtils
@@ -108,7 +111,6 @@ import java.util.Optional
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
-@Suppress("TooManyFunctions")
 class AlbumItemsFragment :
     Fragment(),
     OCFileListFragmentInterface,
@@ -119,13 +121,17 @@ class AlbumItemsFragment :
     lateinit var viewThemeUtils: ViewThemeUtils
 
     @Inject
+    lateinit var fileActionHandler: FileActionHandler
+
+    @Inject
     lateinit var accountManager: UserAccountManager
 
     @Inject
-    lateinit var clientFactory: ClientFactory
+    lateinit var clientRepository: ClientRepository
 
-    @Inject
-    lateinit var throttler: Throttler
+    private val addMediaThrottle = Throttle()
+    private val actionsMenuThrottle = Throttle()
+    private val sharingSheetThrottle = Throttle()
 
     @Inject
     lateinit var thumbnailGenerator: ThumbnailGenerator
@@ -135,7 +141,6 @@ class AlbumItemsFragment :
 
     private var adapter: GalleryAdapter? = null
     private var addMediaFab: FloatingActionButton? = null
-    private var client: OwnCloudClient? = null
     private var optionalUser: Optional<User>? = null
     private var containerActivity: FileFragment.ContainerActivity? = null
     private var selectionMode: AlbumItemsMultiChoiceModeListener? = null
@@ -210,7 +215,7 @@ class AlbumItemsFragment :
     override fun onResume() {
         super.onResume()
         getTypedActivity(FileDisplayActivity::class.java)?.run {
-            setupToolbar()
+            showActionBar(ActionBarStyle.Plain)
             supportActionBar?.let { viewThemeUtils.files.themeActionBar(requireContext(), it, albumName) }
             showSortListGroup(false)
             setMainFabVisible(false)
@@ -286,24 +291,7 @@ class AlbumItemsFragment :
         binding.listFragmentLayout.addView(addMediaFab, layoutParams)
     }
 
-    private fun initializeClient() {
-        if (client != null) {
-            return
-        }
-
-        val user = optionalUser?.takeIf { it.isPresent }?.get() ?: return
-
-        client = try {
-            clientFactory.create(user)
-        } catch (e: CreationException) {
-            Log_OC.e(TAG, "Error initializing client", e)
-            null
-        }
-    }
-
     private fun initializeAdapter() {
-        initializeClient()
-
         if (adapter == null) {
             adapter = GalleryAdapter(
                 requireContext(),
@@ -365,7 +353,7 @@ class AlbumItemsFragment :
         showLoadingMessageWhenReachable()
 
         lifecycleScope.launch(Dispatchers.IO) {
-            val client = client ?: run {
+            val client = clientRepository.getOwncloudClient() ?: run {
                 withContext(Dispatchers.Main) { onAlbumItemsFailed(null) }
                 return@launch
             }
@@ -434,7 +422,7 @@ class AlbumItemsFragment :
     fun refreshAlbumMetaData() {
         lifecycleScope.launch(Dispatchers.IO) {
             val albumsRemoteOperation = ReadAlbumsRemoteOperation(albumName)
-            val result = client?.let { albumsRemoteOperation.execute(it) }
+            val result = clientRepository.getOwncloudClient()?.let { albumsRemoteOperation.execute(it) }
 
             withContext(Dispatchers.Main) {
                 photoAlbumEntry = result
@@ -510,7 +498,7 @@ class AlbumItemsFragment :
     }
 
     private fun openAddMediaMenu() {
-        throttler.run(THROTTLE_ADD_MEDIA) {
+        addMediaThrottle.run {
             val fragmentManager = requireActivity().supportFragmentManager
 
             AlbumItemActionsBottomSheet.newInstance()
@@ -526,7 +514,7 @@ class AlbumItemsFragment :
 
     fun onAlbumRenamed(newAlbumName: String) {
         albumName = newAlbumName
-        getTypedActivity(FileDisplayActivity::class.java)?.updateActionBarTitleAndHomeButtonByString(albumName)
+        getTypedActivity(FileDisplayActivity::class.java)?.setActionBarTitle(albumName)
     }
 
     fun onAlbumDeleted() {
@@ -535,8 +523,6 @@ class AlbumItemsFragment :
     //endregion
 
     //region Item interaction
-    override fun getColumnsCount(): Int = columnSize
-
     override fun isLoading(): Boolean = false
 
     override fun onHeaderClicked() = Unit
@@ -558,19 +544,19 @@ class AlbumItemsFragment :
         val activity = containerActivity as? FileDisplayActivity ?: return
 
         when {
-            PreviewImageFragment.canBePreviewed(file) ->
+            PreviewMediaFragment.canBePreviewed(file) ->
                 activity.startImagePreview(file, !file.isDown, VirtualFolderType.ALBUM)
 
             MimeTypeUtil.isVideo(file) ->
                 activity.startImagePreview(file, true, VirtualFolderType.ALBUM)
 
-            file.isDown && activity.canMediaPreviewed(file) ->
-                activity.startMediaPreview(file, showPreview = true, streamMedia = false)
+            file.isDown && activity.canPreviewInAudioPlayer(file) ->
+                activity.startAudioPreview(file, showPreview = true, streamMedia = false)
 
             file.isDown -> containerActivity?.fileOperationsHelper?.openFile(file)
 
-            activity.canMediaPreviewed(file) && !file.isEncrypted ->
-                activity.startMediaPreview(file, showPreview = true, streamMedia = true)
+            activity.canPreviewInAudioPlayer(file) && !file.isEncrypted ->
+                activity.startAudioPreview(file, showPreview = true, streamMedia = true)
 
             else -> Log_OC.d(TAG, "Couldn't handle item click")
         }
@@ -612,7 +598,7 @@ class AlbumItemsFragment :
 
     //region File actions
     private fun openActionsMenu(filesCount: Int, checkedFiles: Set<OCFile>) {
-        throttler.run(THROTTLE_OVERFLOW_CLICK) {
+        actionsMenuThrottle.launch(viewLifecycleOwner.lifecycleScope) {
             val actionsSheet = FileActionsBottomSheet.newInstance(
                 filesCount,
                 checkedFiles,
@@ -620,7 +606,9 @@ class AlbumItemsFragment :
                 hiddenFileActions(checkedFiles),
                 false,
                 contextMenuEndpoints(checkedFiles)
-            ).setResultListener(childFragmentManager, this) { id -> onFileActionChosen(id, checkedFiles) }
+            ).setResultListener(childFragmentManager, this@AlbumItemsFragment) { id ->
+                onFileActionChosen(id, checkedFiles)
+            }
 
             if (isDialogFragmentReady()) {
                 actionsSheet.show(childFragmentManager, TAG_FILE_ACTIONS)
@@ -638,46 +626,45 @@ class AlbumItemsFragment :
         return hidden
     }
 
-    private fun contextMenuEndpoints(checkedFiles: Set<OCFile>) = containerActivity
-        ?.storageManager
-        ?.getCapability(optionalUser?.get())
-        ?.getClientIntegrationEndpoints(Type.CONTEXT_MENU, checkedFiles.first().mimeType)
-        .orEmpty()
+    private suspend fun contextMenuEndpoints(checkedFiles: Set<OCFile>): List<Endpoint> {
+        val storageManager = containerActivity?.storageManager ?: return emptyList()
+        val user = optionalUser?.get()
+        val mimeType = checkedFiles.first().mimeType
 
-    private fun onFileActionChosen(@IdRes itemId: Int, checkedFiles: Set<OCFile>): Boolean {
-        if (checkedFiles.isEmpty()) {
-            return false
+        return withContext(Dispatchers.IO) {
+            storageManager.getCapability(user).getClientIntegrationEndpoints(Type.CONTEXT_MENU, mimeType)
         }
+    }
 
-        val fileOperationsHelper = containerActivity?.fileOperationsHelper
+    private fun onFileActionChosen(@IdRes itemId: Int, checkedFiles: Set<OCFile>) {
+        if (checkedFiles.isEmpty()) return
 
         when (itemId) {
             R.id.action_remove_file -> confirmFilesRemoval(checkedFiles)
-            R.id.action_favorite -> fileOperationsHelper?.toggleFavoriteFiles(checkedFiles, true)
-            R.id.action_unset_favorite -> fileOperationsHelper?.toggleFavoriteFiles(checkedFiles, false)
-            R.id.action_open_file_with -> fileOperationsHelper?.openFile(checkedFiles.first())
-            R.id.action_stream_media -> fileOperationsHelper?.streamMediaFile(checkedFiles.first())
-            R.id.action_select_all_action_menu -> selectAllFiles(true)
-            R.id.action_deselect_all_action_menu -> selectAllFiles(false)
-        }
 
-        return true
+            R.id.action_select_all_action_menu -> selectAllFiles(true)
+
+            R.id.action_deselect_all_action_menu -> selectAllFiles(false)
+
+            else -> containerActivity?.let {
+                val host = FileActionHost(it, parentFragmentManager, view, null)
+                fileActionHandler.handle(itemId, checkedFiles, host)
+            }
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMessageEvent(event: FavoriteEvent) {
-        try {
-            val client = clientFactory.create(accountManager.user)
+        lifecycleScope.launch(Dispatchers.IO) {
+            val client = clientRepository.getOwncloudClient() ?: return@launch
             val toggleFavoriteOperation = ToggleAlbumFavoriteRemoteOperation(event.shouldFavorite, event.remotePath)
 
             if (!toggleFavoriteOperation.execute(client).isSuccess) {
-                return
+                return@launch
             }
 
             Handler(Looper.getMainLooper()).post { selectionMode?.exitSelectionMode() }
             adapter?.markAsFavorite(event.remotePath, event.shouldFavorite)
-        } catch (e: CreationException) {
-            Log_OC.e(TAG, "Error processing event", e)
         }
     }
     //endregion
@@ -727,18 +714,13 @@ class AlbumItemsFragment :
         lifecycleScope.launch(Dispatchers.IO) {
             withContext(Dispatchers.Main) { showLoadingDialog() }
 
-            val failedFiles = try {
-                removeFromAlbum(clientFactory.create(accountManager.user), files)
-            } catch (e: CreationException) {
-                Log_OC.e(TAG, "Error removing album files", e)
-                emptyList()
-            }
+            val failedFiles = clientRepository.getOwncloudClient()?.let { removeFromAlbum(it, files) }.orEmpty()
 
             Log_OC.d(TAG, "Files that could not be removed: ${failedFiles.size}")
 
             withContext(Dispatchers.Main) {
                 if (failedFiles.isNotEmpty() && files.size > SINGLE_SELECTION) {
-                    DisplayUtils.showSnackMessage(requireActivity(), getString(R.string.album_delete_failed_message))
+                    SnackbarUtil.show(requireActivity(), getString(R.string.album_delete_failed_message))
                 }
 
                 dismissLoadingDialog()
@@ -762,7 +744,7 @@ class AlbumItemsFragment :
 
             if (files.size == SINGLE_SELECTION) {
                 val message = ErrorMessageAdapter.getErrorCauseMessage(result, operation, resources)
-                withContext(Dispatchers.Main) { DisplayUtils.showSnackMessage(requireActivity(), message) }
+                withContext(Dispatchers.Main) { SnackbarUtil.show(requireActivity(), message) }
             }
         }
 
@@ -815,7 +797,7 @@ class AlbumItemsFragment :
         val mediaUris = contentIntent.mediaUris()
 
         if (mediaUris.isEmpty()) {
-            DisplayUtils.showSnackMessage(requireActivity(), R.string.album_unsupported_file)
+            SnackbarUtil.show(requireActivity(), R.string.album_unsupported_file)
             return
         }
 
@@ -854,7 +836,7 @@ class AlbumItemsFragment :
 
     //region Album sharing
     private fun openAlbumSharingBottomSheet() {
-        throttler.run(THROTTLE_SHARING_SHEET) {
+        sharingSheetThrottle.run {
             val album = photoAlbumEntry ?: return@run
             val fragmentManager = requireActivity().supportFragmentManager
 
@@ -908,10 +890,6 @@ class AlbumItemsFragment :
         private const val TAG_ALBUM_ACTIONS = "album_actions"
         private const val TAG_ALBUM_SHARING = "album_sharing_sheet"
         private const val TAG_FILE_ACTIONS = "actions"
-
-        private const val THROTTLE_ADD_MEDIA = "addMediaClick"
-        private const val THROTTLE_SHARING_SHEET = "albumSharingSheet"
-        private const val THROTTLE_OVERFLOW_CLICK = "overflowClick"
 
         private const val ALBUMS_REMOTE_PATH = "/albums/"
         private const val ANY_MIME_TYPE = "*/*"

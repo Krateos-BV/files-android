@@ -102,8 +102,13 @@
     <bool name="privacy_enabled">true</bool>
     <string name="privacy_url">https://xeniacloud.eu/privacy-statement-eu/</string>
     <bool name="imprint_enabled">false</bool>
+<<<<<<< HEAD
     <bool name="recommend_enabled">false</bool>
     <bool name="logger_enabled">false</bool>
+=======
+    <bool name="recommend_enabled">true</bool>
+    <bool name="logger_enabled">true</bool>
+>>>>>>> upstream/master
     <bool name="sourcecode_enabled">true</bool>
     <string name="sourcecode_url" translatable="false">https://github.com/Krateos-BV/files-android</string>
     <bool name="license_enabled">true</bool>
@@ -150,6 +155,7 @@
 
     <!--    [{\"name\":\"name1\",\"url\":\"url\"},{\"name\":\"name2\",\"url\":\"url1\"}]-->
     <string name="enforce_servers" translatable="false"></string>
+    <string name="suggested_server" translatable="false"></string>
 
     
     <!-- Files becomes Home -->
